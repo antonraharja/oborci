@@ -25,8 +25,8 @@ class SC_users extends CI_Model {
 	 * $data format:
 	 * $data['preferences'] = array( 'email' => $email, 'first_name' => $first_name, 'last_name' => $last_name )
 	 * $data['users'] = array( 'role_id' => $role_id, 'preference_id' => $preference_id, 'username' => $username, 'password' => $password )
-	 * @param array $data
-	 * @return integer,boolean
+	 * @param array $data Array of user data and its preferences to be inserted to database
+	 * @return integer,boolean User ID or FALSE when failed
 	 */
 	public function insert($data) {
 		if (!$this->get_user_id($data['users']['username'])) {
@@ -53,8 +53,8 @@ class SC_users extends CI_Model {
 
 	/**
 	 * Get all users or specific user login when $user_id given
-	 * @param integer $user_id
-	 * @return array
+	 * @param integer $user_id User ID
+	 * @return array Array of user data
 	 */
 	public function get($user_id=NULL) {
 		if (isset($user_id)) {
@@ -70,9 +70,9 @@ class SC_users extends CI_Model {
 	 * $data format:
 	 * $data['preferences'] = array( 'email' => $email, 'first_name' => $first_name, 'last_name' => $last_name )
 	 * $data['users'] = array( 'role_id' => $role_id, 'preference_id' => $preference_id, 'username' => $username, 'password' => $password )
-	 * @param array $data
-	 * @param integer $user_id
-	 * @return boolean
+	 * @param array $data Array of user data and its preferences to be updated
+	 * @param integer $user_id User ID
+	 * @return boolean TRUE if update success
 	 */
 	public function update($data, $user_id) {
 		if ($this->get_user_id($data['users']['username'])) {
@@ -99,8 +99,8 @@ class SC_users extends CI_Model {
 
 	/**
 	 * Delete user login and preferences
-	 * @param integer $user_id
-	 * @return boolean
+	 * @param integer $user_id User ID
+	 * @return boolean TRUE if user successfully deleted
 	 */
 	public function delete($user_id) {
 		$preference_id = get_preference_id($user_id);
@@ -120,8 +120,8 @@ class SC_users extends CI_Model {
 
 	/**
 	 * Get user ID
-	 * @param string $username
-	 * @return integer,boolean
+	 * @param string $username Username
+	 * @return integer,boolean User ID or FALSE when failed
 	 */
 	public function get_user_id($username) {
 		$query = $this->db->get_where($this->table_users, array('username' => $username));
@@ -140,8 +140,8 @@ class SC_users extends CI_Model {
 
 	/**
 	 * Get role ID
-	 * @param integer $user_id
-	 * @return integer,boolean
+	 * @param integer $user_id User ID
+	 * @return integer,boolean Role ID or FALSE when failed
 	 */
 	public function get_role_id($user_id) {
 		$returns = $this->get($user_id);
@@ -159,8 +159,8 @@ class SC_users extends CI_Model {
 
 	/**
 	 * Get preference ID
-	 * @param integer $user_id
-	 * @return integer,boolean
+	 * @param integer $user_id User ID
+	 * @return integer,boolean Preference ID or FALSE when failed
 	 */
 	public function get_preference_id($user_id) {
 		$returns = $this->get($user_id);

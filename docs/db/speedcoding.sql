@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 07, 2011 at 11:17 AM
+-- Generation Time: May 09, 2011 at 04:17 AM
 -- Server version: 5.5.8
 -- PHP Version: 5.3.5
 
@@ -25,7 +25,6 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Table structure for table `sc_menus`
 --
 
-DROP TABLE IF EXISTS `sc_menus`;
 CREATE TABLE IF NOT EXISTS `sc_menus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `module_id` int(11) NOT NULL,
@@ -43,9 +42,9 @@ CREATE TABLE IF NOT EXISTS `sc_menus` (
 --
 
 INSERT INTO `sc_menus` (`id`, `module_id`, `parent`, `index`, `uri`, `text`, `title`, `id_css`) VALUES
-(1, 1, 0, 0, '', 'Home', 'Home', 'menu_home'),
-(2, 1, 0, 1, '', 'Roles', 'Role Manager', 'menu_roles'),
-(3, 1, 0, 2, '', 'Users', 'User Manager', 'menu_user');
+(1, 1, 0, 0, 'home', 'Home', 'Home', 'menu_home'),
+(2, 1, 0, 1, 'roles', 'Roles', 'Role Manager', 'menu_roles'),
+(3, 1, 0, 2, 'users', 'Users', 'User Manager', 'menu_user');
 
 -- --------------------------------------------------------
 
@@ -53,7 +52,6 @@ INSERT INTO `sc_menus` (`id`, `module_id`, `parent`, `index`, `uri`, `text`, `ti
 -- Table structure for table `sc_modules`
 --
 
-DROP TABLE IF EXISTS `sc_modules`;
 CREATE TABLE IF NOT EXISTS `sc_modules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `path` varchar(100) NOT NULL,
@@ -75,7 +73,6 @@ INSERT INTO `sc_modules` (`id`, `path`, `name`, `status`) VALUES
 -- Table structure for table `sc_preferences`
 --
 
-DROP TABLE IF EXISTS `sc_preferences`;
 CREATE TABLE IF NOT EXISTS `sc_preferences` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `email` varchar(200) NOT NULL,
@@ -98,7 +95,6 @@ INSERT INTO `sc_preferences` (`id`, `email`, `first_name`, `last_name`) VALUES
 -- Table structure for table `sc_roles`
 --
 
-DROP TABLE IF EXISTS `sc_roles`;
 CREATE TABLE IF NOT EXISTS `sc_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -119,7 +115,6 @@ INSERT INTO `sc_roles` (`id`, `name`) VALUES
 -- Table structure for table `sc_roles_menus`
 --
 
-DROP TABLE IF EXISTS `sc_roles_menus`;
 CREATE TABLE IF NOT EXISTS `sc_roles_menus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_id` int(11) NOT NULL,
@@ -144,7 +139,6 @@ INSERT INTO `sc_roles_menus` (`id`, `role_id`, `menu_id`) VALUES
 -- Table structure for table `sc_roles_screens`
 --
 
-DROP TABLE IF EXISTS `sc_roles_screens`;
 CREATE TABLE IF NOT EXISTS `sc_roles_screens` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_id` int(11) NOT NULL,
@@ -169,7 +163,6 @@ INSERT INTO `sc_roles_screens` (`id`, `role_id`, `screen_id`) VALUES
 -- Table structure for table `sc_screens`
 --
 
-DROP TABLE IF EXISTS `sc_screens`;
 CREATE TABLE IF NOT EXISTS `sc_screens` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `module_id` int(11) NOT NULL,
@@ -184,8 +177,8 @@ CREATE TABLE IF NOT EXISTS `sc_screens` (
 
 INSERT INTO `sc_screens` (`id`, `module_id`, `name`, `uri`) VALUES
 (1, 1, 'Home', 'home'),
-(2, 1, 'User Management', 'users'),
-(3, 1, 'Role Managemenet', 'roles');
+(2, 1, 'Role Management', 'roles'),
+(3, 1, 'User Managemenet', 'users');
 
 -- --------------------------------------------------------
 
@@ -193,7 +186,6 @@ INSERT INTO `sc_screens` (`id`, `module_id`, `name`, `uri`) VALUES
 -- Table structure for table `sc_sessions`
 --
 
-DROP TABLE IF EXISTS `sc_sessions`;
 CREATE TABLE IF NOT EXISTS `sc_sessions` (
   `session_id` varchar(40) NOT NULL DEFAULT '0',
   `ip_address` varchar(16) NOT NULL DEFAULT '0',
@@ -208,7 +200,8 @@ CREATE TABLE IF NOT EXISTS `sc_sessions` (
 --
 
 INSERT INTO `sc_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
-('c664fbc39da32f1547285ba81b3c6893', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100', 1304765197, 'a:4:{s:7:"user_id";s:1:"1";s:7:"role_id";s:1:"1";s:13:"preference_id";s:1:"1";s:11:"login_state";b:1;}');
+('2e94cd38ff78ace37937cb2c363782db', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100', 1304876320, ''),
+('fd29369996d725c8f198e83ad0127467', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100', 1304911799, '');
 
 -- --------------------------------------------------------
 
@@ -216,7 +209,6 @@ INSERT INTO `sc_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activ
 -- Table structure for table `sc_users`
 --
 
-DROP TABLE IF EXISTS `sc_users`;
 CREATE TABLE IF NOT EXISTS `sc_users` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `role_id` int(11) NOT NULL,

@@ -19,8 +19,8 @@ class SC_modules extends CI_Model {
 
 	/**
 	 * Insert a new module to database
-	 * @param array $data
-	 * @return integer,boolean
+	 * @param array $data Array of module data to be inserted to database
+	 * @return integer,boolean Module ID or FALSE when failed
 	 */
 	public function insert($data) {
 		if ($this->db->insert($this->table_modules, $data)) {
@@ -37,8 +37,8 @@ class SC_modules extends CI_Model {
 
 	/**
 	 * Get all modules or specific module when $module_id given
-	 * @param integer $module_id
-	 * @return array
+	 * @param integer $module_id Module ID
+	 * @return array Array of objects containing module items
 	 */
 	public function get($module_id=NULL) {
 		if (isset($module_id)) {
@@ -51,9 +51,9 @@ class SC_modules extends CI_Model {
 
 	/**
 	 * Update module
-	 * @param array $data
-	 * @param integer $module_id
-	 * @return boolean
+	 * @param array $data Array of module data to be updated
+	 * @param integer $module_id Module ID
+	 * @return boolean TRUE if update success
 	 */
 	public function update($data, $module_id) {
 		if (count($data) > 0) {
@@ -68,8 +68,8 @@ class SC_modules extends CI_Model {
 
 	/**
 	 * Delete module
-	 * @param integer $module_id
-	 * @return boolean
+	 * @param integer $module_id Module ID
+	 * @return boolean TRUE if deletion success
 	 */
 	public function delete($module_id) {
 		$this->db->delete($this->table_modules, array('id' => $module_id));

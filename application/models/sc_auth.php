@@ -29,9 +29,9 @@ class SC_auth extends CI_Model {
 
 	/**
 	 * Authentication, validate username and password
-	 * @param string $username
-	 * @param string $password
-	 * @return boolean
+	 * @param string $username Username from a login form
+	 * @param string $password Password from a login form
+	 * @return boolean TRUE if username and password authenticated
 	 */
 	public function auth($username, $password) {
 		$test_password = NULL;
@@ -67,7 +67,7 @@ class SC_auth extends CI_Model {
 
 	/**
 	 * Get user ID
-	 * @return boolean
+	 * @return integer Current logged in user ID
 	 */
 	public function get_user_id() {
 		return $this->user_id;
@@ -75,7 +75,7 @@ class SC_auth extends CI_Model {
 
 	/**
 	 * Set user ID
-	 * @param integer $user_id
+	 * @param integer $user_id User ID
 	 */
 	private function set_user_id($user_id) {
 		$this->user_id = $user_id;
@@ -83,7 +83,7 @@ class SC_auth extends CI_Model {
 
 	/**
 	 * Get login state
-	 * @return boolean
+	 * @return boolean TRUE if user ID is authenticated
 	 */
 	public function get_login_state() {
 		return $this->login_state;
@@ -91,7 +91,7 @@ class SC_auth extends CI_Model {
 
 	/**
 	 * Set login state
-	 * @param boolean $login_state
+	 * @param boolean $login_state Login state
 	 */
 	private function set_login_state($login_state) {
 		$this->login_state = $login_state;
@@ -99,7 +99,7 @@ class SC_auth extends CI_Model {
 
 	/**
 	 * Process login
-	 * @return boolean
+	 * @return boolean TRUE when login process successed
 	 */
 	public function login() {
 		if ($this->get_login_state()) {
@@ -127,14 +127,13 @@ class SC_auth extends CI_Model {
 
 	/**
 	 * Get login information
-	 * @param integer $user_id
-	 * @return array,boolean
+	 * @param integer $user_id User ID, if user ID omitted get_login() will get user ID from session
+	 * @return array,boolean Array of logged in user data or FALSE when user not authenticated
 	 */
 	public function get_login($user_id=NULL) {
 		if (!isset($user_id)) {
-			if ($this->user_id) {
-				$user_id = $this->get_user_id();
-			} else {
+			$user_id = $this->get_user_id();
+			if (!isset($user_id)) {
 				return FALSE;
 			}
 		}

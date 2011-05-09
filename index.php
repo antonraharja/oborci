@@ -57,7 +57,7 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-$system_path = 'C:\apps\wamp\www\ci\system';
+$system_path = '/var/www/ci/system';
 
 /*
  *---------------------------------------------------------------

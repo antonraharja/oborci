@@ -19,8 +19,8 @@ class SC_menus extends CI_Model {
 
 	/**
 	 * Insert a new menu to database
-	 * @param array $data
-	 * @return integer|boolean
+	 * @param array $data Array of menu data to be inserted to database
+	 * @return integer,boolean Menu ID or FALSE when failed
 	 */
 	public function insert($data) {
 		if ($this->db->insert($this->table_menus, $data)) {
@@ -36,9 +36,9 @@ class SC_menus extends CI_Model {
 	}
 
 	/**
-	 * Get all menus or specific menu when $menu_id given
-	 * @param integer $menu_id
-	 * @return array
+	 * Get all menus or specific menu when $menu_id is given
+	 * @param integer $menu_id Menu ID
+	 * @return array Array of objects containing menu items
 	 */
 	public function get($menu_id=NULL) {
 		if (isset($menu_id)) {
@@ -51,9 +51,9 @@ class SC_menus extends CI_Model {
 
 	/**
 	 * Update menu
-	 * @param array $data
-	 * @param integer $menu_id
-	 * @return boolean
+	 * @param array $data Array of menu data to be updated
+	 * @param integer $menu_id Menu ID
+	 * @return boolean TRUE if update success
 	 */
 	public function update($data, $menu_id) {
 		if (count($data) > 0) {
@@ -68,8 +68,8 @@ class SC_menus extends CI_Model {
 
 	/**
 	 * Delete menu
-	 * @param integer $menu_id
-	 * @return boolean
+	 * @param integer $menu_id Menu ID
+	 * @return boolean TRUE if deletion success
 	 */
 	public function delete($menu_id) {
 		$this->db->delete($this->table_menus, array('id' => $menu_id));

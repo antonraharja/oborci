@@ -24,7 +24,7 @@ class SC_ACL extends CI_Model {
 
 	/**
 	 * Get access state
-	 * @return boolean
+	 * @return boolean TRUE if visitor has access to current URI
 	 */
 	public function get_access() {
 		log_message('debug', 'SC_ACL get_access '.($this->valid ? 'TRUE' : 'FALSE'));
@@ -33,7 +33,7 @@ class SC_ACL extends CI_Model {
 
 	/**
 	 * Set access state
-	 * @param boolean $valid
+	 * @param NULL
 	 */
 	private function set_access($valid) {
 		log_message('debug', 'SC_ACL set_access '.($this->valid ? 'TRUE' : 'FALSE'));
@@ -42,7 +42,7 @@ class SC_ACL extends CI_Model {
 
 	/**
 	 * Validate if user has access to this URI
-	 * @return boolean
+	 * @return boolean TRUE if visitor has access to current URI
 	 */
 	public function validate() {
 		log_message('debug', 'SC_ACL validate');

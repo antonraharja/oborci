@@ -19,8 +19,8 @@ class SC_screens extends CI_Model {
 
 	/**
 	 * Insert a new screen to database
-	 * @param array $data
-	 * @return integer,boolean
+	 * @param array $data Array of screen data to be inserted to database
+	 * @return integer,boolean Screen ID or FALSE when failed
 	 */
 	public function insert($data) {
 		if ($this->db->insert($this->table_screens, $data)) {
@@ -37,8 +37,8 @@ class SC_screens extends CI_Model {
 
 	/**
 	 * Get all screens or specific screen when $screen_id given
-	 * @param integer $screen_id
-	 * @return array
+	 * @param integer $screen_id Screen ID
+	 * @return array Array of objects containing screen items
 	 */
 	public function get($screen_id=NULL) {
 		if (isset($screen_id)) {
@@ -51,9 +51,9 @@ class SC_screens extends CI_Model {
 
 	/**
 	 * Update screen
-	 * @param array $data
-	 * @param integer $screen_id
-	 * @return boolean
+	 * @param array $data Array of screen data to be updated
+	 * @param integer $screen_id Screen ID
+	 * @return boolean TRUE if update success
 	 */
 	public function update($data, $screen_id) {
 		if (count($data) > 0) {
@@ -68,8 +68,8 @@ class SC_screens extends CI_Model {
 
 	/**
 	 * Delete screen
-	 * @param integer $screen_id
-	 * @return boolean
+	 * @param integer $screen_id Screen ID
+	 * @return boolean TRUE if deletion success
 	 */
 	public function delete($screen_id) {
 		$this->db->delete($this->table_screens, array('id' => $screen_id));
@@ -82,8 +82,8 @@ class SC_screens extends CI_Model {
 
 	/**
 	 * Get screen by URI data
-	 * @param integer $uri
-	 * @return array
+	 * @param integer $uri URI in screen
+	 * @return array Array of screen ID
 	 */
 	public function get_by_uri($uri) {
 		$query = $this->db->get_where($this->table_screens, array('uri' => $uri));

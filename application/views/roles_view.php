@@ -10,4 +10,6 @@
 
 <p><?php echo anchor('process/logout', _('Logout'), 'title=' . _('Logout')); ?></p>
 
+<?=$crud?>
+
 <?php include APPPATH . '/views/footer_view.php' ?>

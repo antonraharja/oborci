@@ -29,12 +29,17 @@ class Users extends CI_Controller {
 		if ($this->SC_ACL->get_access()) {
 			$data['menu']['box'] = $this->SC_template->menu_box();
 			$data['login'] = $this->SC_auth->get_login();
+			$data['crud'] = $this->_get_crud();
 			$this->load->view('users_view', $data);
 		} else {
 			redirect('process/unauthorized');
 		}
 	}
 
+	private function _get_crud() {
+		// TODO
+		return 'CRUD';
+	}
 }
 
 /* End of file users.php */

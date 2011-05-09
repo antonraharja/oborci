@@ -25,7 +25,7 @@ class SC_template extends CI_Model {
 
 	/**
 	 * Create login form
-	 * @param string $id_css_prefix
+	 * @param string $id_css_prefix CSS ID parameter
 	 * @return NULL
 	 */
 	public function login_form($id_css_prefix='login') {
@@ -39,25 +39,8 @@ class SC_template extends CI_Model {
 	}
 
 	/**
-	 * Create menu box
-	 * @param string $box_id_css
-	 * @return NULL, string
-	 */
-	public function menu_box($box_id_css=NULL) {
-		$data = NULL;
-		if (!isset($box_id_css)) {
-			$box_id_css = "menu_item";
-		}
-		$menus = $this->menu_array();
-		foreach ($menus as $menu) {
-			$data .= '<div id="' . $box_id_css . '">' . anchor($menu['uri'], _($menu['text']), 'title="' . _($menu['title']) . '" id="' . $menu['id_css'] . '"') . '</div>';
-		}
-		return $data;
-	}
-
-	/**
 	 * Get menu array containing menu items
-	 * @return array
+	 * @return array Array of menu
 	 */
 	public function menu_array() {
 		$data = array();
@@ -86,6 +69,23 @@ class SC_template extends CI_Model {
                             'title' => _('Home'),
                             'id_css' => 'menu_home'
                             );
+		}
+		return $data;
+	}
+	
+	/**
+	 * Create menu box
+	 * @param string $box_id_css CSS ID for menu div
+	 * @return NULL, string NULL for no menu or menu box HTML
+	 */
+	public function menu_box($box_id_css=NULL) {
+		$data = NULL;
+		if (!isset($box_id_css)) {
+			$box_id_css = "menu_item";
+		}
+		$menus = $this->menu_array();
+		foreach ($menus as $menu) {
+			$data .= '<div id="' . $box_id_css . '">' . anchor($menu['uri'], _($menu['text']), 'title="' . _($menu['title']) . '" id="' . $menu['id_css'] . '"') . '</div>';
 		}
 		return $data;
 	}
