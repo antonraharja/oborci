@@ -1,0 +1,42 @@
+Model:
+- User		: user login, user preferences, user roles
+- Roles   	: roles management, access control list
+- ACL       : screen list, user roles validation
+
+- Menus     : menu list
+- Modules   : module list, 
+
+
+
+rewrite for lighttpd:
+
+this:
+url.rewrite-once = (
+ "/(.*)\.(.*)" => "$0",
+ "/(css|files|img|js|stats)/" => "$0",
+ "^/([^.]+)$" => "/index.php/$1"
+)  
+
+or this:
+url.rewrite-once = (
+"/(.*)\.(.*)" => "$0",
+"/(assets|pma|robots\.txt)/" => "$0",
+"/^(.*)\.html$" => "/index.php/$1",
+"^/([^.]+)$" => "/index.php/$1"
+)
+
+
+
+rewrite for apache22:
+
+application/config/config.php:
+$config['index_page'] = '';
+
+httpd.conf:
+LoadModule rewrite_module modules/mod_rewrite.so
+
+RewriteEngine On
+RewriteBase /speedcoding/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L]  

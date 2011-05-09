@@ -1,0 +1,277 @@
+/**
+ * Form Generation Library Stylesheet
+ * 
+ * This style sheet includes the basic styles
+ * for a form generated with the form generation
+ * library for CodeIgniter
+ * 
+ * @license		MIT License
+ * @author		Frank Michel
+ * @link		http://frankmichel.com
+ * @docu		http://frankmichel.com/formgenlib
+ * @email		info@frankmichel.com
+ * 
+ * @file		form.css
+ * @version		1.0.4
+ * @date		02/28/2011
+ * 
+ * Copyright (c) 2009 Frank Michel
+ */
+
+/* --------------------------------------------------------------------------
+	GENERAL FORM */
+
+form {
+	color: #444;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Lucida, Tahoma, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 24px;
+}
+
+/**
+ * this will make sure that floats will be cleared
+ * for example if you use <br /> after checkboxes and radio buttons
+ */
+form br {
+	clear: left;
+}
+
+#errors {
+	padding: 10px; 
+	margin-bottom: 10px;
+	border: 1px solid #c00;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	background-color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+	FIELDSET */
+
+fieldset {
+	margin-bottom: 20px;
+	padding: 20px;
+	background-color: #f4f4f4;
+	border: 1px solid #bbb;	
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+
+legend {
+	font-size: 12px;
+}
+
+/* --------------------------------------------------------------------------
+	LABELS */
+
+label {
+	display: inline;
+	float: left;
+	
+	width: 140px;
+	width: "150px";
+	padding-right: 10px;
+	
+	vertical-align: middle;
+}
+
+label.error {
+	color: #c00;
+}
+
+/**
+ * use this class in the $config['defaults'] for 'label' in the config file
+ * if you want the text in the label left justified
+ */
+label.left {
+	text-align: left;
+}
+
+/**
+ * 'combine' is used when two labels are combined such as in 'City/Zip'
+ */
+label.left.combine {
+	width: auto;
+	float: left;
+	padding: 0;
+}
+
+/**
+ * use this class in the $config['defaults'] for 'label' in the config file
+ * if you want the text in the label right justified
+ */
+label.right {
+	text-align: right;
+}
+
+label.right.combine {
+	width: auto;
+	float: none;
+	text-align: right;	
+	padding: 0;
+}
+
+/**
+ * use this class in the $config['defaults'] for 'label' in the config file
+ * if you want to display the label above the field
+ */
+label.top {
+	float: none;
+	padding: 0;
+	width: auto;
+	text-align: left;
+}
+
+/**
+ * use this class in the $config['defaults'] for 'label' in the config file
+ * if you want to display the label after the field
+ */
+label.after {
+	float: none;
+	padding-left: 10px;
+	vertical-align: top;
+	text-align: left;
+}
+
+label.after.combine {
+	width: auto;
+	float: left;
+	padding: 0;
+}
+
+/**
+ * this needs to be assigned to all 'checkbox' and 'radio' type elements
+ * (to remove any width and float styles previously set)
+ */
+label.check {
+	float: left;
+	width: auto;
+}
+
+input.check + label.check  {
+	padding-left: 6px;
+}
+
+/**
+ * this is where you can style your required labels
+ * don't forget to include this class name in the config file
+ */
+label.required {
+	font-weight: bold;
+}
+
+/* --------------------------------------------------------------------------
+	GENERAL INPUTS */
+
+input, select, textarea, button {
+	font-size: 12px;
+	color: #000;
+	border: 1px solid #666;
+}
+
+input.error, select.error, textarea.error {
+	border: 1px solid #c00;
+}
+
+input[disabled], input[readonly] {
+	color: #808080;
+	background-color: #efefef;
+}
+
+input[type="file"] {
+	border: none;
+}
+
+/* --------------------------------------------------------------------------
+	TEXT INPUTS */
+
+input {
+	width: 192px;
+	width: "200px";
+	padding: 4px;
+	margin-bottom: 5px;
+}
+
+/* --------------------------------------------------------------------------
+	CHECKBOX / RADIO INPUTS */
+
+input.check {
+	float: left;
+	width: auto;
+	padding: 0;
+	margin: 0;
+	height: 24px;
+	border: none;
+}
+
+/* --------------------------------------------------------------------------
+	UPLOADS */
+
+input.upload {
+	border: none;
+	background-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+	IMAGE INPUTS */
+
+input.image {
+	border: 0px;
+	background-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+	TEXTAREA */
+
+textarea {
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Lucida, Tahoma, Arial, sans-serif;	
+	padding: 2px;
+	width: 296px;
+	width: "300px";
+	height: 150px;
+}
+
+/* --------------------------------------------------------------------------
+	SELECT */
+
+select {
+	padding: 2px;
+	margin-bottom: 4px;
+	background-color: #fff;
+}
+
+optgroup {
+	color: #fff;
+	background-color: #999;
+}
+
+option {
+	color: #000;
+	background-color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+	BUTTONS */
+
+button, .button {
+	width: auto;
+	height: 24px;
+	padding: 1px 5px 1px 5px;
+	margin: 0;
+	color: #fff;
+	background-color: #215586;			
+	border: 1px solid #606060;
+	vertical-align: middle;		
+}
+
+/* --------------------------------------------------------------------------
+	OTHER */
+	
+span.help {
+	display: block;
+	color: #666;
+	font-size: 10px;
+	margin-left: 160px;
+	line-height: 15px;
+	margin-bottom: 5px;
+}
