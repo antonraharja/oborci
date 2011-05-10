@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Roles management model
+ * Access control list management model
  *
  * @property SC_auth $SC_auth
  * @property SC_roles $SC_roles

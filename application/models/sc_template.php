@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Template management model
+ * Template model
  *
  * @property SC_acl $SC_acl
  * @property SC_auth $SC_auth
@@ -72,7 +72,7 @@ class SC_template extends CI_Model {
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * Create menu box
 	 * @param string $box_id_css CSS ID for menu div

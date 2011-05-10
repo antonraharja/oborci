@@ -5,10 +5,10 @@ exit('No direct script access allowed');
 
 /**
  * Process controller
- * 
+ *
  * @property SC_auth $SC_auth
  * @property SC_template $SC_template
- * 
+ *
  * @author Anton Raharja
  *
  */
@@ -75,14 +75,14 @@ class Process extends CI_Controller {
 		$data['menu']['box'] = $this->SC_template->menu_box();
 		$this->load->view('process/logout_view', $data);
 	}
-	
+
 	/**
 	 * Process unauthorized
 	 */
 	public function unauthorized() {
 		$data['menu']['box'] = $this->SC_template->menu_box();
 		$data['login']['form'] = $this->SC_template->login_form();
-		$this->load->view('process/unauthorized', $data);		
+		$this->load->view('process/unauthorized', $data);
 	}
 
 }

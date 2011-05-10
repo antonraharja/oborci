@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Description of sc_auth
+ * Authentication model
  *
  * @property SC_preferences $SC_preferences
  * @property SC_roles $SC_roles

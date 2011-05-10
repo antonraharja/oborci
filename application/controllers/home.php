@@ -5,11 +5,11 @@ exit('No direct script access allowed');
 
 /**
  * Home controller
- * 
+ *
  * @property SC_ACL $SC_ACL
  * @property SC_auth $SC_auth
  * @property SC_template $SC_template
- * 
+ *
  * @author Anton Raharja
  *
  */
