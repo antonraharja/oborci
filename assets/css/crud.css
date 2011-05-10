@@ -1,0 +1,19 @@
+/* 
+    Document   : crud
+    Created on : May 10, 2011, 9:55:12 PM
+    Author     : Anton Raharja
+*/
+
+#crud_insert_button {	
+	float: none;
+}
+
+#crud_update_button {
+	padding-right: 5px;
+	float: left;
+}
+
+#crud_delete_button {
+	float: left;
+}
+

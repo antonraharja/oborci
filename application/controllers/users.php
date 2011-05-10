@@ -18,6 +18,7 @@ class Users extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model(array('SC_ACL', 'SC_auth', 'SC_template'));
+		$this->load->library('Crud');
 		$this->SC_ACL->validate();
 	}
 
@@ -99,7 +100,8 @@ class Users extends CI_Controller {
 				'name' => 'sc_users'
 			),
 			'properties' => array(
-				'uri' => 'index',
+				'name' => 'users',
+				'uri' => 'users',
 				'index_column' => TRUE,
 				'index_column_start' => 1,
 				'insert' => TRUE,
@@ -107,7 +109,6 @@ class Users extends CI_Controller {
 				'delete' => TRUE
 			)
 		);
-		$this->load->library('Crud');
 		$this->crud->set_data($data);
 		return $this->crud->render();
 	}

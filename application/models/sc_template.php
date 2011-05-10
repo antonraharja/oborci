@@ -20,7 +20,6 @@ class SC_template extends CI_Model {
 		parent::__construct();
 		$this->load->model(array('SC_ACL', 'SC_auth', 'SC_users', 'SC_roles', 'SC_menus'));
 		$this->load->library(array('table'));
-		log_message('debug', 'SC_template constructed');
 	}
 
 	/**

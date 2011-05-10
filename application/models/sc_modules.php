@@ -14,7 +14,6 @@ class SC_modules extends CI_Model {
 
 	function __construct() {
 		parent::__construct();
-		log_message('debug', 'SC_modules constructed');
 	}
 
 	/**

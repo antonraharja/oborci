@@ -19,6 +19,7 @@ class Roles extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model(array('SC_ACL', 'SC_auth', 'SC_template'));
+		$this->load->library('Crud');
 		$this->SC_ACL->validate();
 	}
 
@@ -26,7 +27,7 @@ class Roles extends CI_Controller {
 	 * Index Page for this controller.
 	 *
 	 */
-	public function index($param=NULL) {
+	public function index() {
 		if ($this->SC_ACL->get_access()) {
 			$data['menu']['box'] = $this->SC_template->menu_box();
 			$data['login'] = $this->SC_auth->get_login();
@@ -82,15 +83,15 @@ class Roles extends CI_Controller {
 				'name' => 'sc_roles'
 			),
 			'properties' => array(
-				'uri' => 'index',
-				'index_column' => TRUE,
+				'name' => 'roles',
+				'uri' => 'roles',
+				'index_column' => FALSE,
 				'index_column_start' => 1,
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE
 			)
 		);
-		$this->load->library('Crud');
 		$this->crud->set_data($data);
 		return $this->crud->render();
 	}

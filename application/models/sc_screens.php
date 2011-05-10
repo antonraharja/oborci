@@ -14,7 +14,6 @@ class SC_screens extends CI_Model {
 
 	function __construct() {
 		parent::__construct();
-		log_message('debug', 'SC_screens constructed');
 	}
 
 	/**

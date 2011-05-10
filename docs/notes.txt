@@ -133,6 +133,8 @@ Array
 
     [properties] => Array
         (
+        	['name'] => 'users',
+            ['uri'] => 'index',
         	[index_column] => 1
         	[index_column_start] => 1
             [insert] => 1

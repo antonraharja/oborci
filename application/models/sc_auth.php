@@ -24,7 +24,6 @@ class SC_auth extends CI_Model {
 			$this->set_user_id($this->session->userdata('user_id'));
 			$this->set_login_state(TRUE);
 		}
-		log_message('debug', 'SC_auth constructed');
 	}
 
 	/**
