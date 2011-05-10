@@ -39,4 +39,108 @@ RewriteEngine On
 RewriteBase /speedcoding/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php/$1 [L]  
+RewriteRule ^(.*)$ index.php/$1 [L]
+
+
+
+
+crud data array:
+
+Array
+(
+    [insert] => Array
+        (
+            [0] => Array
+                (
+                    [field] => username
+                    [title] => Username
+                    [type] => text
+                    [size] => 50
+                    [maxlength] => 20
+                    [unique] => 1
+                    [readonly] => 
+                )
+
+            [1] => Array
+                (
+                    [field] => password
+                    [title] => Password
+                    [type] => password
+                    [size] => 50
+                    [maxlength] => 50
+                    [confirm] => 1
+                    [confirm_title] => Confirm password
+                    [readonly] => 
+                )
+
+        )
+
+    [select] => Array
+        (
+            [0] => Array
+                (
+                    [field] => id
+                    [title] => ID
+                )
+
+            [1] => Array
+                (
+                    [field] => username
+                    [title] => Username
+                )
+
+        )
+
+    [update] => Array
+        (
+            [0] => Array
+                (
+                    [field] => username
+                    [title] => Username
+                    [type] => text
+                    [size] => 50
+                    [readonly] => 1
+                )
+
+            [1] => Array
+                (
+                    [field] => password
+                    [title] => Password
+                    [type] => password
+                    [size] => 50
+                    [maxlength] => 50
+                    [confirm] => 1
+                    [confirm_title] => Confirm password
+                    [readonly] => 
+                )
+
+        )
+
+    [delete] => Array
+        (
+            [0] => Array
+                (
+                    [field] => id
+                )
+
+        )
+
+    [datasource] => Array
+        (
+            [source] => table
+            [name] => sc_users
+        )
+
+    [properties] => Array
+        (
+        	[index_column] => 1
+        	[index_column_start] => 1
+            [insert] => 1
+            [update] => 1
+            [delete] => 1
+        )
+
+)
+
+
+  

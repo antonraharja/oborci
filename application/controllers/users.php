@@ -29,14 +29,14 @@ class Users extends CI_Controller {
 		if ($this->SC_ACL->get_access()) {
 			$data['menu']['box'] = $this->SC_template->menu_box();
 			$data['login'] = $this->SC_auth->get_login();
-			$data['crud'] = $this->_get_crud($param);
+			$data['crud'] = $this->_get_crud();
 			$this->load->view('users_view', $data);
 		} else {
 			redirect('process/unauthorized');
 		}
 	}
 
-	private function _get_crud($param=NULL) {
+	private function _get_crud() {
 		$data = array(
 			'insert' => array(
 				0 => array (
@@ -90,23 +90,25 @@ class Users extends CI_Controller {
 			),
 			'delete' => array(
 				0 => array(
-					'field' => 'id'
+					'field' => 'id',
+					'confirm' => TRUE
 				)
 			),
 			'datasource' => array(
 				'source' => 'table',
 				'name' => 'sc_users'
 			),
-			'action' => array(
+			'properties' => array(
+				'uri' => 'index',
+				'index_column' => TRUE,
+				'index_column_start' => 1,
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE
 			)
 		);
 		$this->load->library('Crud');
-		$this->crud->set_name('users');
-		$this->crud->set_grid($data);
-		$this->crud->set_uri('index');
+		$this->crud->set_data($data);
 		return $this->crud->render();
 	}
 }

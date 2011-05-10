@@ -7,39 +7,30 @@
  */
 class Crud {
 
-	/**
-	 * Enter description here ...
-	 * $this->crud->set_name('roles');
-	 * @param string $name
-	 */
-	public function set_name($name) {
+	private $data = NULL;
+	// private $CI = NULL;
 
+	function __construct() {
+		$this->data = NULL;
+		// $this->CI =& get_instance();
+	}
+	
+	/**
+	 * Set uniquely formatted data structure
+	 * Usage example: $this->crud->set_data($data);
+	 * @param array $data Data array
+	 */
+	public function set_data($data) {
+			$this->data = $data;
 	}
 
 	/**
-	 * Enter description here ...
-	 * $this->crud->set_grid($data);
-	 * @param array $data
-	 */
-	public function set_grid($data) {
-			
-	}
-
-	/**
-	 * Enter description here ...
-	 * $this->crud->set_uri('index');
-	 * @param unknown_type $uri
-	 */
-	public function set_uri($uri) {
-
-	}
-
-	/**
-	 * Enter description here ...
-	 * return $this->crud->render();
+	 * Render CRUD form and grid
+	 * Usage example: return $this->crud->render();
+	 * @return NULL
 	 */
 	public function render() {
-		return 'CRUD';
+		return print_r($this->data, TRUE);
 	}
 
 }
