@@ -12,7 +12,6 @@ class Crud {
 	private $select = NULL;
 	private $update = NULL;
 	private $delete = NULL;
-	private $datasource = NULL;
 	private $properties = NULL;
 	private $key_field = NULL;
 	private $CI = NULL;
@@ -29,17 +28,23 @@ class Crud {
 	 */
 	private function _button_insert() {
 		$data = array(
-			'open' => array(
-				'uri' => $this->properties['uri'],
-				'name' => $this->properties['name'].'_button_insert'
+			0 => array(
+				'open' => array(
+					'uri' => $this->properties['uri'],
+					'name' => $this->properties['name'].'_button_insert',
+				)
 			),
-			'hidden' => array(
-				'name' => 'crud_action',
-				'value' => 'insert',
+			1 => array(
+				'hidden' => array(
+					'name' => 'crud_action',
+					'value' => 'insert',
+				),
 			),
-			'submit' => array(
-				'name' => 'crud_submit_insert',
-				'value' => _('Add')
+			2 => array(
+				'submit' => array(
+					'name' => 'crud_submit_insert',
+					'value' => _('Add'),
+				),
 			),
 		);
 		$this->CI->form->set_data($data);
@@ -55,14 +60,32 @@ class Crud {
 	 */
 	private function _form_insert() {
 		$data = array(
-			'open' => array(
-				'uri' => $this->properties['uri'],
-				'name' => $this->properties['name'].'_form_insert'
+			0 => array(
+				'open' => array(
+					'uri' => $this->properties['uri'],
+					'name' => $this->properties['name'].'_form_insert',
+				),
 			),
-			'hidden' => array(
-				'name' => 'crud_action',
-				'value' => 'insert_action',
+			1 => array(
+				'hidden' => array(
+					'name' => 'crud_action',
+					'value' => 'insert_action',
+				),
 			),
+		);
+		foreach ($this->insert as $row) {
+			$data[] = array(
+				$row['type'] => $row
+			);
+			if ($row['confirm']) {
+				$row['name'] = $row['name'].'_confirm';
+				$row['label'] = $row['confirm_label'];
+				$data[] = array(
+					$row['type'] => $row
+				);
+			}
+		}
+		$data[] = array(
 			'submit' => array(
 				'name' => 'crud_submit_insert',
 				'value' => _('Add')
@@ -81,14 +104,32 @@ class Crud {
 	 */
 	private function _form_update() {
 		$data = array(
-			'open' => array(
-				'uri' => $this->properties['uri'],
-				'name' => $this->properties['name'].'_form_update'
+			0 => array(
+				'open' => array(
+					'uri' => $this->properties['uri'],
+					'name' => $this->properties['name'].'_form_update',
+				),
 			),
-			'hidden' => array(
-				'name' => 'crud_action',
-				'value' => 'update_action',
+			1 => array(
+				'hidden' => array(
+					'name' => 'crud_action',
+					'value' => 'update_action',
+				),
 			),
+		);
+		foreach ($this->update as $row) {
+			$data[] = array(
+				$row['type'] => $row
+			);
+			if ($row['confirm']) {
+				$row['name'] = $row['name'].'_confirm';
+				$row['label'] = $row['confirm_label'];
+				$data[] = array(
+					$row['type'] => $row
+				);
+			}
+		}
+		$data[] = array(
 			'submit' => array(
 				'name' => 'crud_submit_update',
 				'value' => _('Edit')
@@ -107,14 +148,32 @@ class Crud {
 	 */
 	private function _form_delete() {
 		$data = array(
-			'open' => array(
-				'uri' => $this->properties['uri'],
-				'name' => $this->properties['name'].'_form_delete'
+			0 => array(
+				'open' => array(
+					'uri' => $this->properties['uri'],
+					'name' => $this->properties['name'].'_form_delete',
+				),
 			),
-			'hidden' => array(
-				'name' => 'crud_action',
-				'value' => 'delete_action',
+			1 => array(
+				'hidden' => array(
+					'name' => 'crud_action',
+					'value' => 'delete_action',
+				),
 			),
+		);
+		foreach ($this->delete as $row) {
+			$data[] = array(
+				$row['type'] => $row
+			);
+			if ($row['confirm']) {
+				$row['name'] = $row['name'].'_confirm';
+				$row['label'] = $row['confirm_label'];
+				$data[] = array(
+					$row['type'] => $row
+				);
+			}
+		}
+		$data[] = array(
 			'submit' => array(
 				'name' => 'crud_submit_delete',
 				'value' => _('Del')
@@ -144,15 +203,16 @@ class Crud {
 	 * @return string $returns Dropdown
 	 */
 	private function _dropdown() {
-		$options_update = array();
+		$options = array();
 		if ($this->properties['update']) {
-			$options_update = array('update' => _('Update'));
+			$options1 = array('update' => _('Update'));
+			$options = array_merge($options, $options1);
 		}
 		$options_delete = array();
 		if ($this->properties['delete']) {
-			$options_delete = array('delete' => _('Delete'));
+			$options1 = array('delete' => _('Delete'));
+			$options = array_merge($options, $options1);
 		}
-		$options = array_merge($options_update, $options_delete);
 		$dropdown = array(
 			'name' => 'crud_action', 
 			'options' => $options
@@ -183,10 +243,10 @@ class Crud {
 		
 		if (count($this->select) > 0) {
 			foreach ($this->select as $row) {
-				$heading[] = $row['title']; // columns
-				$select_fields[] = $row['field'];
+				$heading[] = $row['label']; // columns
+				$select_fields[] = $row['name'];
 				if (isset($row['key'])) {
-					$this->key_field = $row['field'];
+					$this->key_field = $row['name'];
 				}
 			}
 			
@@ -203,7 +263,7 @@ class Crud {
 			$this->CI->table->set_heading($heading);
 			
 			$this->CI->db->select($select_fields);
-			$query = $this->CI->db->get($this->datasource['name']);
+			$query = $this->CI->db->get($this->properties['datasource']);
 			$j =0;
 			foreach ($query->result_array() as $row) {
 				$j++;
@@ -244,7 +304,6 @@ class Crud {
 		$this->select = $data['select'];
 		$this->update = $data['update'];
 		$this->delete = $data['delete'];
-		$this->datasource = $data['datasource'];
 		$this->properties = $data['properties'];
 	}
 
@@ -261,18 +320,21 @@ class Crud {
 				$returns .= $this->_form_insert();
 				break;
 			case 'insert_action':
+				print_r($_POST);
 				$returns .= "INSERTED";
 				break;
 			case 'update':
 				$returns .= $this->_form_update();
 				break;
 			case 'update_action':
+				print_r($_POST);
 				$returns .= "UPDATED";
 				break;
 			case 'delete':
 				$returns .= $this->_form_delete();
 				break;
 			case 'delete_action':
+				print_r($_POST);
 				$returns .= "DELETED";
 				break;
 			default:

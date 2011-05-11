@@ -29,25 +29,33 @@ class SC_template extends CI_Model {
 	 */
 	public function login_form($id_css_prefix='login') {
 		$data = array(
-			'open' => array(
-				'uri' => 'process/login',
-				'name' => $id_css_prefix.'_form'
+			0 => array(
+				'open' => array(
+					'uri' => 'process/login',
+					'name' => $id_css_prefix.'_form',
+				),
 			),
-			'input' => array(
-				'name' => 'username',
-				'id' => $id_css_prefix.'_username',
-				'label' => 'Username'
+			1 => array(
+				'input' => array(
+					'name' => 'username',
+					'id' => $id_css_prefix.'_username',
+					'label' => 'Username',
+				),
 			),
-			'password' => array(
-				'name' => 'password',
-				'id' => $id_css_prefix.'_password',
-				'label' => 'Password'
+			2 => array(
+				'password' => array(
+					'name' => 'password',
+					'id' => $id_css_prefix.'_password',
+					'label' => 'Password',
+				),
 			),
-			'submit' => array(
-				'name' => 'submit',
-				'id' => $id_css_prefix.'_submit',
-				'value' => _('Submit')
-			)
+			3 => array(
+				'submit' => array(
+					'name' => 'submit',
+					'id' => $id_css_prefix.'_submit',
+					'value' => _('Submit'),
+				),
+			),
 		);
 		$this->form->set_data($data);
 		$data = $this->form->render();

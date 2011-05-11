@@ -41,75 +41,65 @@ class Users extends CI_Controller {
 		$data = array(
 			'insert' => array(
 				array (
-					'field' => 'username',
-					'title' => _('Username'),
-					'type' => 'text',
-					'size' => 50,
-					'maxlength' => 20,
+					'name' => 'username',
+					'label' => _('Username'),
+					'type' => 'input',
 					'unique' => TRUE,
-					'readonly' => FALSE 
 				),
 				array(
-					'field' => 'password',
-					'title' => _('Password'),
+					'name' => 'password',
+					'label' => _('Password'),
 					'type' => 'password',
-					'size' => 50,
-					'maxlength' => 50,
 					'confirm' => TRUE,
-					'confirm_title' => _('Confirm password'),
-					'readonly' => FALSE
-				)
+					'confirm_label' => _('Confirm password'),
+				),
 			),
 			'select' => array(
 				array(
-					'field' => 'id',
-					'title' => 'ID',
-					'key' => TRUE
+					'name' => 'id',
+					'label' => 'ID',
+					'key' => TRUE,
 				),
 				array(
-					'field' => 'username',
-					'title' => 'Username'
-				)
+					'name' => 'username',
+					'label' => 'Username',
+				),
 			),
 			'update' => array(
 				array (
-					'field' => 'username',
-					'title' => _('Username'),
-					'type' => 'text',
-					'size' => 50,
-					'readonly' => TRUE 
+					'name' => 'username',
+					'label' => _('Username'),
+					'type' => 'input',
+					'value' => '@username',
+					'disabled' => TRUE,
 				),
 				array(
-					'field' => 'password',
-					'title' => _('Password'),
+					'name' => 'password',
+					'label' => _('Password'),
 					'type' => 'password',
-					'size' => 50,
-					'maxlength' => 50,
 					'confirm' => TRUE,
-					'confirm_title' => _('Confirm password'),
-					'readonly' => FALSE
-				)
+					'confirm_label' => _('Confirm password'),
+				),
 			),
 			'delete' => array(
 				array (
-					'field' => 'username',
-					'title' => _('Username'),
-					'type' => 'text',
-					'size' => 50
-				)
-			),
-			'datasource' => array(
-				'name' => 'sc_users'
+					'name' => 'username',
+					'label' => _('Username'),
+					'type' => 'input',
+					'value' => '@username',
+					'disabled' => TRUE,
+				),
 			),
 			'properties' => array(
+				'datasource' => 'sc_users',
 				'name' => 'users',
 				'uri' => 'users',
 				'index_column' => TRUE,
 				'index_column_start' => 1,
 				'insert' => TRUE,
 				'update' => TRUE,
-				'delete' => TRUE
-			)
+				'delete' => TRUE,
+			),
 		);
 		$this->crud->set_data($data);
 		return $this->crud->render();

@@ -47,6 +47,9 @@ class Form {
 	public function checkbox($data=NULL) {
 		$returns = "<div id='form_checkbox'>";
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
+		if ($data['checked']) {
+			$data['checked'] =  'checked';
+		}
 		$returns .= form_checkbox($data);
 		$returns .= "</div>";
 		return $returns;
@@ -60,6 +63,9 @@ class Form {
 	public function radio($data=NULL) {
 		$returns = "<div id='form_radio'>";
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
+		if ($data['checked']) {
+			$data['checked'] =  'checked';
+		}
 		$returns .= form_radio($data);
 		$returns .= "</div>";
 		return $returns;
@@ -99,6 +105,22 @@ class Form {
 	}
 
 	/**
+	 * Create label
+	 * @param array $data Data array
+	 * @return string $returns Label
+	 */
+	public function label($data=NULL) {
+		$returns = "<div id='form_label'>";
+		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
+		if ($data['label']) {
+			$attr = array('id' => $data['id'].'_label');
+			$returns .= form_label($data['label'], $data['name'], $attr);
+		}
+		$returns .= "</div>";
+		return $returns;
+	}
+
+	/**
 	 * Create text input
 	 * @param array $data Data array
 	 * @return string $returns Text input
@@ -109,6 +131,12 @@ class Form {
 		if ($data['label']) {
 			$attr = array('id' => $data['id'].'_label');
 			$returns .= form_label($data['label'], $data['name'], $attr);
+		}
+		if ($data['readonly']) {
+			$data['readonly'] = 'readonly';
+		}
+		if ($data['disabled']) {
+			$data['disabled'] = 'disabled';
 		}
 		$returns .= form_input($data);
 		$returns .= "</div>";
@@ -208,15 +236,17 @@ class Form {
 		$returns = NULL;
 		$form_open_exists = FALSE;
 		$form_close_exists = FALSE;
-		foreach ($this->data as $key => $val) {
-			if (method_exists($this->form_name, $key)) {
-				$returns .= call_user_func_array(array($this->form_name, $key), array($val));
-			}
-			if ($key == 'open') {
-				$form_open_exists = TRUE;
-			}
-			if ($key == 'close') {
-				$form_close_exists = TRUE;
+		foreach ($this->data as $row) {
+			foreach ($row as $key => $val) {
+				if (method_exists($this->form_name, $key)) {
+					$returns .= call_user_func_array(array($this->form_name, $key), array($val));
+				}
+				if ($key == 'open') {
+					$form_open_exists = TRUE;
+				}
+				if ($key == 'close') {
+					$form_close_exists = TRUE;
+				}
 			}
 		}
 		if ($form_open_exists && !$form_close_exists) {

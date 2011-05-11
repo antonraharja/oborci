@@ -49,80 +49,102 @@ CRUD data array:
 		$data = array(
 			'insert' => array(
 				array (
-					'field' => 'name',
-					'title' => _('Role name'),
-					'type' => 'text',
-					'size' => 50,
-					'maxlength' => 50,
+					'name' => 'username',
+					'label' => _('Username'),
+					'type' => 'input',
 					'unique' => TRUE,
-					'readonly' => FALSE 
-				)
+				),
+				array(
+					'name' => 'password',
+					'label' => _('Password'),
+					'type' => 'password',
+					'confirm' => TRUE,
+					'confirm_label' => _('Confirm password'),
+				),
 			),
 			'select' => array(
 				array(
-					'field' => 'id',
-					'title' => 'ID',
-					'key' => TRUE
+					'name' => 'id',
+					'label' => 'ID',
+					'key' => TRUE,
 				),
 				array(
-					'field' => 'name',
-					'title' => 'Role name'
-				)
+					'name' => 'username',
+					'label' => 'Username',
+				),
 			),
 			'update' => array(
+				array (
+					'name' => 'username',
+					'label' => _('Username'),
+					'type' => 'input',
+					'value' => '@username',
+					'disabled' => TRUE,
+				),
 				array(
-					'field' => 'name',
-					'title' => _('Role name'),
-					'type' => 'text',
-					'size' => 50,
-					'maxlength' => 50,
-					'unique' => TRUE,
-					'readonly' => FALSE
-				)
+					'name' => 'password',
+					'label' => _('Password'),
+					'type' => 'password',
+					'confirm' => TRUE,
+					'confirm_label' => _('Confirm password'),
+				),
 			),
 			'delete' => array(
-				array(
-					'field' => 'name',
-					'title' => _('Role name'),
-					'type' => 'text',
-					'size' => 50,
-					'maxlength' => 50
-				)
-			),
-			'datasource' => array(
-				'name' => 'sc_roles'
+				array (
+					'name' => 'username',
+					'label' => _('Username'),
+					'type' => 'input',
+					'value' => '@username',
+					'disabled' => TRUE,
+				),
 			),
 			'properties' => array(
-				'name' => 'roles',
-				'uri' => 'roles',
-				'index_column' => FALSE,
+				'datasource' => 'sc_users',
+				'name' => 'users',
+				'uri' => 'users',
+				'index_column' => TRUE,
 				'index_column_start' => 1,
 				'insert' => TRUE,
 				'update' => TRUE,
-				'delete' => TRUE
-			)
+				'delete' => TRUE,
+			),
 		);
+		$this->crud->set_data($data);
+		return $this->crud->render();
 
 
 
 FORM data array:
 
 		$data = array(
-			'form' => array(
-				'uri' => $this->properties['uri'],
-				'name' => $this->properties['name'].'_button_insert'
+			0 => array(
+				'open' => array(
+					'uri' => 'process/login',
+					'name' => $id_css_prefix.'_form',
+				),
 			),
-			'hidden' => array(
-				array(
-					'name' => 'crud_action',
-					'value' => 'insert',
-				)
+			1 => array(
+				'input' => array(
+					'name' => 'username',
+					'id' => $id_css_prefix.'_username',
+					'label' => 'Username',
+				),
 			),
-			'submit' => array(
-				array(
-					'name' => 'crud_submit_insert',
-					'value' => _('Add')
-				)
-			)
+			2 => array(
+				'password' => array(
+					'name' => 'password',
+					'id' => $id_css_prefix.'_password',
+					'label' => 'Password',
+				),
+			),
+			3 => array(
+				'submit' => array(
+					'name' => 'submit',
+					'id' => $id_css_prefix.'_submit',
+					'value' => _('Submit'),
+				),
+			),
 		);
-  
+		$this->form->set_data($data);
+		$data = $this->form->render();
+

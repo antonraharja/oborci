@@ -42,58 +42,51 @@ class Roles extends CI_Controller {
 		$data = array(
 			'insert' => array(
 				array (
-					'field' => 'name',
-					'title' => _('Role name'),
-					'type' => 'text',
-					'size' => 50,
-					'maxlength' => 50,
+					'name' => 'name',
+					'label' => _('Role name'),
+					'type' => 'input',
 					'unique' => TRUE,
-					'readonly' => FALSE 
-				)
+				),
 			),
 			'select' => array(
 				array(
-					'field' => 'id',
-					'title' => 'ID',
-					'key' => TRUE
+					'name' => 'id',
+					'label' => 'ID',
+					'key' => TRUE,
 				),
 				array(
-					'field' => 'name',
-					'title' => 'Role name'
-				)
+					'name' => 'name',
+					'label' => _('Role name'),
+				),
 			),
 			'update' => array(
 				array(
-					'field' => 'name',
-					'title' => _('Role name'),
-					'type' => 'text',
-					'size' => 50,
-					'maxlength' => 50,
+					'name' => 'name',
+					'label' => _('Role name'),
+					'type' => 'input',
 					'unique' => TRUE,
-					'readonly' => FALSE
-				)
+					'value' => '@name',
+					'disabled' => TRUE,
+				),
 			),
 			'delete' => array(
 				array(
-					'field' => 'name',
-					'title' => _('Role name'),
-					'type' => 'text',
-					'size' => 50,
-					'maxlength' => 50
-				)
-			),
-			'datasource' => array(
-				'name' => 'sc_roles'
+					'name' => 'name',
+					'label' => _('Role name'),
+					'type' => 'input',
+					'unique' => TRUE,
+					'value' => '@name',
+					'disabled' => TRUE,
+				),
 			),
 			'properties' => array(
+				'datasource' => 'sc_roles',
 				'name' => 'roles',
 				'uri' => 'roles',
-				'index_column' => FALSE,
-				'index_column_start' => 1,
 				'insert' => TRUE,
 				'update' => TRUE,
-				'delete' => TRUE
-			)
+				'delete' => TRUE,
+			),
 		);
 		$this->crud->set_data($data);
 		return $this->crud->render();
