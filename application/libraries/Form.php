@@ -138,6 +138,11 @@ class Form {
 		if ($data['disabled']) {
 			$data['disabled'] = 'disabled';
 		}
+		unset($data['label']);
+		unset($data['unique']);
+		unset($data['confirm']);
+		unset($data['confirm_label']);
+		unset($data['show_value']);
 		$returns .= form_input($data);
 		$returns .= "</div>";
 		return $returns;
@@ -155,6 +160,11 @@ class Form {
 			$attr = array('id' => $data['id'].'_label');
 			$returns .= form_label($data['label'], $data['name'], $attr);
 		}
+		unset($data['label']);
+		unset($data['unique']);
+		unset($data['confirm']);
+		unset($data['confirm_label']);
+		unset($data['show_value']);
 		$returns .= form_password($data);
 		$returns .= "</div>";
 		return $returns;

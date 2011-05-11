@@ -65,18 +65,13 @@ class Roles extends CI_Controller {
 					'label' => _('Role name'),
 					'type' => 'input',
 					'unique' => TRUE,
-					'value' => '@name',
-					'disabled' => TRUE,
+					'show_value' => TRUE,
 				),
 			),
 			'delete' => array(
 				array(
 					'name' => 'name',
 					'label' => _('Role name'),
-					'type' => 'input',
-					'unique' => TRUE,
-					'value' => '@name',
-					'disabled' => TRUE,
 				),
 			),
 			'properties' => array(
@@ -86,6 +81,10 @@ class Roles extends CI_Controller {
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE,
+				'grid_form_title' => '<p><h1>Role Management</h1></p>',
+				'insert_form_title' => '<p><h2>Insert Data</h2></p>',
+				'update_form_title' => '<p><h2>Update Data</h2></p>',
+				'delete_form_title' => '<p><h2>Delete Data</h2></p>',
 			),
 		);
 		$this->crud->set_data($data);

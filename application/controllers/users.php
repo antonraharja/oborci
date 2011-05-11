@@ -59,6 +59,7 @@ class Users extends CI_Controller {
 					'name' => 'id',
 					'label' => 'ID',
 					'key' => TRUE,
+					'hidden' => TRUE,
 				),
 				array(
 					'name' => 'username',
@@ -70,7 +71,7 @@ class Users extends CI_Controller {
 					'name' => 'username',
 					'label' => _('Username'),
 					'type' => 'input',
-					'value' => '@username',
+					'show_value' => TRUE,
 					'disabled' => TRUE,
 				),
 				array(
@@ -85,9 +86,6 @@ class Users extends CI_Controller {
 				array (
 					'name' => 'username',
 					'label' => _('Username'),
-					'type' => 'input',
-					'value' => '@username',
-					'disabled' => TRUE,
 				),
 			),
 			'properties' => array(
@@ -99,6 +97,10 @@ class Users extends CI_Controller {
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE,
+				'grid_form_title' => '<p><h1>User Management</h1></p>',
+				'insert_form_title' => '<p><h2>Insert Data</h2></p>',
+				'update_form_title' => '<p><h2>Update Data</h2></p>',
+				'delete_form_title' => '<p><h2>Delete Data</h2></p>',
 			),
 		);
 		$this->crud->set_data($data);
