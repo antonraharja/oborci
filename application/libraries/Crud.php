@@ -41,11 +41,11 @@ class Crud {
 	 * Create insert or add button
 	 * @return string $data Insert or add button
 	 */
-	private function _insert_button() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_insert_button');
+	private function _button_insert() {
+		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_button_insert');
 		$this->CI->form->hidden('crud_action', 'insert');
 		$this->CI->form->submit(_('Add'), 'crud_submit_insert');
-		$data = "<div id='crud_insert_button'>";
+		$data = "<div id='crud_button_insert'>";
 		$data .= $this->CI->form->get();
 		$data .= "</div>";
 		$this->CI->form->clear();
@@ -56,11 +56,11 @@ class Crud {
 	 * Create update or edit button
 	 * @return string $data Update or edit button
 	 */
-	private function _update_button() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_update_button');
+	private function _button_update() {
+		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_button_update');
 		$this->CI->form->hidden('crud_action', 'update');
 		$this->CI->form->submit(_('Edit'), 'crud_submit_update');
-		$data = "<div id='crud_update_button'>";
+		$data = "<div id='crud_button_update'>";
 		$data .= $this->CI->form->get();
 		$data .= "</div>";
 		$this->CI->form->clear();
@@ -71,11 +71,11 @@ class Crud {
 	 * Create delete or del button
 	 * @return string $data Delete or del button
 	 */
-	private function _delete_button() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_delete_button');
+	private function _button_delete() {
+		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_button_delete');
 		$this->CI->form->hidden('crud_action', 'delete');
 		$this->CI->form->submit(_('Del'), 'crud_submit_delete');
-		$data = "<div id='crud_delete_button'>";
+		$data = "<div id='crud_button_delete'>";
 		$data .= $this->CI->form->get();
 		$data .= "</div>";
 		$this->CI->form->clear();
@@ -86,11 +86,11 @@ class Crud {
 	 * Create insert or add form
 	 * @return string $data Insert or add form
 	 */
-	private function _insert_form() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_insert_form');
-		$this->CI->form->hidden('crud_action', 'insert_handle');
+	private function _form_insert() {
+		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_form_insert');
+		$this->CI->form->hidden('crud_action', 'insert_action');
 		$this->CI->form->submit(_('Submit'), 'crud_submit_insert');
-		$data = "<div id='crud_insert_form'>";
+		$data = "<div id='crud_form_insert'>";
 		$data .= $this->CI->form->get();
 		$data .= "</div>";
 		$this->CI->form->clear();
@@ -101,11 +101,11 @@ class Crud {
 	 * Create update or edit form
 	 * @return string $data Update or edit form
 	 */
-	private function _update_form() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_update_form');
-		$this->CI->form->hidden('crud_action', 'update_handle');
+	private function _form_update() {
+		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_form_update');
+		$this->CI->form->hidden('crud_action', 'update_action');
 		$this->CI->form->submit(_('Submit'), 'crud_submit_update');
-		$data = "<div id='crud_update_form'>";
+		$data = "<div id='crud_form_update'>";
 		$data .= $this->CI->form->get();
 		$data .= "</div>";
 		$this->CI->form->clear();
@@ -116,11 +116,11 @@ class Crud {
 	 * Create delete or del form
 	 * @return string $data Delete or del form
 	 */
-	private function _delete_form() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_delete_form');
-		$this->CI->form->hidden('crud_action', 'delete_handle');
+	private function _form_delete() {
+		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_form_delete');
+		$this->CI->form->hidden('crud_action', 'delete_action');
 		$this->CI->form->submit(_('Submit'), 'crud_submit_delete');
-		$data = "<div id='crud_delete_form'>";
+		$data = "<div id='crud_form_delete'>";
 		$data .= $this->CI->form->get();
 		$data .= "</div>";
 		$this->CI->form->clear();
@@ -138,7 +138,7 @@ class Crud {
 		if ($this->properties['index_column']) {
 			$column_size = 1;
 			$index_column_count = $this->properties['index_column_start'];
-			$heading[] = '*';
+			$heading[] = _('No');
 		}
 		if (count($this->select) > 0) {
 			foreach ($this->select as $row) {
@@ -165,7 +165,7 @@ class Crud {
 					$list[] = $row[$select_fields[$i]];
 				}
 				if ($this->properties['update'] || $this->properties['delete']) {
-					$list[] = $this->_update_button() .' '.$this->_delete_button();
+					$list[] = $this->_button_update() .' '.$this->_button_delete();
 				}
 			}
 			$column_size += count($this->select);
@@ -186,33 +186,29 @@ class Crud {
 		$crud_action = trim(strtolower($this->CI->input->post('crud_action')));
 		switch ($crud_action) {
 			case 'insert':
-				$data .= $this->_insert_form();
+				$data .= $this->_form_insert();
 				break;
-			case 'insert_handle':
+			case 'insert_action':
 				$data .= "INSERTED";
 				break;
 			case 'update':
-				$data .= $this->_update_form();
+				$data .= $this->_form_update();
 				break;
-			case 'update_handle':
+			case 'update_action':
 				$data .= "UPDATED";
 				break;
 			case 'delete':
-				$data .= $this->_delete_form();
+				$data .= $this->_form_delete();
 				break;
-			case 'delete_handle':
+			case 'delete_action':
 				$data .= "DELETED";
 				break;
 			default:
-				// insert button
-				if ($this->properties['insert']) {
-					$data .= $this->_insert_button();
-				}
 				// grid
 				$data .= $this->_grid();
 				// insert button
 				if ($this->properties['insert']) {
-					$data .= $this->_insert_button();
+					$data .= $this->_button_insert();
 				}
 		}
 		return $data;

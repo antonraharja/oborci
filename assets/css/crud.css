@@ -4,16 +4,16 @@
     Author     : Anton Raharja
 */
 
-#crud_insert_button {	
+#crud_button_insert {	
 	float: none;
 }
 
-#crud_update_button {
+#crud_button_update {
 	padding-right: 5px;
 	float: left;
 }
 
-#crud_delete_button {
+#crud_button_delete {
 	float: left;
 }
 
