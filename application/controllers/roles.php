@@ -27,7 +27,7 @@ class Roles extends CI_Controller {
 	 * Index Page for this controller.
 	 *
 	 */
-	public function index() {
+	public function index($param=NULL) {
 		if ($this->SC_ACL->get_access()) {
 			$data['menu']['box'] = $this->SC_template->menu_box();
 			$data['login'] = $this->SC_auth->get_login();
@@ -77,7 +77,8 @@ class Roles extends CI_Controller {
 			'properties' => array(
 				'datasource' => 'sc_roles',
 				'name' => 'roles',
-				'uri' => 'roles',
+				'uri' => 'roles/index',
+				'pagination_per_page' => 2,
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE,

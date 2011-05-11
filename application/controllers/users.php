@@ -91,9 +91,10 @@ class Users extends CI_Controller {
 			'properties' => array(
 				'datasource' => 'sc_users',
 				'name' => 'users',
-				'uri' => 'users',
+				'uri' => 'users/index',
 				'index_column' => TRUE,
 				'index_column_start' => 1,
+				'pagination_per_page' => 2,
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE,

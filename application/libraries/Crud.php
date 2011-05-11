@@ -17,12 +17,15 @@ class Crud {
 	private $select_fields = NULL;
 	private $update_fields = NULL;
 	private $delete_fields = NULL;
+	private $config = NULL;
 	private $CI = NULL;
 
 	function __construct() {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
-		$this->CI->load->library(array('table', 'Form'));
+		$this->CI->load->library(array('table', 'pagination', 'Form'));
+		$this->CI->load->config('crud', TRUE);
+		$this->config = $this->CI->config->item('crud');		
 	}
 
 	/**
@@ -312,22 +315,25 @@ class Crud {
 		$returns = NULL;
 		$heading = NULL;
 		
+		$pagination['total_rows'] = $this->CI->db->count_all($this->properties['datasource']);
+		$pagination['per_page'] = isset($this->properties['pagination_per_page']) ? $this->properties['pagination_per_page'] : '10';
+		
 		if ($this->properties['index_column']) {
 			$column_size = 1;
 			$index_column_count = $this->properties['index_column_start'];
-			$heading[] = _('No'); // first column
+			$heading[] = "<div id='table_heading_index'>"._('No')."</div>"; // first column
 		}
 		if (count($this->select) > 0) {
 			foreach ($this->select as $row) {
 				if (! $row['hidden']) {
 					$column_size++;
-					$heading[] = $row['label']; // columns
+					$heading[] = "<div id='table_heading_column'>".$row['label']."</div>"; // columns
 				}
 			}
 		}			
 		if ($this->properties['update'] || $this->properties['delete']) {
 			$column_size += 1;
-			$heading[] = _('Action'); // last column
+			$heading[] = "<div id='table_heading_action'>".$this->CI->form->checkbox()."</div>"; // last column
 		}
 		
 		$returns = "<div id='crud_grid'>";
@@ -338,6 +344,10 @@ class Crud {
 			$this->CI->table->set_heading($heading);
 			
 			$this->CI->db->select($this->select_fields);
+			$this->CI->db->limit(
+				$pagination['per_page'], 
+				$this->CI->uri->segment($this->CI->uri->total_segments()) * ($pagination['per_page'] - 1)
+			);
 			$query = $this->CI->db->get($this->properties['datasource']);
 			$j =0;
 			foreach ($query->result_array() as $row) {
@@ -356,10 +366,25 @@ class Crud {
 					$list[] = $this->_checkbox($row[$this->key_field]); // action column
 				}
 			}
+			$total_rows = $j;
+			
+			if ($this->properties['table_template']) {			
+				$this->CI->table->set_template($this->properties['table_template']);
+			} else {
+				$this->CI->table->set_template($this->config['table_template']);
+			}
 			
 			$new_list = $this->CI->table->make_columns($list, $column_size);
 			$returns .= $this->CI->table->generate($new_list);
 
+			$config['base_url'] = base_url().'/'.$this->properties['uri'];
+			$config['total_rows'] = $pagination['total_rows'];
+			$config['per_page'] = $pagination['per_page'];
+			$this->CI->pagination->initialize($config);
+			$returns .= "<div id='crud_pagination'>";
+			$returns .= $this->CI->pagination->create_links();
+			$returns .= "</div>"; 		
+		
 			if ($this->properties['update'] || $this->properties['delete']) {
 				$returns .= $this->_dropdown();
 				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit_form', 'value' => _('Go')));
@@ -367,7 +392,6 @@ class Crud {
 			$returns .= $this->CI->form->close();
 		}
 		$returns .= "</div>";
-		
 		return $returns;
 	}
 

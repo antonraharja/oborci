@@ -17,3 +17,10 @@
 	float: left;
 }
 
+#crud_select {
+	float: left;
+}
+
+#crud_submit_form {
+	float: none;
+}
