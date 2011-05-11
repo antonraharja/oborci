@@ -44,109 +44,64 @@ RewriteRule ^(.*)$ index.php/$1 [L]
 
 
 
-crud data array:
+CRUD data array:
 
-Array
-(
-    [insert] => Array
-        (
-            [0] => Array
-                (
-                    [field] => username
-                    [title] => Username
-                    [type] => text
-                    [size] => 50
-                    [maxlength] => 20
-                    [unique] => 1
-                    [readonly] => 
-                )
-
-            [1] => Array
-                (
-                    [field] => password
-                    [title] => Password
-                    [type] => password
-                    [size] => 50
-                    [maxlength] => 50
-                    [confirm] => 1
-                    [confirm_title] => Confirm password
-                    [readonly] => 
-                )
-
-        )
-
-    [select] => Array
-        (
-            [0] => Array
-                (
-                    [field] => id
-                    [title] => ID
-                    [key] => 1
-                )
-
-            [1] => Array
-                (
-                    [field] => username
-                    [title] => Username
-                )
-
-        )
-
-    [update] => Array
-        (
-            [0] => Array
-                (
-                    [field] => username
-                    [title] => Username
-                    [type] => text
-                    [size] => 50
-                    [readonly] => 1
-                )
-
-            [1] => Array
-                (
-                    [field] => password
-                    [title] => Password
-                    [type] => password
-                    [size] => 50
-                    [maxlength] => 50
-                    [confirm] => 1
-                    [confirm_title] => Confirm password
-                    [readonly] => 
-                )
-
-        )
-
-    [delete] => Array
-        (
-            [0] => Array
-                (
-                    [field] => username
-                    [title] => Username
-                    [type] => text
-                    [size] => 50
-                )
-
-        )
-
-    [datasource] => Array
-        (
-            [name] => sc_users
-        )
-
-    [properties] => Array
-        (
-        	['name'] => 'users',
-            ['uri'] => 'index',
-        	[index_column] => 1
-        	[index_column_start] => 1
-            [insert] => 1
-            [update] => 1
-            [delete] => 1
-        )
-
-)
-
+		$data = array(
+			'insert' => array(
+				array (
+					'field' => 'name',
+					'title' => _('Role name'),
+					'type' => 'text',
+					'size' => 50,
+					'maxlength' => 50,
+					'unique' => TRUE,
+					'readonly' => FALSE 
+				)
+			),
+			'select' => array(
+				array(
+					'field' => 'id',
+					'title' => 'ID',
+					'key' => TRUE
+				),
+				array(
+					'field' => 'name',
+					'title' => 'Role name'
+				)
+			),
+			'update' => array(
+				array(
+					'field' => 'name',
+					'title' => _('Role name'),
+					'type' => 'text',
+					'size' => 50,
+					'maxlength' => 50,
+					'unique' => TRUE,
+					'readonly' => FALSE
+				)
+			),
+			'delete' => array(
+				array(
+					'field' => 'name',
+					'title' => _('Role name'),
+					'type' => 'text',
+					'size' => 50,
+					'maxlength' => 50
+				)
+			),
+			'datasource' => array(
+				'name' => 'sc_roles'
+			),
+			'properties' => array(
+				'name' => 'roles',
+				'uri' => 'roles',
+				'index_column' => FALSE,
+				'index_column_start' => 1,
+				'insert' => TRUE,
+				'update' => TRUE,
+				'delete' => TRUE
+			)
+		);
 
 
 

@@ -19,13 +19,13 @@ class Crud {
 
 	function __construct() {
 		$this->CI =& get_instance();
-		$this->CI->load->library('Form');
-		$this->CI->load->library('table');
+		$this->CI->load->database();
+		$this->CI->load->library(array('table', 'Form'));
 	}
 
 	/**
 	 * Create insert or add button
-	 * @return string $data Insert or add button
+	 * @return string $returns Insert or add button
 	 */
 	private function _button_insert() {
 		$data = array(
@@ -51,32 +51,86 @@ class Crud {
 
 	/**
 	 * Create insert or add form
-	 * @return string $data Insert or add form
+	 * @return string $returns Insert or add form
 	 */
 	private function _form_insert() {
-		return $data;
+		$data = array(
+			'open' => array(
+				'uri' => $this->properties['uri'],
+				'name' => $this->properties['name'].'_form_insert'
+			),
+			'hidden' => array(
+				'name' => 'crud_action',
+				'value' => 'insert_action',
+			),
+			'submit' => array(
+				'name' => 'crud_submit_insert',
+				'value' => _('Add')
+			),
+		);
+		$this->CI->form->set_data($data);
+		$returns = "<div id='crud_form_insert'>";
+		$returns .= $this->CI->form->render();
+		$returns .= "</div>";
+		return $returns;
 	}
 
 	/**
 	 * Create update or edit form
-	 * @return string $data Update or edit form
+	 * @return string $returns Update or edit form
 	 */
 	private function _form_update() {
-		return $data;
+		$data = array(
+			'open' => array(
+				'uri' => $this->properties['uri'],
+				'name' => $this->properties['name'].'_form_update'
+			),
+			'hidden' => array(
+				'name' => 'crud_action',
+				'value' => 'update_action',
+			),
+			'submit' => array(
+				'name' => 'crud_submit_update',
+				'value' => _('Edit')
+			),
+		);
+		$this->CI->form->set_data($data);
+		$returns = "<div id='crud_form_update'>";
+		$returns .= $this->CI->form->render();
+		$returns .= "</div>";
+		return $returns;
 	}
 
 	/**
 	 * Create delete or del form
-	 * @return string $data Delete or del form
+	 * @return string $returns Delete or del form
 	 */
 	private function _form_delete() {
-		return $data;
+		$data = array(
+			'open' => array(
+				'uri' => $this->properties['uri'],
+				'name' => $this->properties['name'].'_form_delete'
+			),
+			'hidden' => array(
+				'name' => 'crud_action',
+				'value' => 'delete_action',
+			),
+			'submit' => array(
+				'name' => 'crud_submit_delete',
+				'value' => _('Del')
+			),
+		);
+		$this->CI->form->set_data($data);
+		$returns = "<div id='crud_form_delete'>";
+		$returns .= $this->CI->form->render();
+		$returns .= "</div>";
+		return $returns;
 	}
 
 	/**
 	 * Create checkbox on form
 	 * @param string $key_value Value of key field
-	 * @return string $data Checkbox
+	 * @return string $returns Checkbox
 	 */
 	private function _checkbox($key_value) {
 		$returns = "<div id='crud_checkbox'>";
@@ -87,7 +141,7 @@ class Crud {
 
 	/**
 	 * Create dropdown on form
-	 * @return string $data Dropdown
+	 * @return string $returns Dropdown
 	 */
 	private function _dropdown() {
 		$options_update = array();
@@ -111,11 +165,11 @@ class Crud {
 
 	/**
 	 * Create grid
-	 * @return string $data Grid
+	 * @return string $returns Grid
 	 */
 	private function _grid() {
 		$column_size = NULL;
-		$data = NULL;
+		$returns = NULL;
 		$heading = NULL;
 		$select_fields = NULL;
 		
@@ -143,8 +197,8 @@ class Crud {
 		}
 		
 		if (count($select_fields) > 0) {	
-			$data = "<div id='crud_grid'>";
-			$data .= $this->CI->form->open(array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_form'));
+			$returns = "<div id='crud_grid'>";
+			$returns .= $this->CI->form->open(array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_form'));
 			
 			$this->CI->table->set_heading($heading);
 			
@@ -165,23 +219,24 @@ class Crud {
 			}
 			
 			$new_list = $this->CI->table->make_columns($list, $column_size);
-			$data .= $this->CI->table->generate($new_list);
+			$returns .= $this->CI->table->generate($new_list);
 
 			if ($this->properties['update'] || $this->properties['delete']) {
-				$data .= $this->_dropdown();
-				$data .= $this->CI->form->submit(array( 'name' => 'crud_submit_form', 'value' => _('Go')));
+				$returns .= $this->_dropdown();
+				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit_form', 'value' => _('Go')));
 			}
-			$data .= $this->CI->form->close();
-			$data .= "</div>";
+			$returns .= $this->CI->form->close();
+			$returns .= "</div>";
 		}
 		
-		return $data;
+		return $returns;
 	}
 
 	/**
 	 * Set uniquely formatted data structure
 	 * Usage example: $this->crud->set_data($data);
 	 * @param array $data Data array
+	 * @return NULL
 	 */
 	public function set_data($data) {
 		$this->data = $data;
@@ -196,39 +251,39 @@ class Crud {
 	/**
 	 * Render CRUD form and grid
 	 * Usage example: return $this->crud->render();
-	 * @return string $data Forms and grid
+	 * @return string $returns Forms and grid
 	 */
 	public function render() {
-		$data = NULL;
+		$returns = NULL;
 		$crud_action = trim(strtolower($this->CI->input->post('crud_action')));
 		switch ($crud_action) {
 			case 'insert':
-				$data .= $this->_form_insert();
+				$returns .= $this->_form_insert();
 				break;
 			case 'insert_action':
-				$data .= "INSERTED";
+				$returns .= "INSERTED";
 				break;
 			case 'update':
-				$data .= $this->_form_update();
+				$returns .= $this->_form_update();
 				break;
 			case 'update_action':
-				$data .= "UPDATED";
+				$returns .= "UPDATED";
 				break;
 			case 'delete':
-				$data .= $this->_form_delete();
+				$returns .= $this->_form_delete();
 				break;
 			case 'delete_action':
-				$data .= "DELETED";
+				$returns .= "DELETED";
 				break;
 			default:
 				// grid
-				$data .= $this->_grid();
+				$returns .= $this->_grid();
 				// insert button
 				if ($this->properties['insert']) {
-					$data .= $this->_button_insert();
+					$returns .= $this->_button_insert();
 				}
 		}
-		return $data;
+		return $returns;
 	}
 
 }

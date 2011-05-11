@@ -21,26 +21,28 @@ class Form {
 	/**
 	 * Create form open
 	 * @param array $data Data array
-	 * @return string $data Form open
+	 * @return string $returns Form open
 	 */
 	public function open($data=NULL) {
 		$id = isset($data['id']) ? $data['id'] : $data['name'];
-		return form_open($data['uri'], array('name' => $data['name'], 'id' => $id));
+		$returns = form_open($data['uri'], array('name' => $data['name'], 'id' => $id));
+		return $returns;
 	}
 
 	/**
 	 * Create form close
 	 * @param array $data Data array
-	 * @return string $data Form close
+	 * @return string $returns Form close
 	 */
 	public function close($data=NULL) {
-		return form_close($data['value']);
+		$returns = form_close($data['value']);
+		return $returns;
 	}
 
 	/**
 	 * Create checkbox
 	 * @param array $data Data array
-	 * @return string $data Checkbox
+	 * @return string $returns Checkbox
 	 */
 	public function checkbox($data=NULL) {
 		$returns = "<div id='form_checkbox'>";
@@ -53,7 +55,7 @@ class Form {
 	/**
 	 * Create radio button
 	 * @param array $data Data array
-	 * @return string $data Radio button
+	 * @return string $returns Radio button
 	 */
 	public function radio($data=NULL) {
 		$returns = "<div id='form_radio'>";
@@ -66,13 +68,15 @@ class Form {
 	/**
 	 * Create dropdown
 	 * @param array $data Data array
-	 * @return string $data Dropdown
+	 * @return string $returns Dropdown
 	 */
 	public function dropdown($data=NULL) {
+		$extra = NULL;
 		$returns = "<div id='form_dropdown'>";
 		$name = $data['name'];
 		$options = $data['options'];
 		$selected = isset($data['selected']) ? $data['selected'] : '';
+		$data['extra']['id'] = isset($data['id']) ? $data['id'] : $data['extra']['id'];
 		$data['extra']['id'] = isset($data['extra']['id']) ? $data['extra']['id'] : $data['name'];
 		foreach ($data['extra'] as $key => $val) {
 			$extra .= $key.'='.$val.' ';			
@@ -85,18 +89,19 @@ class Form {
 	/**
 	 * Create hidden input
 	 * @param array $data Data array
-	 * @return string $data Hidden input
+	 * @return string $returns Hidden input
 	 */
 	public function hidden($data=NULL) {
 		$name = $data['name'];
 		$value = $data['value'];
-		return form_hidden($name, $value);
+		$returns = form_hidden($name, $value);
+		return $returns;
 	}
 
 	/**
 	 * Create text input
 	 * @param array $data Data array
-	 * @return string $data Text input
+	 * @return string $returns Text input
 	 */
 	public function input($data=NULL) {
 		$returns = "<div id='form_input'>";
@@ -113,7 +118,7 @@ class Form {
 	/**
 	 * Create password input
 	 * @param array $data Data array
-	 * @return string $data Password input
+	 * @return string $returns Password input
 	 */
 	public function password($data=NULL) {
 		$returns = "<div id='form_password'>";
@@ -130,46 +135,50 @@ class Form {
 	/**
 	 * Create submit button
 	 * @param array $data Data array
-	 * @return string $data Submit button
+	 * @return string $returns Submit button
 	 */
 	public function submit($data=NULL) {
 		if (! isset($data['name'])) {
 			$data['name'] = 'form_submit';
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
-		return form_submit($data);
+		$returns = form_submit($data);
+		return $returns;
 	}
 
 	/**
 	 * Create reset button
 	 * @param array $data Data array
-	 * @return string $data Reset button
+	 * @return string $returns Reset button
 	 */
 	public function reset($data=NULL) {
 		if (! isset($data['name'])) {
 			$data['name'] = 'form_reset';
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
-		return form_reset($data);
+		$returns = form_reset($data);
+		return $returns;
 	}
 
 	/**
 	 * Create plain button
 	 * @param array $data Data array
-	 * @return string $data Plain button
+	 * @return string $returns Plain button
 	 */
 	public function button($data=NULL) {
 		if (! isset($data['name'])) {
 			$data['name'] = 'form_button';
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
-		return form_button($data);
+		$returns = form_button($data);
+		return $returns;
 	}
 	
 	/**
 	 * Set uniquely formatted data structure
 	 * Usage example: $this->form->set_data($data);
 	 * @param array $data Data array
+	 * @return NULL
 	 */
 	public function set_data($data) {
 		$this->data = $data;
@@ -193,15 +202,15 @@ class Form {
 	/**
 	 * Render form
 	 * Usage example: return $this->form->render();
-	 * @return string $data Form
+	 * @return string $returns Form
 	 */
 	public function render() {
-		$data = NULL;
+		$returns = NULL;
 		$form_open_exists = FALSE;
 		$form_close_exists = FALSE;
 		foreach ($this->data as $key => $val) {
 			if (method_exists($this->form_name, $key)) {
-				$data .= call_user_func_array(array($this->form_name, $key), array($val));
+				$returns .= call_user_func_array(array($this->form_name, $key), array($val));
 			}
 			if ($key == 'open') {
 				$form_open_exists = TRUE;
@@ -211,9 +220,9 @@ class Form {
 			}
 		}
 		if ($form_open_exists && !$form_close_exists) {
-			$data .= $this->close();
+			$returns .= $this->close();
 		}
-		return $data;
+		return $returns;
 	}
 
 }
