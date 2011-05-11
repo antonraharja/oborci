@@ -19,7 +19,7 @@ class SC_template extends CI_Model {
 	function __construct() {
 		parent::__construct();
 		$this->load->model(array('SC_ACL', 'SC_auth', 'SC_users', 'SC_roles', 'SC_menus'));
-		$this->load->library(array('table'));
+		$this->load->library(array('table', 'Form'));
 	}
 
 	/**
@@ -28,12 +28,29 @@ class SC_template extends CI_Model {
 	 * @return NULL
 	 */
 	public function login_form($id_css_prefix='login') {
-		$data = form_open('process/login', 'id="'.$id_css_prefix.'_form"');
-		$this->table->add_row(_('Username'), ':', form_input('username', '', 'id="'.$id_css_prefix.'_username"'));
-		$this->table->add_row(_('Password'), ':', form_password('password', '', 'id="'.$id_css_prefix.'_password"'));
-		$this->table->add_row(form_submit('submit', _('Submit'), 'id="'.$id_css_prefix.'_submit"'));
-		$data .= $this->table->generate();
-		$data .= form_close();
+		$data = array(
+			'open' => array(
+				'uri' => 'process/login',
+				'name' => $id_css_prefix.'_form'
+			),
+			'input' => array(
+				'name' => 'username',
+				'id' => $id_css_prefix.'_username',
+				'label' => 'Username'
+			),
+			'password' => array(
+				'name' => 'password',
+				'id' => $id_css_prefix.'_password',
+				'label' => 'Password'
+			),
+			'submit' => array(
+				'name' => 'submit',
+				'id' => $id_css_prefix.'_submit',
+				'value' => _('Submit')
+			)
+		);
+		$this->form->set_data($data);
+		$data = $this->form->render();
 		return $data;
 	}
 

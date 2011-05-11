@@ -40,7 +40,7 @@ class Users extends CI_Controller {
 	private function _get_crud() {
 		$data = array(
 			'insert' => array(
-				0 => array (
+				array (
 					'field' => 'username',
 					'title' => _('Username'),
 					'type' => 'text',
@@ -49,7 +49,7 @@ class Users extends CI_Controller {
 					'unique' => TRUE,
 					'readonly' => FALSE 
 				),
-				1 => array(
+				array(
 					'field' => 'password',
 					'title' => _('Password'),
 					'type' => 'password',
@@ -61,24 +61,25 @@ class Users extends CI_Controller {
 				)
 			),
 			'select' => array(
-				0 => array(
+				array(
 					'field' => 'id',
-					'title' => 'ID'
+					'title' => 'ID',
+					'key' => TRUE
 				),
-				1 => array(
+				array(
 					'field' => 'username',
 					'title' => 'Username'
 				)
 			),
 			'update' => array(
-				0 => array (
+				array (
 					'field' => 'username',
 					'title' => _('Username'),
 					'type' => 'text',
 					'size' => 50,
 					'readonly' => TRUE 
 				),
-				1 => array(
+				array(
 					'field' => 'password',
 					'title' => _('Password'),
 					'type' => 'password',
@@ -90,13 +91,14 @@ class Users extends CI_Controller {
 				)
 			),
 			'delete' => array(
-				0 => array(
-					'field' => 'id',
-					'confirm' => TRUE
+				array (
+					'field' => 'username',
+					'title' => _('Username'),
+					'type' => 'text',
+					'size' => 50
 				)
 			),
 			'datasource' => array(
-				'source' => 'table',
 				'name' => 'sc_users'
 			),
 			'properties' => array(

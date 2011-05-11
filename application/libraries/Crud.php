@@ -14,12 +14,168 @@ class Crud {
 	private $delete = NULL;
 	private $datasource = NULL;
 	private $properties = NULL;
+	private $key_field = NULL;
 	private $CI = NULL;
 
 	function __construct() {
 		$this->CI =& get_instance();
 		$this->CI->load->library('Form');
 		$this->CI->load->library('table');
+	}
+
+	/**
+	 * Create insert or add button
+	 * @return string $data Insert or add button
+	 */
+	private function _button_insert() {
+		$data = array(
+			'open' => array(
+				'uri' => $this->properties['uri'],
+				'name' => $this->properties['name'].'_button_insert'
+			),
+			'hidden' => array(
+				'name' => 'crud_action',
+				'value' => 'insert',
+			),
+			'submit' => array(
+				'name' => 'crud_submit_insert',
+				'value' => _('Add')
+			),
+		);
+		$this->CI->form->set_data($data);
+		$returns = "<div id='crud_button_insert'>";
+		$returns .= $this->CI->form->render();
+		$returns .= "</div>";
+		return $returns;
+	}
+
+	/**
+	 * Create insert or add form
+	 * @return string $data Insert or add form
+	 */
+	private function _form_insert() {
+		return $data;
+	}
+
+	/**
+	 * Create update or edit form
+	 * @return string $data Update or edit form
+	 */
+	private function _form_update() {
+		return $data;
+	}
+
+	/**
+	 * Create delete or del form
+	 * @return string $data Delete or del form
+	 */
+	private function _form_delete() {
+		return $data;
+	}
+
+	/**
+	 * Create checkbox on form
+	 * @param string $key_value Value of key field
+	 * @return string $data Checkbox
+	 */
+	private function _checkbox($key_value) {
+		$returns = "<div id='crud_checkbox'>";
+		$returns .= $this->CI->form->checkbox(array('name' => $this->key_field.'[]', 'value' => $key_value));
+		$returns .= "</div>";
+		return $returns;
+	}
+
+	/**
+	 * Create dropdown on form
+	 * @return string $data Dropdown
+	 */
+	private function _dropdown() {
+		$options_update = array();
+		if ($this->properties['update']) {
+			$options_update = array('update' => _('Update'));
+		}
+		$options_delete = array();
+		if ($this->properties['delete']) {
+			$options_delete = array('delete' => _('Delete'));
+		}
+		$options = array_merge($options_update, $options_delete);
+		$dropdown = array(
+			'name' => 'crud_action', 
+			'options' => $options
+		);
+		$returns = "<div id='crud_select'>";
+		$returns .= $this->CI->form->dropdown($dropdown);
+		$returns .= "</div>";
+		return $returns;
+	}
+
+	/**
+	 * Create grid
+	 * @return string $data Grid
+	 */
+	private function _grid() {
+		$column_size = NULL;
+		$data = NULL;
+		$heading = NULL;
+		$select_fields = NULL;
+		
+		if ($this->properties['index_column']) {
+			$column_size = 1;
+			$index_column_count = $this->properties['index_column_start'];
+			$heading[] = _('No'); // first column
+		}
+		
+		$column_size += count($this->select);
+		
+		if (count($this->select) > 0) {
+			foreach ($this->select as $row) {
+				$heading[] = $row['title']; // columns
+				$select_fields[] = $row['field'];
+				if (isset($row['key'])) {
+					$this->key_field = $row['field'];
+				}
+			}
+			
+			if ($this->properties['update'] || $this->properties['delete']) {
+				$column_size += 1;
+				$heading[] = _('Action'); // last column
+			}
+		}
+		
+		if (count($select_fields) > 0) {	
+			$data = "<div id='crud_grid'>";
+			$data .= $this->CI->form->open(array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_form'));
+			
+			$this->CI->table->set_heading($heading);
+			
+			$this->CI->db->select($select_fields);
+			$query = $this->CI->db->get($this->datasource['name']);
+			$j =0;
+			foreach ($query->result_array() as $row) {
+				$j++;
+				if ($this->properties['index_column']) {
+					$list[] = $index_column_count++; // index column
+				}
+				for ($i=0;$i<count($select_fields);$i++) {
+					$list[] = $row[$select_fields[$i]]; // data columns
+				}
+				if ($this->properties['update'] || $this->properties['delete']) {
+					$list[] = $this->_checkbox('1'); // action column
+				}
+			}
+			
+			$new_list = $this->CI->table->make_columns($list, $column_size);
+			$data .= $this->CI->table->generate($new_list);
+
+			if ($this->properties['update'] || $this->properties['delete']) {
+				$data .= $this->_dropdown();
+				$data .= $this->CI->form->submit(array( 'name' => 'crud_submit_form', 'value' => _('Go')));
+			}
+			$data .= $this->CI->form->close();
+			$data .= "</div>";
+		}
+		
+		return $data;
 	}
 
 	/**
@@ -35,145 +191,6 @@ class Crud {
 		$this->delete = $data['delete'];
 		$this->datasource = $data['datasource'];
 		$this->properties = $data['properties'];
-	}
-
-	/**
-	 * Create insert or add button
-	 * @return string $data Insert or add button
-	 */
-	private function _button_insert() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_button_insert');
-		$this->CI->form->hidden('crud_action', 'insert');
-		$this->CI->form->submit(_('Add'), 'crud_submit_insert');
-		$data = "<div id='crud_button_insert'>";
-		$data .= $this->CI->form->get();
-		$data .= "</div>";
-		$this->CI->form->clear();
-		return $data;
-	}
-
-	/**
-	 * Create update or edit button
-	 * @return string $data Update or edit button
-	 */
-	private function _button_update() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_button_update');
-		$this->CI->form->hidden('crud_action', 'update');
-		$this->CI->form->submit(_('Edit'), 'crud_submit_update');
-		$data = "<div id='crud_button_update'>";
-		$data .= $this->CI->form->get();
-		$data .= "</div>";
-		$this->CI->form->clear();
-		return $data;
-	}
-
-	/**
-	 * Create delete or del button
-	 * @return string $data Delete or del button
-	 */
-	private function _button_delete() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_button_delete');
-		$this->CI->form->hidden('crud_action', 'delete');
-		$this->CI->form->submit(_('Del'), 'crud_submit_delete');
-		$data = "<div id='crud_button_delete'>";
-		$data .= $this->CI->form->get();
-		$data .= "</div>";
-		$this->CI->form->clear();
-		return $data;
-	}
-
-	/**
-	 * Create insert or add form
-	 * @return string $data Insert or add form
-	 */
-	private function _form_insert() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_form_insert');
-		$this->CI->form->hidden('crud_action', 'insert_action');
-		$this->CI->form->submit(_('Submit'), 'crud_submit_insert');
-		$data = "<div id='crud_form_insert'>";
-		$data .= $this->CI->form->get();
-		$data .= "</div>";
-		$this->CI->form->clear();
-		return $data;
-	}
-
-	/**
-	 * Create update or edit form
-	 * @return string $data Update or edit form
-	 */
-	private function _form_update() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_form_update');
-		$this->CI->form->hidden('crud_action', 'update_action');
-		$this->CI->form->submit(_('Submit'), 'crud_submit_update');
-		$data = "<div id='crud_form_update'>";
-		$data .= $this->CI->form->get();
-		$data .= "</div>";
-		$this->CI->form->clear();
-		return $data;
-	}
-
-	/**
-	 * Create delete or del form
-	 * @return string $data Delete or del form
-	 */
-	private function _form_delete() {
-		$this->CI->form->open($this->properties['uri'], $this->properties['name'].'_form_delete');
-		$this->CI->form->hidden('crud_action', 'delete_action');
-		$this->CI->form->submit(_('Submit'), 'crud_submit_delete');
-		$data = "<div id='crud_form_delete'>";
-		$data .= $this->CI->form->get();
-		$data .= "</div>";
-		$this->CI->form->clear();
-		return $data;
-	}
-
-	/**
-	 * Create grid
-	 * @return string $data Grid
-	 */
-	private function _grid() {
-		$data = NULL;
-		$heading = NULL;
-		$select_fields = NULL;
-		if ($this->properties['index_column']) {
-			$column_size = 1;
-			$index_column_count = $this->properties['index_column_start'];
-			$heading[] = _('No');
-		}
-		if (count($this->select) > 0) {
-			foreach ($this->select as $row) {
-				$heading[] = $row['title'];
-				$select_fields[] = $row['field'];
-			}
-			if ($this->properties['update'] || $this->properties['delete']) {
-				$column_size += 1;
-				$heading[] = _('Action');
-			}
-			$data = "<div id='crud_grid'>";
-			$this->CI->table->set_heading($heading);
-			if ($this->datasource['source'] == 'table') {
-				$this->CI->db->select($select_fields);
-				$query = $this->CI->db->get($this->datasource['name']);
-			} else {
-				$query = $this->datasource['name'];
-			}
-			foreach ($query->result_array() as $row) {
-				if ($this->properties['index_column']) {
-					$list[] = $index_column_count++;
-				}
-				for ($i=0;$i<count($select_fields);$i++) {
-					$list[] = $row[$select_fields[$i]];
-				}
-				if ($this->properties['update'] || $this->properties['delete']) {
-					$list[] = $this->_button_update() .' '.$this->_button_delete();
-				}
-			}
-			$column_size += count($this->select);
-			$new_list = $this->CI->table->make_columns($list, $column_size);
-			$data .= $this->CI->table->generate($new_list);
-			$data .= "</div>";
-		}
-		return $data;
 	}
 
 	/**
@@ -216,4 +233,4 @@ class Crud {
 
 }
 
-/* End of file SC_CRUD.php */
+/* End of file Crud.php */

@@ -81,6 +81,7 @@ Array
                 (
                     [field] => id
                     [title] => ID
+                    [key] => 1
                 )
 
             [1] => Array
@@ -120,14 +121,16 @@ Array
         (
             [0] => Array
                 (
-                    [field] => id
+                    [field] => username
+                    [title] => Username
+                    [type] => text
+                    [size] => 50
                 )
 
         )
 
     [datasource] => Array
         (
-            [source] => table
             [name] => sc_users
         )
 
@@ -145,4 +148,26 @@ Array
 )
 
 
+
+
+FORM data array:
+
+		$data = array(
+			'form' => array(
+				'uri' => $this->properties['uri'],
+				'name' => $this->properties['name'].'_button_insert'
+			),
+			'hidden' => array(
+				array(
+					'name' => 'crud_action',
+					'value' => 'insert',
+				)
+			),
+			'submit' => array(
+				array(
+					'name' => 'crud_submit_insert',
+					'value' => _('Add')
+				)
+			)
+		);
   

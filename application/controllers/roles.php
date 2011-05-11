@@ -41,7 +41,7 @@ class Roles extends CI_Controller {
 	private function _get_crud() {		
 		$data = array(
 			'insert' => array(
-				0 => array (
+				array (
 					'field' => 'name',
 					'title' => _('Role name'),
 					'type' => 'text',
@@ -52,17 +52,18 @@ class Roles extends CI_Controller {
 				)
 			),
 			'select' => array(
-				0 => array(
+				array(
 					'field' => 'id',
-					'title' => 'ID'
+					'title' => 'ID',
+					'key' => TRUE
 				),
-				1 => array(
+				array(
 					'field' => 'name',
 					'title' => 'Role name'
 				)
 			),
 			'update' => array(
-				0 => array(
+				array(
 					'field' => 'name',
 					'title' => _('Role name'),
 					'type' => 'text',
@@ -73,13 +74,15 @@ class Roles extends CI_Controller {
 				)
 			),
 			'delete' => array(
-				0 => array(
-					'field' => 'id',
-					'confirm' => TRUE
+				array(
+					'field' => 'name',
+					'title' => _('Role name'),
+					'type' => 'text',
+					'size' => 50,
+					'maxlength' => 50
 				)
 			),
 			'datasource' => array(
-				'source' => 'table',
 				'name' => 'sc_roles'
 			),
 			'properties' => array(
