@@ -177,10 +177,33 @@ input[type="file"] {
 }
 
 /* --------------------------------------------------------------------------
+	BUTTONS */
+button,.button,submit,.submit,reset,.reset {
+	width: auto;
+	height: 24px;
+	padding: 1px 5px 1px 5px;
+	margin: 0;
+	color: #fff;
+	background-color: #215586;
+	border: 1px solid #606060;
+	vertical-align: middle;
+}
+
+/* --------------------------------------------------------------------------
+
+/* --------------------------------------------------------------------------
 	TEXT INPUTS */
 input {
 	width: 192px;
 	width: "200px";
+	padding: 4px;
+	margin-bottom: 5px;
+}
+
+/* --------------------------------------------------------------------------
+	SUBMIT INPUTS */
+input.submit {
+	width: auto;
 	padding: 4px;
 	margin-bottom: 5px;
 }
@@ -239,20 +262,6 @@ option {
 	background-color: #fff;
 }
 
-/* --------------------------------------------------------------------------
-	BUTTONS */
-button,.button {
-	width: auto;
-	height: 24px;
-	padding: 1px 5px 1px 5px;
-	margin: 0;
-	color: #fff;
-	background-color: #215586;
-	border: 1px solid #606060;
-	vertical-align: middle;
-}
-
-/* --------------------------------------------------------------------------
 	OTHER */
 span.help {
 	display: block;

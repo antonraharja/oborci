@@ -82,10 +82,11 @@ class Roles extends CI_Controller {
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE,
-				'grid_form_title' => '<p><h1>Role Management</h1></p>',
-				'insert_form_title' => '<p><h2>Insert Data</h2></p>',
-				'update_form_title' => '<p><h2>Update Data</h2></p>',
-				'delete_form_title' => '<p><h2>Delete Data</h2></p>',
+				'crud_title' => '<h1>Role Management</h1>',
+				'crud_form_title' => '<h2>List of Roles</h2>',
+				'insert_form_title' => '<h2>Insert Data</h2>',
+				'update_form_title' => '<h2>Update Data</h2>',
+				'delete_form_title' => '<h2>Delete Data</h2>',
 			),
 		);
 		$this->crud->set_data($data);

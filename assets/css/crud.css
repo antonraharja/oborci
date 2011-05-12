@@ -17,10 +17,20 @@
 	float: left;
 }
 
+#crud_submit_form {
+	width: 30px;
+	height: 24px;
+	float: none;
+}
+
+#crud_submit_insert, #crud_submit_update, #crud_submit_delete {
+	width: 50px;
+	height: 24px;
+	float: none;
+}
+
 #crud_select {
 	float: left;
 }
 
-#crud_submit_form {
-	float: none;
-}
+
