@@ -78,6 +78,8 @@ class Roles extends CI_Controller {
 				'datasource' => 'sc_roles',
 				'name' => 'roles',
 				'uri' => 'roles/index',
+				'index_column' => TRUE,
+				'index_column_start' => 1,
 				'pagination_per_page' => 2,
 				'insert' => TRUE,
 				'update' => TRUE,

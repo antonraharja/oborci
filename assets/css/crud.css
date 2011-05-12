@@ -4,6 +4,10 @@
     Author     : Anton Raharja
 */
 
+#crud_grid {
+	width: 760px;
+}
+
 #crud_button_insert {	
 	float: none;
 }
@@ -17,20 +21,43 @@
 	float: left;
 }
 
-#crud_submit_form {
-	width: 30px;
-	height: 24px;
-	float: none;
-}
-
 #crud_submit_insert, #crud_submit_update, #crud_submit_delete {
 	width: 50px;
-	height: 24px;
-	float: none;
+	height: 26px;
+	display: block;
+}
+
+#crud_submit_form {
+	width: 30px;
+	height: 26px;
+	float: right;
 }
 
 #crud_select {
-	float: left;
+	float: right;
+	padding-left: 5px;
 }
 
+#crud_pagination {
+	margin-left: 50%;
+	margin-right: 50%;
+}
 
+#crud_th_index, #crud_th_action {
+	width: 5px;
+	border: 1px solid #f0f0f0;
+}
+
+#crud_th_name, #crud_th_username {
+	width: 100%;
+	border: 1px solid #f0f0f0;
+}
+
+#crud_th_id {
+	width: 5px;
+	border: 1px solid #f0f0f0;
+}
+
+td {
+	border: 1px solid #f0f0f0;		
+}

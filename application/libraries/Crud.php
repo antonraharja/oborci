@@ -247,7 +247,7 @@ class Crud {
 		$returns .= $this->properties['crud_title'];
 		$returns .= $this->properties['insert_form_title'];
 		$returns .= "<div id='crud_form_insert'>";
-		$returns = print_r($_POST, TRUE);
+		$returns .= print_r($_POST, TRUE);
 		$returns .= "</div></div>";
 		return $returns;
 	}
@@ -261,7 +261,7 @@ class Crud {
 		$returns .= $this->properties['crud_title'];
 		$returns .= $this->properties['update_form_title'];
 		$returns .= "<div id='crud_form_update'>";
-		$returns = print_r($_POST, TRUE);
+		$returns .= print_r($_POST, TRUE);
 		$returns .= "</div></div>";
 		return $returns;
 			}
@@ -275,7 +275,7 @@ class Crud {
 		$returns .= $this->properties['crud_title'];
 		$returns .= $this->properties['delete_form_title'];
 		$returns .= "<div id='crud_form_delete'>";
-		$returns = print_r($_POST, TRUE);
+		$returns .= print_r($_POST, TRUE);
 		$returns .= "</div></div>";
 		return $returns;
 	}
