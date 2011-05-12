@@ -45,13 +45,11 @@ class Form {
 	 * @return string $returns Checkbox
 	 */
 	public function checkbox($data=NULL) {
-		$returns = "<div id='form_checkbox'>";
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['checked']) {
 			$data['checked'] =  'checked';
 		}
-		$returns .= form_checkbox($data);
-		$returns .= "</div>";
+		$returns = form_checkbox($data);
 		return $returns;
 	}
 
@@ -61,13 +59,11 @@ class Form {
 	 * @return string $returns Radio button
 	 */
 	public function radio($data=NULL) {
-		$returns = "<div id='form_radio'>";
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['checked']) {
 			$data['checked'] =  'checked';
 		}
-		$returns .= form_radio($data);
-		$returns .= "</div>";
+		$returns = form_radio($data);
 		return $returns;
 	}
 
@@ -78,7 +74,6 @@ class Form {
 	 */
 	public function dropdown($data=NULL) {
 		$extra = NULL;
-		$returns = "<div id='form_dropdown'>";
 		$name = $data['name'];
 		$options = $data['options'];
 		$selected = isset($data['selected']) ? $data['selected'] : '';
@@ -87,8 +82,7 @@ class Form {
 		foreach ($data['extra'] as $key => $val) {
 			$extra .= $key.'='.$val.' ';			
 		}		
-		$returns .= form_dropdown($name, $options, $selected, $extra);
-		$returns .= "</div>";
+		$returns = form_dropdown($name, $options, $selected, $extra);
 		return $returns;
 	}
 
@@ -110,13 +104,12 @@ class Form {
 	 * @return string $returns Label
 	 */
 	public function label($data=NULL) {
-		$returns = "<div id='form_label'>";
+		$returns = NULL;
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['label']) {
 			$attr = array('id' => $data['id'].'_label');
 			$returns .= form_label($data['label'], $data['name'], $attr);
 		}
-		$returns .= "</div>";
 		return $returns;
 	}
 
@@ -126,7 +119,7 @@ class Form {
 	 * @return string $returns Text input
 	 */
 	public function input($data=NULL) {
-		$returns = "<div id='form_input'>";
+		$returns = NULL;
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['label']) {
 			$attr = array('id' => $data['id'].'_label');
@@ -144,7 +137,6 @@ class Form {
 		unset($data['confirm_label']);
 		unset($data['show_value']);
 		$returns .= form_input($data);
-		$returns .= "</div>";
 		return $returns;
 	}
 
@@ -154,7 +146,7 @@ class Form {
 	 * @return string $returns Password input
 	 */
 	public function password($data=NULL) {
-		$returns = "<div id='form_password'>";
+		$returns = NULL;
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['label']) {
 			$attr = array('id' => $data['id'].'_label');
@@ -166,7 +158,6 @@ class Form {
 		unset($data['confirm_label']);
 		unset($data['show_value']);
 		$returns .= form_password($data);
-		$returns .= "</div>";
 		return $returns;
 	}
 	

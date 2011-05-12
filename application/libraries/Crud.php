@@ -14,9 +14,7 @@ class Crud {
 	private $delete = NULL;
 	private $properties = NULL;
 	private $key_field = NULL;
-	private $select_fields = NULL;
-	private $update_fields = NULL;
-	private $delete_fields = NULL;
+	private $fields = NULL;
 	private $config = NULL;
 	private $CI = NULL;
 
@@ -25,7 +23,7 @@ class Crud {
 		$this->CI->load->database();
 		$this->CI->load->library(array('table', 'pagination', 'Form'));
 		$this->CI->load->config('crud', TRUE);
-		$this->config = $this->CI->config->item('crud');		
+		$this->config = $this->CI->config->item('crud');
 	}
 
 	/**
@@ -34,22 +32,22 @@ class Crud {
 	 */
 	private function _button_insert() {
 		$data = array(
-			0 => array(
-				'open' => array(
-					'uri' => $this->properties['uri'],
-					'name' => $this->properties['name'].'_button_insert',
-				)
-			),
-			1 => array(
-				'hidden' => array(
-					'name' => 'crud_action',
-					'value' => 'insert',
+				0 => array(
+						'open' => array(
+							'uri' => $this->properties['uri'],
+							'name' => $this->properties['name'].'_button_insert',
 				),
 			),
-			2 => array(
-				'submit' => array(
-					'name' => 'crud_submit_insert',
-					'value' => _('Add'),
+				1 => array(
+						'hidden' => array(
+							'name' => 'crud_action',
+							'value' => 'insert',
+				),
+			),
+				2 => array(
+						'submit' => array(
+							'name' => 'crud_submit_insert',
+							'value' => _('Add'),
 				),
 			),
 		);
@@ -98,7 +96,7 @@ class Crud {
 			),
 		);
 		$this->CI->form->set_data($data);
-		
+
 		$returns = "<div id='crud_grid'>";
 		$returns .= $this->properties['grid_form_title'];
 		$returns .= "<div id='crud_form_insert'>";
@@ -113,7 +111,7 @@ class Crud {
 	 * @return string $returns Update or edit form
 	 */
 	private function _form_update() {
-		$select_fields = array();
+		$fields['select'] = array();
 		$data = array(
 			0 => array(
 				'open' => array(
@@ -122,9 +120,9 @@ class Crud {
 				),
 			),
 			1 => array(
-				'hidden' => array(
-					'name' => 'crud_action',
-					'value' => 'update_action',
+					'hidden' => array(
+						'name' => 'crud_action',
+						'value' => 'update_action',
 				),
 			),
 		);
@@ -132,7 +130,7 @@ class Crud {
 		$i = 0;
 		foreach ($id as $val) {
 			$i++;
-			$this->CI->db->select($this->update_fields);
+			$this->CI->db->select($this->fields['update']);
 			$this->CI->db->where($this->key_field, $val);
 			$query = $this->CI->db->get($this->properties['datasource']);
 			foreach ($query->result_array() as $result) {
@@ -168,7 +166,7 @@ class Crud {
 			),
 		);
 		$this->CI->form->set_data($data);
-		
+
 		$returns = "<div id='crud_grid'>";
 		$returns .= $this->properties['grid_form_title'];
 		$returns .= "<div id='crud_form_update'>";
@@ -183,7 +181,7 @@ class Crud {
 	 * @return string $returns Delete or del form
 	 */
 	private function _form_delete() {
-		$select_fields = array();
+		$fields['select'] = array();
 		$data = array(
 			0 => array(
 				'open' => array(
@@ -202,14 +200,14 @@ class Crud {
 		$i = 0;
 		foreach ($id as $val) {
 			$i++;
-			$this->CI->db->select($this->delete_fields);
+			$this->CI->db->select($this->fields['delete']);
 			$this->CI->db->where($this->key_field, $val);
 			$query = $this->CI->db->get($this->properties['datasource']);
 			foreach ($query->result_array() as $result) {
 				foreach ($this->delete as $row) {
 					$row['type'] = 'input';
 					$row['value'] = $result[$row['name']];
-					$row['disabled'] = TRUE;					
+					$row['disabled'] = TRUE;
 					$data[] = array(
 						$row['type'] => $row
 					);
@@ -229,7 +227,7 @@ class Crud {
 			),
 		);
 		$this->CI->form->set_data($data);
-		
+
 		$returns = "<div id='crud_grid'>";
 		$returns .= $this->properties['grid_form_title'];
 		$returns .= "<div id='crud_form_delete'>";
@@ -245,39 +243,61 @@ class Crud {
 	 */
 	private function _form_insert_action() {
 		$returns = print_r($_POST, TRUE);
-		return $returns; 
+		return $returns;
 	}
-	
+
 	/**
 	 * Create update or edit action form
 	 * @return string $returns Update or edit action form
 	 */
 	private function _form_update_action() {
 		$returns = print_r($_POST, TRUE);
-		return $returns; 
+		return $returns;
 	}
-	
+
 	/**
 	 * Create delete or del form
 	 * @return string $returns Delete or del action form
 	 */
 	private function _form_delete_action() {
 		$returns = print_r($_POST, TRUE);
-		return $returns; 
+		return $returns;
 	}
-	
-/**
+
+	/**
 	 * Create checkbox on form
 	 * @param string $key_value Value of key field
 	 * @return string $returns Checkbox
 	 */
 	private function _checkbox($key_value) {
 		$data['name'] = $this->key_field.'[]';
-		$data['id'] = $this->key_field.$key_value;
+		$data['id'] = $this->key_field;
 		$data['value'] = $key_value;
-		$returns = "<div id='crud_checkbox'>";
 		$returns .= $this->CI->form->checkbox($data);
-		$returns .= "</div>";
+		return $returns;
+	}
+
+	/**
+	 * Generate javascript check all for checkbox
+	 * @param string $id_main Checkbox check-all element ID
+	 * @param string $id_child Checkbox child element ID
+	 * @return string $returns Javascript
+	 */
+	private function _checkbox_checkall_js($id_main, $id_child=NULL) {
+		if (! isset($id_child)) {
+			$id_child = $id_main;
+		}
+		$returns = '
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$("#'.$id_main.'").click(function() {
+						var checked_status = this.checked;
+						$("#crud_grid input").each(function() {
+							this.checked = checked_status;
+						});
+					});
+				});
+			</script>';
 		return $returns;
 	}
 
@@ -314,10 +334,10 @@ class Crud {
 		$column_size = 0;
 		$returns = NULL;
 		$heading = NULL;
-		
+
 		$pagination['total_rows'] = $this->CI->db->count_all($this->properties['datasource']);
 		$pagination['per_page'] = isset($this->properties['pagination_per_page']) ? $this->properties['pagination_per_page'] : '10';
-		
+
 		if ($this->properties['index_column']) {
 			$column_size = 1;
 			$index_column_count = $this->properties['index_column_start'];
@@ -330,36 +350,40 @@ class Crud {
 					$heading[] = "<div id='table_heading_column'>".$row['label']."</div>"; // columns
 				}
 			}
-		}			
+		}
 		if ($this->properties['update'] || $this->properties['delete']) {
 			$column_size += 1;
-			$heading[] = "<div id='table_heading_action'>".$this->CI->form->checkbox()."</div>"; // last column
+			$checkbox_id_main =  $this->key_field.'_main';
+			$data = array( 'name' => $checkbox_id_main);
+			$heading[] = "<div id='table_heading_action'>".$this->CI->form->checkbox($data)."</div>"; // last column
+			$js_checkbox = $this->_checkbox_checkall_js($checkbox_id_main, $this->key_field);
 		}
-		
+
 		$returns = "<div id='crud_grid'>";
+		$returns .= $js_checkbox;
 		$returns .= $this->properties['grid_form_title'];
-		if (count($this->select_fields) > 0) {	
+		if (count($this->fields['select']) > 0) {
 			$returns .= $this->CI->form->open(array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_form'));
-			
+
 			$this->CI->table->set_heading($heading);
-			
-			$this->CI->db->select($this->select_fields);
+
+			$this->CI->db->select($this->fields['select']);
 			$this->CI->db->limit(
-				$pagination['per_page'], 
-				$this->CI->uri->segment($this->CI->uri->total_segments()) * ($pagination['per_page'] - 1)
+			$pagination['per_page'],
+			$this->CI->uri->segment($this->CI->uri->total_segments()) * ($pagination['per_page'] - 1)
 			);
 			$query = $this->CI->db->get($this->properties['datasource']);
 			$j =0;
 			foreach ($query->result_array() as $row) {
 				$j++;
-				
+
 				if ($this->properties['index_column']) {
 					$list[] = $index_column_count++; // index column
 				}
-				
-				for ($i=0;$i<count($this->select_fields);$i++) {
+
+				for ($i=0;$i<count($this->fields['select']);$i++) {
 					if (! $this->select[$i]['hidden']) {
-						$list[] = $row[$this->select_fields[$i]]; // data columns
+						$list[] = $row[$this->fields['select'][$i]]; // data columns
 					}
 				}
 				if ($this->properties['update'] || $this->properties['delete']) {
@@ -367,13 +391,13 @@ class Crud {
 				}
 			}
 			$total_rows = $j;
-			
-			if ($this->properties['table_template']) {			
+
+			if ($this->properties['table_template']) {
 				$this->CI->table->set_template($this->properties['table_template']);
 			} else {
 				$this->CI->table->set_template($this->config['table_template']);
 			}
-			
+
 			$new_list = $this->CI->table->make_columns($list, $column_size);
 			$returns .= $this->CI->table->generate($new_list);
 
@@ -383,8 +407,8 @@ class Crud {
 			$this->CI->pagination->initialize($config);
 			$returns .= "<div id='crud_pagination'>";
 			$returns .= $this->CI->pagination->create_links();
-			$returns .= "</div>"; 		
-		
+			$returns .= "</div>";
+
 			if ($this->properties['update'] || $this->properties['delete']) {
 				$returns .= $this->_dropdown();
 				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit_form', 'value' => _('Go')));
@@ -403,30 +427,30 @@ class Crud {
 	 */
 	public function set_data($data) {
 		$this->data = $data;
-		
+
 		$this->insert = $data['insert'];
 		$this->select = $data['select'];
 		$this->update = $data['update'];
 		$this->delete = $data['delete'];
 		$this->properties = $data['properties'];
-		
+
 		foreach ($this->select as $row) {
-			$select_fields[] = $row['name'];
+			$fields['select'][] = $row['name'];
 			if (isset($row['key'])) {
 				$this->key_field = $row['name'];
 			}
 		}
-		$this->select_fields = $select_fields;
-				
+		$this->fields['select'] = $fields['select'];
+
 		foreach ($this->update as $row) {
-			$update_fields[] = $row['name'];
+			$fields['update'][] = $row['name'];
 		}
-		$this->update_fields = $update_fields;
-				
+		$this->fields['update'] = $fields['update'];
+
 		foreach ($this->delete as $row) {
-			$delete_fields[] = $row['name'];
+			$fields['delete'][] = $row['name'];
 		}
-		$this->delete_fields = $delete_fields;		
+		$this->fields['delete'] = $fields['delete'];
 	}
 
 	/**

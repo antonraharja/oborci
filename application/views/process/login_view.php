@@ -2,9 +2,6 @@
 
 <script
 	type="text/javascript"
-	src="<?php echo base_url(); ?>assets/js/jquery-1.6.min.js"></script>
-<script
-	type="text/javascript"
 	src="<?php echo base_url(); ?>assets/js/login.js"></script>
 
 <div id='menu_box'><?= $menu['box'] ?></div>
