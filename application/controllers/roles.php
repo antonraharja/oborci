@@ -45,6 +45,7 @@ class Roles extends CI_Controller {
 					'label' => t('Role name'),
 					'type' => 'input',
 					'unique' => TRUE,
+					'mandatory' => TRUE,
 				),
 			),
 			'select' => array(

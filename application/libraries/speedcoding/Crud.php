@@ -33,24 +33,18 @@ class Crud {
 	 */
 	private function _button_insert() {
 		$data = array(
-				0 => array(
-						'open' => array(
-							'uri' => $this->properties['uri'],
-							'name' => $this->properties['name'].'_button_insert',
-				),
-			),
-				1 => array(
-						'hidden' => array(
-							'name' => 'crud_action',
-							'value' => 'insert',
-				),
-			),
-				2 => array(
-						'submit' => array(
-							'name' => 'crud_submit_insert',
-							'value' => t('Add'),
-				),
-			),
+			array('open' => array(
+					'uri' => $this->properties['uri'],
+					'name' => $this->properties['name'].'_button_insert',
+			),),
+			array('hidden' => array(
+					'name' => 'crud_action',
+					'value' => 'insert',
+			),),
+			array('submit' => array(
+					'name' => 'crud_submit_insert',
+					'value' => t('Add'),
+			),),
 		);
 		$this->CI->form->set_data($data);
 		$returns = "<div id='crud_button_insert'>";
@@ -65,18 +59,16 @@ class Crud {
 	 */
 	private function _form_insert() {
 		$data = array(
-			0 => array(
+			array(
 				'open' => array(
 					'uri' => $this->properties['uri'],
 					'name' => $this->properties['name'].'_form_insert',
-				),
-			),
-			1 => array(
+			),),
+			array(
 				'hidden' => array(
 					'name' => 'crud_action',
 					'value' => 'insert_action',
-				),
-			),
+			),),
 		);
 		foreach ($this->insert as $row) {
 			$data[] = array(
@@ -108,24 +100,82 @@ class Crud {
 	}
 
 	/**
+	 * Create insert or add action form
+	 * @return string $returns Insert or add action form
+	 */
+	private function _form_insert_action() {
+		$returns = "<div id='crud_grid'>";
+		$returns .= $this->properties['crud_title'];
+		$returns .= $this->properties['insert_form_title'];
+		$returns .= "<div id='crud_form_insert'>";
+		$returns .= $this->_form_insert_process();
+		$returns .= "</div></div>";
+		return $returns;
+	}
+	
+	/**
+	 * Process inputs on insert form
+	 * @return string HTML returns on process
+	 */
+	private function  _form_insert_process() {
+		$returns = NULL;
+		$error = NULL;
+		$data = $this->_get_data_by_name('insert');
+		$inputs = $this->_get_valid_inputs('insert');
+		foreach ($inputs as $key => $val) {
+			$data[$key]['value'] = $val;
+			if ($data[$key]['unique']) {
+				$query = $this->CI->db->get_where($this->properties['datasource'], array( $key => $val ));
+				if ($query->num_rows()) {
+					$error[$key] = t('Data is already exists');
+				}
+			}
+			if ($data[$key]['confirm']) {
+				$confirm_val = $this->CI->input->post($key.'_confirm');
+				if ($confirm_val != $val) {
+					$error[$key] = t('Confirmation answer is different');
+				}
+			}
+			if ($data[$key]['mandatory']) {
+				if (empty($val)) {
+					$error[$key] = t('You must fill this field');
+				}
+			}
+			if ($data[$key]['disabled'] || $data[$key]['readonly']) {
+				unset($data[$key]);
+			}
+		}
+		if (count($error) > 0) {
+			$error_string = NULL;
+			foreach ($error as $key1 => $val1) {
+				$error_string .= '<p id="message_error">'.$key1.' - '.$val1.'</p>';
+			}
+			$returns .= $error_string;
+		} else {
+			// FIXME have not saved anything yet
+			$returns .= '<p id="message_success">'.t('Data has been saved').'</p>';
+		}
+		$returns .= anchor($this->properties['uri'], t('Back'));
+		return $returns;
+	}
+	
+	/**
 	 * Create update or edit form
 	 * @return string $returns Update or edit form
 	 */
 	private function _form_update() {
 		$fields['select'] = array();
 		$data = array(
-			0 => array(
+			array(
 				'open' => array(
 					'uri' => $this->properties['uri'],
 					'name' => $this->properties['name'].'_form_update',
-				),
-			),
-			1 => array(
+			),),
+			array(
 					'hidden' => array(
 						'name' => 'crud_action',
 						'value' => 'update_action',
-				),
-			),
+			),),
 		);
 		$keys = $this->CI->input->post($this->key_field);
 		$i = 0;
@@ -184,18 +234,16 @@ class Crud {
 	private function _form_delete() {
 		$fields['select'] = array();
 		$data = array(
-			0 => array(
+			array(
 				'open' => array(
 					'uri' => $this->properties['uri'],
 					'name' => $this->properties['name'].'_form_delete',
-				),
-			),
-			1 => array(
+			),),
+			array(
 				'hidden' => array(
 					'name' => 'crud_action',
 					'value' => 'delete_action',
-				),
-			),
+			),),
 		);
 		$keys = $this->CI->input->post($this->key_field);
 		$i = 0;
@@ -234,20 +282,6 @@ class Crud {
 		$returns .= $this->properties['delete_form_title'];
 		$returns .= "<div id='crud_form_delete'>";
 		$returns .= $this->CI->form->render();
-		$returns .= "</div></div>";
-		return $returns;
-	}
-
-	/**
-	 * Create insert or add action form
-	 * @return string $returns Insert or add action form
-	 */
-	private function _form_insert_action() {
-		$returns = "<div id='crud_grid'>";
-		$returns .= $this->properties['crud_title'];
-		$returns .= $this->properties['insert_form_title'];
-		$returns .= "<div id='crud_form_insert'>";
-		$returns .= print_r($_POST, TRUE);
 		$returns .= "</div></div>";
 		return $returns;
 	}
@@ -442,6 +476,36 @@ class Crud {
 		
 		return $returns;
 	}
+	
+	/**
+	 * Get valid inputs from POST inputs
+	 * @param string $action Action insert, select, update or delete
+	 * @return array Array name-value pair of input variable and its value
+	 */
+	private function _get_valid_inputs($action) {
+		$data = NULL;
+		foreach ($this->fields[$action] as $field) {
+			$val = $this->CI->input->post($field);
+			$data[$field] = $val;
+		}		
+		return $data;
+	}
+	
+	/**
+	 * Get data as array of name instead of index
+	 * @param string $action Action insert, select, update or delete
+	 * @return array Array of data by name
+	 */
+	private function _get_data_by_name($action) {
+		$returns = NULL;
+		$data = $this->data[$action];
+		foreach ($data as $row) {
+			$name = $row['name'];
+			unset($row['name']);
+			$returns[$name] = $row;
+		}
+		return $returns;
+	}
 
 	/**
 	 * Set uniquely formatted data structure
@@ -457,6 +521,11 @@ class Crud {
 		$this->update = $data['update'];
 		$this->delete = $data['delete'];
 		$this->properties = $data['properties'];
+
+		foreach ($this->insert as $row) {
+			$fields['insert'][] = $row['name'];
+		}
+		$this->fields['insert'] = $fields['insert'];
 
 		foreach ($this->select as $row) {
 			$fields['select'][] = $row['name'];
