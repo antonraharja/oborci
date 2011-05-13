@@ -48,7 +48,7 @@ class Crud {
 				2 => array(
 						'submit' => array(
 							'name' => 'crud_submit_insert',
-							'value' => _('Add'),
+							'value' => t('Add'),
 				),
 			),
 		);
@@ -93,7 +93,7 @@ class Crud {
 		$data[] = array(
 			'submit' => array(
 				'name' => 'crud_submit_insert',
-				'value' => _('Add')
+				'value' => t('Add')
 			),
 		);
 		$this->CI->form->set_data($data);
@@ -163,7 +163,7 @@ class Crud {
 		$data[] = array(
 			'submit' => array(
 				'name' => 'crud_submit_update',
-				'value' => _('Submit')
+				'value' => t('Submit')
 			),
 		);
 		$this->CI->form->set_data($data);
@@ -224,7 +224,7 @@ class Crud {
 		$data[] = array(
 			'submit' => array(
 				'name' => 'crud_submit_delete',
-				'value' => _('Submit')
+				'value' => t('Submit')
 			),
 		);
 		$this->CI->form->set_data($data);
@@ -321,12 +321,12 @@ class Crud {
 	private function _dropdown() {
 		$options = array();
 		if ($this->properties['update']) {
-			$options1 = array('update' => _('Update'));
+			$options1 = array('update' => t('Update'));
 			$options = array_merge($options, $options1);
 		}
 		$options_delete = array();
 		if ($this->properties['delete']) {
-			$options1 = array('delete' => _('Delete'));
+			$options1 = array('delete' => t('Delete'));
 			$options = array_merge($options, $options1);
 		}
 		$dropdown = array(
@@ -352,7 +352,7 @@ class Crud {
 		if ($this->properties['index_column']) {
 			$column_size = 1;
 			$index_column_count = $this->properties['index_column_start'];
-			$heading[] = array('data' => _('No'), 'id' => 'crud_th_index');
+			$heading[] = array('data' => t('No'), 'id' => 'crud_th_index');
 		}
 		
 		// data columns
@@ -430,7 +430,7 @@ class Crud {
 			// Update delete dropdown and Go button
 			if ($this->properties['update'] || $this->properties['delete']) {
 				$returns .= $this->_dropdown();
-				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit_form', 'value' => _('Go')));
+				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit_form', 'value' => t('Go')));
 			}
 			
 			// close form

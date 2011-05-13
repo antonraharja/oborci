@@ -43,7 +43,7 @@ class Roles extends CI_Controller {
 			'insert' => array(
 				array (
 					'name' => 'name',
-					'label' => _('Role name'),
+					'label' => t('Role name'),
 					'type' => 'input',
 					'unique' => TRUE,
 				),
@@ -56,13 +56,13 @@ class Roles extends CI_Controller {
 				),
 				array(
 					'name' => 'name',
-					'label' => _('Role name'),
+					'label' => t('Role name'),
 				),
 			),
 			'update' => array(
 				array(
 					'name' => 'name',
-					'label' => _('Role name'),
+					'label' => t('Role name'),
 					'type' => 'input',
 					'unique' => TRUE,
 					'show_value' => TRUE,
@@ -71,7 +71,7 @@ class Roles extends CI_Controller {
 			'delete' => array(
 				array(
 					'name' => 'name',
-					'label' => _('Role name'),
+					'label' => t('Role name'),
 				),
 			),
 			'properties' => array(

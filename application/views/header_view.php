@@ -14,4 +14,4 @@
 </head>
 <body>
 
-<h1><?php echo _('Administration Panel'); ?></h1>
+<h1><?php echo t('Administration Panel'); ?></h1>

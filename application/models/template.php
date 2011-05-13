@@ -86,7 +86,7 @@ class Template extends CI_Model {
 				'submit' => array(
 					'name' => 'submit',
 					'id' => $id_css_prefix.'_submit',
-					'value' => _('Submit'),
+					'value' => t('Submit'),
 				),
 			),
 		);
@@ -111,8 +111,8 @@ class Template extends CI_Model {
 						'parent' => $menu[0]->parent,
 						'index' => $menu[0]->index,
 						'uri' => $menu[0]->uri,
-						'text' => _($menu[0]->text),
-						'title' => _($menu[0]->title),
+						'text' => t($menu[0]->text),
+						'title' => t($menu[0]->title),
 						'id_css' => $menu[0]->id_css
 					);
 				}
@@ -122,8 +122,8 @@ class Template extends CI_Model {
 				'parent' => 0,
 				'index' => 0,
 				'uri' => 'home',
-				'text' => _('Home'),
-				'title' => _('Home'),
+				'text' => t('Home'),
+				'title' => t('Home'),
 				'id_css' => 'menu_home'
 			);
 		}
@@ -142,7 +142,7 @@ class Template extends CI_Model {
 		}
 		$menus = $this->menu_array();
 		foreach ($menus as $menu) {
-			$data .= '<div id="' . $box_id_css . '">' . anchor($menu['uri'], _($menu['text']), 'title="' . _($menu['title']) . '" id="' . $menu['id_css'] . '"') . '</div>';
+			$data .= '<div id="' . $box_id_css . '">' . anchor($menu['uri'], t($menu['text']), 'title="' . t($menu['title']) . '" id="' . $menu['id_css'] . '"') . '</div>';
 		}
 		return $data;
 	}

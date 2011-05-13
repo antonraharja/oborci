@@ -42,16 +42,16 @@ class Users extends CI_Controller {
 			'insert' => array(
 				array (
 					'name' => 'username',
-					'label' => _('Username'),
+					'label' => t('Username'),
 					'type' => 'input',
 					'unique' => TRUE,
 				),
 				array(
 					'name' => 'password',
-					'label' => _('Password'),
+					'label' => t('Password'),
 					'type' => 'password',
 					'confirm' => TRUE,
-					'confirm_label' => _('Confirm password'),
+					'confirm_label' => t('Confirm password'),
 				),
 			),
 			'select' => array(
@@ -69,23 +69,23 @@ class Users extends CI_Controller {
 			'update' => array(
 				array (
 					'name' => 'username',
-					'label' => _('Username'),
+					'label' => t('Username'),
 					'type' => 'input',
 					'show_value' => TRUE,
 					'disabled' => TRUE,
 				),
 				array(
 					'name' => 'password',
-					'label' => _('Password'),
+					'label' => t('Password'),
 					'type' => 'password',
 					'confirm' => TRUE,
-					'confirm_label' => _('Confirm password'),
+					'confirm_label' => t('Confirm password'),
 				),
 			),
 			'delete' => array(
 				array (
 					'name' => 'username',
-					'label' => _('Username'),
+					'label' => t('Username'),
 				),
 			),
 			'properties' => array(

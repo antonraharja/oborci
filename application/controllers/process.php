@@ -50,14 +50,14 @@ class Process extends CI_Controller {
 		}
 		if ($ok) {
 			if (strtolower($ajax) == 'ajax') {
-				$data = array('state' => TRUE, 'message' => _('Welcome') . ' ' . $username);
+				$data = array('state' => TRUE, 'message' => t('Welcome') . ' ' . $username);
 				echo json_encode($data);
 			} else {
 				redirect('home');
 			}
 		} else {
 			if (strtolower($ajax) == 'ajax') {
-				$data = array('state' => FALSE, 'message' => _('Invalid login, please try again'));
+				$data = array('state' => FALSE, 'message' => t('Invalid login, please try again'));
 				echo json_encode($data);
 			} else {
 				$data['menu']['box'] = $this->template->menu_box();

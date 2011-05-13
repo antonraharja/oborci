@@ -6,7 +6,7 @@
 
 <div id='menu_box'><?= $menu['box'] ?></div>
 
-<p><?php echo _('Login'); ?></p>
+<p><?php echo t('Login'); ?></p>
 
 <div id="login_box"><?= $login['form'] ?></div>
 

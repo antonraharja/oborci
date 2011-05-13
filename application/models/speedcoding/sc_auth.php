@@ -169,7 +169,7 @@ class SC_auth extends CI_Model {
 
 	/**
 	 * Validate if user has access to this URI
-	 * @return boolean TRUE if visitor has access to current URI
+	 * @return NULL Validation result is accessible through get_access() method
 	 */
 	public function validate() {
 		if ($this->get_login_state()) {
@@ -188,15 +188,12 @@ class SC_auth extends CI_Model {
 				$id = $this->SC_roles->get_roles_screens_id($role_id, $screen_id);
 				if ($id) {
 					$this->set_access(TRUE);
-					return $this->get_access();
 				} else {
 					$this->set_access(FALSE);
-					return $this->get_access();
 				}
 			}
 		} else {
 			$this->set_access(FALSE);
-			return $this->get_access();
 		}
 	}
 	
