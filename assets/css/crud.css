@@ -46,16 +46,19 @@
 #crud_th_index, #crud_th_action {
 	width: 5px;
 	border: 1px solid #f0f0f0;
+	background-color: #fed888;
 }
 
 #crud_th_name, #crud_th_username {
 	width: 100%;
 	border: 1px solid #f0f0f0;
+	background-color: #fed888;
 }
 
 #crud_th_id {
-	width: 5px;
+	width: 20px;
 	border: 1px solid #f0f0f0;
+	background-color: #fed888;
 }
 
 td {
