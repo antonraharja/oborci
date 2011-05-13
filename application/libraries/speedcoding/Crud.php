@@ -22,8 +22,8 @@ class Crud {
 	function __construct() {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
-		$this->CI->load->library(array('table', 'pagination', 'Form'));
-		$this->CI->load->config('crud', TRUE);
+		$this->CI->load->library(array('table', 'pagination', 'speedcoding/Form'));
+		$this->CI->load->config('speedcoding/crud', TRUE);
 		$this->config = $this->CI->config->item('crud');
 	}
 
@@ -514,6 +514,7 @@ class Crud {
 				break;
 			case 'update_action':
 				$returns .= $this->_form_update_action();
+				return $returns;
 				break;
 			case 'delete':
 				$keys = $this->CI->input->post($this->key_field);
@@ -524,6 +525,7 @@ class Crud {
 				break;
 			case 'delete_action':
 				$returns .= $this->_form_delete_action();
+				return $returns;
 				break;
 		}
 		

@@ -6,20 +6,28 @@ exit('No direct script access allowed');
 /**
  * Template model
  *
- * @property SC_acl $SC_acl
  * @property SC_auth $SC_auth
- * @property SC_users $SC_users
  * @property SC_menus $SC_menus
+ * @property SC_preferences $SC_preferences
  * @property SC_roles $SC_roles
+ * @property SC_users $SC_users
  *
  * @author Anton Raharja
  */
-class SC_template extends CI_Model {
+class Template extends CI_Model {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model(array('SC_ACL', 'SC_auth', 'SC_menus', 'SC_preferences', 'SC_roles', 'SC_users'));
-		$this->load->library(array('table', 'Form'));
+		$this->load->model(
+			array(
+				'speedcoding/SC_auth', 
+				'speedcoding/SC_menus', 
+				'speedcoding/SC_preferences', 
+				'speedcoding/SC_roles', 
+				'speedcoding/SC_users'
+			)
+		);
+		$this->load->library(array('table', 'speedcoding/Form'));
 	}
 
 	/**
@@ -29,17 +37,13 @@ class SC_template extends CI_Model {
 	 */
 	public function get_login($user_id=NULL) {
 		if (!isset($user_id)) {
-			$user_id = $this->get_user_id();
+			$user_id = $this->SC_auth->get_user_id();
 			if (!isset($user_id)) {
 				return FALSE;
 			}
 		}
-		$preference_id = $this->SC_users->get_preference_id($user_id);
-		$preferences = $this->SC_preferences->get($preference_id);
-		$role_id = $this->SC_users->get_role_id($user_id);
-		$data['user_id'] = $user_id;
-		$data['preference_id'] = $preference_id;
-		$data['role_id'] = $role_id;
+		$data = $this->SC_auth->get_login_id($user_id);
+		$preferences = $this->SC_preferences->get($data['preference_id']);
 		if (count($preferences) > 0) {
 			$data['first_name'] = $preferences[0]->first_name;
 			$data['last_name'] = $preferences[0]->last_name;
@@ -97,7 +101,7 @@ class SC_template extends CI_Model {
 	 */
 	public function menu_array() {
 		$data = array();
-		if ($this->SC_ACL->get_access()) {
+		if ($this->SC_auth->get_access()) {
 			$role_id = $this->SC_users->get_role_id($this->SC_auth->get_user_id());
 			$returns = $this->SC_roles->get_menu_id($role_id);
 			foreach ($returns as $row) {

@@ -7,7 +7,7 @@ exit('No direct script access allowed');
  * Process controller
  *
  * @property SC_auth $SC_auth
- * @property SC_template $SC_template
+ * @property template $template
  *
  * @author Anton Raharja
  *
@@ -16,7 +16,7 @@ class Process extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model(array('SC_auth', 'SC_template'));
+		$this->load->model(array('speedcoding/SC_auth', 'template'));
 		$this->load->helper(array('form'));
 		$this->load->library(array('uri'));
 	}
@@ -29,8 +29,8 @@ class Process extends CI_Controller {
 		if ($this->session->userdata('login_state')) {
 			redirect('home');
 		} else {
-			$data['menu']['box'] = $this->SC_template->menu_box();
-			$data['login']['form'] = $this->SC_template->login_form();
+			$data['menu']['box'] = $this->template->menu_box();
+			$data['login']['form'] = $this->template->login_form();
 			$this->load->view('process/unauthorized', $data);
 		}
 	}
@@ -60,8 +60,8 @@ class Process extends CI_Controller {
 				$data = array('state' => FALSE, 'message' => _('Invalid login, please try again'));
 				echo json_encode($data);
 			} else {
-				$data['menu']['box'] = $this->SC_template->menu_box();
-				$data['login']['form'] = $this->SC_template->login_form();
+				$data['menu']['box'] = $this->template->menu_box();
+				$data['login']['form'] = $this->template->login_form();
 				$this->load->view('process/login_view', $data);
 			}
 		}
@@ -72,7 +72,7 @@ class Process extends CI_Controller {
 	 */
 	public function logout() {
 		$this->SC_auth->logout();
-		$data['menu']['box'] = $this->SC_template->menu_box();
+		$data['menu']['box'] = $this->template->menu_box();
 		$this->load->view('process/logout_view', $data);
 	}
 
@@ -80,8 +80,8 @@ class Process extends CI_Controller {
 	 * Process unauthorized
 	 */
 	public function unauthorized() {
-		$data['menu']['box'] = $this->SC_template->menu_box();
-		$data['login']['form'] = $this->SC_template->login_form();
+		$data['menu']['box'] = $this->template->menu_box();
+		$data['login']['form'] = $this->template->login_form();
 		$this->load->view('process/unauthorized', $data);
 	}
 

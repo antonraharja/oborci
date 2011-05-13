@@ -6,9 +6,9 @@ exit('No direct script access allowed');
 /**
  * Roles controller
  *
- * @property SC_ACL $SC_ACL
  * @property SC_auth $SC_auth
- * @property SC_template $SC_template
+ * @property SC_auth $SC_auth
+ * @property template $template
  * @property crud $crud
  *
  * @author Anton Raharja
@@ -18,9 +18,9 @@ class Roles extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model(array('SC_ACL', 'SC_auth', 'SC_template'));
-		$this->load->library('Crud');
-		$this->SC_ACL->validate();
+		$this->load->model(array('speedcoding/SC_auth', 'template'));
+		$this->load->library('speedcoding/Crud');
+		$this->SC_auth->validate();
 	}
 
 	/**
@@ -28,9 +28,9 @@ class Roles extends CI_Controller {
 	 *
 	 */
 	public function index($param=NULL) {
-		if ($this->SC_ACL->get_access()) {
-			$data['menu']['box'] = $this->SC_template->menu_box();
-			$data['login'] = $this->SC_auth->get_login();
+		if ($this->SC_auth->get_access()) {
+			$data['menu']['box'] = $this->template->menu_box();
+			$data['login'] = $this->template->get_login();
 			$data['crud'] = $this->_get_crud();
 			$this->load->view('roles_view', $data);
 		} else {

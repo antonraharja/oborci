@@ -16,7 +16,7 @@ class SC_users extends CI_Model {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model('SC_preferences');
+		$this->load->model('speedcoding/SC_preferences');
 	}
 
 	/**
