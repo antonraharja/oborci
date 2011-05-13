@@ -18,8 +18,37 @@ class SC_template extends CI_Model {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model(array('SC_ACL', 'SC_auth', 'SC_users', 'SC_roles', 'SC_menus'));
+		$this->load->model(array('SC_ACL', 'SC_auth', 'SC_menus', 'SC_preferences', 'SC_roles', 'SC_users'));
 		$this->load->library(array('table', 'Form'));
+	}
+
+	/**
+	 * Get login information
+	 * @param integer $user_id User ID, if user ID omitted get_login() will get user ID from session
+	 * @return array,boolean Array of logged in user data or FALSE when user not authenticated
+	 */
+	public function get_login($user_id=NULL) {
+		if (!isset($user_id)) {
+			$user_id = $this->get_user_id();
+			if (!isset($user_id)) {
+				return FALSE;
+			}
+		}
+		$preference_id = $this->SC_users->get_preference_id($user_id);
+		$preferences = $this->SC_preferences->get($preference_id);
+		$role_id = $this->SC_users->get_role_id($user_id);
+		$data['user_id'] = $user_id;
+		$data['preference_id'] = $preference_id;
+		$data['role_id'] = $role_id;
+		if (count($preferences) > 0) {
+			$data['first_name'] = $preferences[0]->first_name;
+			$data['last_name'] = $preferences[0]->last_name;
+		}
+		$role = $this->SC_roles->get($role_id);
+		if (count($role) > 0) {
+			$data['role'] = $role[0]->name;
+		}
+		return $data;
 	}
 
 	/**
@@ -75,24 +104,24 @@ class SC_template extends CI_Model {
 				$menu = $this->SC_menus->get($row->menu_id);
 				if (count($menu) > 0) {
 					$data[] = array(
-                                            'parent' => $menu[0]->parent,
-                                            'index' => $menu[0]->index,
-                                            'uri' => $menu[0]->uri,
-                                            'text' => _($menu[0]->text),
-                                            'title' => _($menu[0]->title),
-                                            'id_css' => $menu[0]->id_css
+						'parent' => $menu[0]->parent,
+						'index' => $menu[0]->index,
+						'uri' => $menu[0]->uri,
+						'text' => _($menu[0]->text),
+						'title' => _($menu[0]->title),
+						'id_css' => $menu[0]->id_css
 					);
 				}
 			}
 		} else {
 			$data[] = array(
-                            'parent' => 0,
-                            'index' => 0,
-                            'uri' => 'home',
-                            'text' => _('Home'),
-                            'title' => _('Home'),
-                            'id_css' => 'menu_home'
-                            );
+				'parent' => 0,
+				'index' => 0,
+				'uri' => 'home',
+				'text' => _('Home'),
+				'title' => _('Home'),
+				'id_css' => 'menu_home'
+			);
 		}
 		return $data;
 	}

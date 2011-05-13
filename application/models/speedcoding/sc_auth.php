@@ -16,10 +16,11 @@ class SC_auth extends CI_Model {
 
 	private $user_id = NULL;
 	private $login_state = FALSE;
+	private $valid = FALSE;
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model(array('SC_preferences', 'SC_roles', 'SC_users'));
+		$this->load->model(array('SC_roles', 'SC_screens', 'SC_users'));
 		if ($this->session->userdata('login_state')) {
 			$this->set_user_id($this->session->userdata('user_id'));
 			$this->set_login_state(TRUE);
@@ -125,34 +126,54 @@ class SC_auth extends CI_Model {
 	}
 
 	/**
-	 * Get login information
-	 * @param integer $user_id User ID, if user ID omitted get_login() will get user ID from session
-	 * @return array,boolean Array of logged in user data or FALSE when user not authenticated
+	 * Get access state
+	 * @return boolean TRUE if visitor has access to current URI
 	 */
-	public function get_login($user_id=NULL) {
-		if (!isset($user_id)) {
-			$user_id = $this->get_user_id();
-			if (!isset($user_id)) {
-				return FALSE;
-			}
-		}
-		$preference_id = $this->SC_users->get_preference_id($user_id);
-		$preferences = $this->SC_preferences->get($preference_id);
-		$role_id = $this->SC_users->get_role_id($user_id);
-		$data['user_id'] = $user_id;
-		$data['preference_id'] = $preference_id;
-		$data['role_id'] = $role_id;
-		if (count($preferences) > 0) {
-			$data['first_name'] = $preferences[0]->first_name;
-			$data['last_name'] = $preferences[0]->last_name;
-		}
-		$role = $this->SC_roles->get($role_id);
-		if (count($role) > 0) {
-			$data['role'] = $role[0]->name;
-		}
-		return $data;
+	public function get_access() {
+		return $this->valid;
 	}
 
+	/**
+	 * Set access state
+	 * @param NULL
+	 */
+	private function set_access($valid) {
+		$this->valid = $valid;
+	}
+
+	/**
+	 * Validate if user has access to this URI
+	 * @return boolean TRUE if visitor has access to current URI
+	 */
+	public function validate() {
+		if ($this->SC_auth->get_login_state()) {
+			$data = $this->SC_auth->get_login();
+			$role_id = $data['role_id'];
+			$uri = NULL;
+			if ($this->uri->rsegment(1)) {
+				$uri = $this->uri->rsegment(1);
+			}
+			if ($this->uri->rsegment(2) && ($this->uri->rsegment(2) != 'index')) {
+				$uri .= '/' . $this->uri->rsegment(2);
+			}
+			$returns = $this->SC_screens->get_by_uri($uri);
+			if (count($returns) > 0) {
+				$screen_id = $returns[0]->id;
+				$id = $this->SC_roles->get_roles_screens_id($role_id, $screen_id);
+				if ($id) {
+					$this->set_access(TRUE);
+					return $this->get_access();
+				} else {
+					$this->set_access(FALSE);
+					return $this->get_access();
+				}
+			}
+		} else {
+			$this->set_access(FALSE);
+			return $this->get_access();
+		}
+	}
+	
 }
 
 /* End of file sc_auth.php */
