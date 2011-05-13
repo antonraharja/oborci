@@ -48,7 +48,7 @@ class Template extends CI_Model {
 			$data['first_name'] = $preferences[0]->first_name;
 			$data['last_name'] = $preferences[0]->last_name;
 		}
-		$role = $this->SC_roles->get($role_id);
+		$role = $this->SC_roles->get($data['role_id']);
 		if (count($role) > 0) {
 			$data['role'] = $role[0]->name;
 		}

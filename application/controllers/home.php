@@ -7,7 +7,6 @@ exit('No direct script access allowed');
  * Home controller
  *
  * @property SC_auth $SC_auth
- * @property SC_auth $SC_auth
  * @property template $template
  *
  * @author Anton Raharja

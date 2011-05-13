@@ -7,9 +7,8 @@ exit('No direct script access allowed');
  * Roles controller
  *
  * @property SC_auth $SC_auth
- * @property SC_auth $SC_auth
- * @property template $template
  * @property crud $crud
+ * @property template $template
  *
  * @author Anton Raharja
  *
