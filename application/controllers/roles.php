@@ -66,6 +66,7 @@ class Roles extends CI_Controller {
 					'type' => 'input',
 					'unique' => TRUE,
 					'show_value' => TRUE,
+					'mandatory' => TRUE,
 				),
 			),
 			'delete' => array(

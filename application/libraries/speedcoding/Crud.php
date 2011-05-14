@@ -17,6 +17,7 @@ class Crud {
 	private $fields = NULL;
 	private $config = NULL;
 	private $pagination = NULL;
+	private $flashdata = NULL;
 	private $CI = NULL;
 
 	function __construct() {
@@ -58,6 +59,7 @@ class Crud {
 	 * @return string $returns Insert or add form
 	 */
 	private function _form_insert() {
+		$flashdata = $this->flashdata;
 		$data = array(
 			array(
 				'open' => array(
@@ -71,15 +73,15 @@ class Crud {
 			),),
 		);
 		foreach ($this->insert as $row) {
+			$row['value'] = $flashdata['inputs'][$row['name']];
 			$data[] = array(
 				$row['type'] => $row
 			);
 			if ($row['confirm']) {
 				$row['name'] = $row['name'].'_confirm';
 				$row['label'] = $row['confirm_label'];
-				$data[] = array(
-					$row['type'] => $row
-				);
+				unset($row['value']);
+				$data[] = array($row['type'] => $row);
 			}
 		}
 		$data[] = array(
@@ -120,42 +122,66 @@ class Crud {
 	private function  _form_insert_process() {
 		$returns = NULL;
 		$error = NULL;
+		
+		// get valid inputs
 		$data = $this->_get_data_by_name('insert');
 		$inputs = $this->_get_valid_inputs('insert');
+		
+		// set flashdata containing current inputs, incase we need it (on error for instance)
+		$flashdata['back_button']['crud_action'] = 'insert';
+		$flashdata['back_button']['inputs'] = $inputs;
+		
+		// process answers or inputs
 		foreach ($inputs as $key => $val) {
-			$data[$key]['value'] = $val;
+			// check if the field is unique
 			if ($data[$key]['unique']) {
 				$query = $this->CI->db->get_where($this->properties['datasource'], array( $key => $val ));
 				if ($query->num_rows()) {
 					$error[$key] = t('Data is already exists');
 				}
 			}
+			// check if the field need to be confirmed, password for instance
 			if ($data[$key]['confirm']) {
 				$confirm_val = $this->CI->input->post($key.'_confirm');
 				if ($confirm_val != $val) {
 					$error[$key] = t('Confirmation answer is different');
 				}
 			}
+			// check if the field is mandatory 
 			if ($data[$key]['mandatory']) {
 				if (empty($val)) {
 					$error[$key] = t('You must fill this field');
 				}
 			}
+			// check if the field is disabled or readonly, unset the inputs if it is
 			if ($data[$key]['disabled'] || $data[$key]['readonly']) {
 				unset($data[$key]);
 			}
 		}
+		
+		// determine to returns error messages or success messages
 		if (count($error) > 0) {
 			$error_string = NULL;
 			foreach ($error as $key1 => $val1) {
 				$error_string .= '<p id="message_error">'.$key1.' - '.$val1.'</p>';
 			}
 			$returns .= $error_string;
+			
+			// set flashdata to session, this data will be used to re-entry the input value
+			$this->CI->session->set_userdata($flashdata);
+			
 		} else {
-			// FIXME have not saved anything yet
-			$returns .= '<p id="message_success">'.t('Data has been saved').'</p>';
+			$result = $this->CI->db->insert($this->properties['datasource'], $inputs);
+			if ($result) { 
+				$returns .= '<p id="message_success">'.t('Data has been saved').'</p>';
+			} else {
+				$returns .= '<p id="message_error">'.t('Fail to save data').'</p>';
+			}
 		}
+		
+		// always add back button
 		$returns .= anchor($this->properties['uri'], t('Back'));
+		
 		return $returns;
 	}
 	
@@ -164,7 +190,7 @@ class Crud {
 	 * @return string $returns Update or edit form
 	 */
 	private function _form_update() {
-		$fields['select'] = array();
+		$flashdata = $this->flashdata;
 		$data = array(
 			array(
 				'open' => array(
@@ -172,15 +198,28 @@ class Crud {
 					'name' => $this->properties['name'].'_form_update',
 			),),
 			array(
-					'hidden' => array(
-						'name' => 'crud_action',
-						'value' => 'update_action',
+				'hidden' => array(
+					'name' => 'crud_action',
+					'value' => 'update_action',
 			),),
 		);
-		$keys = $this->CI->input->post($this->key_field);
+		if (isset($flashdata['inputs'][0]['id'])) {
+			foreach ($flashdata['inputs'] as $row) {
+				$keys[] = $row['id'];
+			}
+		} else {
+			$keys = $this->CI->input->post($this->key_field);
+		}
 		$i = 0;
 		foreach ($keys as $val) {
-			$i++;
+			$data[] = array(
+				'input' => array(
+					'name' => $this->key_field.'__',
+					'label' => $this->key_field,
+					'value' => $val,
+					'readonly' => TRUE,
+				),
+			);
 			$this->CI->db->select($this->fields['update']);
 			$this->CI->db->where($this->key_field, $val);
 			$query = $this->CI->db->get($this->properties['datasource']);
@@ -190,6 +229,10 @@ class Crud {
 					$row['name'] = $original_name.'_'.$i;
 					if ($row['show_value']) {
 						$row['value'] = $result[$original_name];
+					}
+					if (isset($row['disabled'])) {
+						$row['readonly'] = $row['disabled'];
+						unset($row['disabled']);
 					}
 					$data[] = array(
 						$row['type'] => $row
@@ -207,15 +250,26 @@ class Crud {
 							'value' => $val,
 						),
 					);
+					$data[] = array(
+						'hidden' => array(
+							'name' => $this->key_field.'[]',
+							'value' => $val,
+						),
+					);
 				}
 			}
+			$i++;
 		}
+		$data[] = array(
+			'hidden' => array(
+				'name' => 'field_num',
+				'value' => $i,
+		),);
 		$data[] = array(
 			'submit' => array(
 				'name' => 'crud_submit_update',
 				'value' => t('Submit')
-			),
-		);
+		),);
 		$this->CI->form->set_data($data);
 
 		$returns = "<div id='crud_grid'>";
@@ -228,11 +282,108 @@ class Crud {
 	}
 
 	/**
+	 * Create update or edit action form
+	 * @return string $returns Update or edit action form
+	 */
+	private function _form_update_action() {
+		$returns = "<div id='crud_grid'>";
+		$returns .= $this->properties['crud_title'];
+		$returns .= $this->properties['update_form_title'];
+		$returns .= "<div id='crud_form_update'>";
+		$returns .= $this->_form_update_process();
+		$returns .= "</div></div>";
+		return $returns;
+	}
+
+	/**
+	 * Process inputs on update form
+	 * @return string HTML returns on process
+	 */
+	private function  _form_update_process() {
+		$returns = NULL;
+		$error = NULL;
+		
+		// get valid inputs
+		$data = $this->_get_data_by_name('update');
+		$inputs = $this->_get_valid_inputs('update');
+		
+		// set flashdata containing current inputs, incase we need it (on error for instance)
+		$flashdata['back_button']['crud_action'] = 'update';
+		$flashdata['back_button']['inputs'] = $inputs;
+		
+		// process answers or inputs
+		foreach ($inputs as $block_key => $block_val) {
+			foreach ($block_val as $key => $val) {
+				if ($key != $this->key_field) {
+					// check if the field is unique
+					if ($data[$key]['unique']) {
+						$query = $this->CI->db->get_where($this->properties['datasource'], array( $key => $val ));
+						if ($query->num_rows()) {
+							$error[$block_key][$key] = t('Data is already exists');
+						}
+					}
+					// check if the field need to be confirmed, password for instance
+					if ($data[$key]['confirm']) {
+						$confirm_val = $this->CI->input->post($key.'_confirm_'.$block_key);
+						if ($confirm_val != $val) {
+							$error[$block_key][$key] = t('Confirmation answer is different');
+						}
+					}
+					// check if the field is mandatory 
+					if ($data[$key]['mandatory']) {
+						if (empty($val)) {
+							$error[$block_key][$key] = t('You must fill this field');
+						}
+					}
+					// check if the field is disabled or readonly, unset the inputs if it is
+					if ($data[$block_key][$key]['disabled'] || $data[$block_key][$key]['readonly']) {
+						unset($data[$block_key][$key]);
+					}
+				}
+			}
+		}
+		
+		// determine to returns error messages or success messages
+		$error_exists = FALSE;
+		foreach ($inputs as $block_key => $block_val) {
+			$key_field_val = $this->CI->input->post($this->key_field.'_'.$block_key);
+			if (count($error[$block_key]) > 0) {
+				$error_string = NULL;
+				foreach ($error[$block_key] as $key1 => $val1) {
+					$error_string .= '<p id="message_error">'.$this->key_field.':'.$key_field_val.' - '.$key1.' - '.$val1.'</p>';
+				}
+				$returns .= $error_string;
+				$error_exists = TRUE;
+			} else {
+				$result = $this->CI->db->update($this->properties['datasource'], $block_val, array($this->key_field => $key_field_val));
+				if ($result) { 
+					unset($flashdata['back_button']['inputs'][$block_key]);
+					$returns .= '<p id="message_success">'.$this->key_field.':'.$key_field_val.' - '.t('Data has been saved').'</p>';
+				} else {
+					$returns .= '<p id="message_error">'.$this->key_field.':'.$key_field_val.' - '.t('Fail to save data').'</p>';
+					$error_exists = TRUE;
+				}
+			}
+		}
+
+		if ($error_exists) {
+			// set flashdata to session, this data will be used to re-entry the input value
+			sort($flashdata['back_button']['inputs']);
+			$this->CI->session->set_userdata($flashdata);
+		}
+		
+		// always add back button
+		$returns .= anchor($this->properties['uri'], t('Back'));
+		
+		return $returns;
+	}
+	
+	/**
 	 * Create delete or del form
 	 * @return string $returns Delete or del form
 	 */
 	private function _form_delete() {
-		$fields['select'] = array();
+		$flashdata = $this->flashdata;
 		$data = array(
 			array(
 				'open' => array(
@@ -245,10 +396,23 @@ class Crud {
 					'value' => 'delete_action',
 			),),
 		);
-		$keys = $this->CI->input->post($this->key_field);
+		if (isset($flashdata['inputs'][0]['id'])) {
+			foreach ($flashdata['inputs'] as $row) {
+				$keys[] = $row['id'];
+			}
+		} else {
+			$keys = $this->CI->input->post($this->key_field);
+		}
 		$i = 0;
 		foreach ($keys as $val) {
-			$i++;
+			$data[] = array(
+				'input' => array(
+					'name' => $this->key_field.'__',
+					'label' => $this->key_field,
+					'value' => $val,
+					'readonly' => TRUE,
+				),
+			);
 			$this->CI->db->select($this->fields['delete']);
 			$this->CI->db->where($this->key_field, $val);
 			$query = $this->CI->db->get($this->properties['datasource']);
@@ -256,9 +420,16 @@ class Crud {
 				foreach ($this->delete as $row) {
 					$row['type'] = 'input';
 					$row['value'] = $result[$row['name']];
-					$row['disabled'] = TRUE;
+					unset($row['disabled']);
+					$row['readonly'] = TRUE;
 					$data[] = array(
 						$row['type'] => $row
+					);
+					$data[] = array(
+						'hidden' => array(
+							'name' => $this->key_field.'_'.$i,
+							'value' => $val,
+						),
 					);
 					$data[] = array(
 						'hidden' => array(
@@ -268,7 +439,13 @@ class Crud {
 					);
 				}
 			}
+			$i++;
 		}
+		$data[] = array(
+			'hidden' => array(
+				'name' => 'field_num',
+				'value' => $i,
+		),);
 		$data[] = array(
 			'submit' => array(
 				'name' => 'crud_submit_delete',
@@ -287,20 +464,6 @@ class Crud {
 	}
 
 	/**
-	 * Create update or edit action form
-	 * @return string $returns Update or edit action form
-	 */
-	private function _form_update_action() {
-		$returns = "<div id='crud_grid'>";
-		$returns .= $this->properties['crud_title'];
-		$returns .= $this->properties['update_form_title'];
-		$returns .= "<div id='crud_form_update'>";
-		$returns .= print_r($_POST, TRUE);
-		$returns .= "</div></div>";
-		return $returns;
-			}
-
-	/**
 	 * Create delete or del form
 	 * @return string $returns Delete or del action form
 	 */
@@ -309,11 +472,54 @@ class Crud {
 		$returns .= $this->properties['crud_title'];
 		$returns .= $this->properties['delete_form_title'];
 		$returns .= "<div id='crud_form_delete'>";
-		$returns .= print_r($_POST, TRUE);
+		$returns .= $this->_form_delete_process();
 		$returns .= "</div></div>";
 		return $returns;
 	}
 
+	/**
+	 * Process inputs on delete form
+	 * @return string HTML returns on process
+	 */
+	private function  _form_delete_process() {
+		$returns = NULL;
+		$error = NULL;
+		
+		// get valid inputs
+		$data = $this->_get_data_by_name('delete');
+		$inputs = $this->_get_valid_inputs('delete');
+		
+		// set flashdata containing current inputs, incase we need it (on error for instance)
+		$flashdata['back_button']['crud_action'] = 'delete';
+		$flashdata['back_button']['inputs'] = $inputs;
+
+		// process answers or inputs
+		// determine to returns error messages or success messages
+		$error_exists = FALSE;
+		foreach ($inputs as $block_key => $block_val) {
+			$key_field_val = $this->CI->input->post($this->key_field.'_'.$block_key);
+			$result = $this->CI->db->delete($this->properties['datasource'], array($this->key_field => $key_field_val));
+			if ($result) { 
+				unset($flashdata['back_button']['inputs'][$block_key]);
+				$returns .= '<p id="message_success">'.$this->key_field.':'.$key_field_val.' - '.t('Data has been deleted').'</p>';
+			} else {
+				$returns .= '<p id="message_error">'.$this->key_field.':'.$key_field_val.' - '.t('Fail to delete data').'</p>';
+				$error_exists = TRUE;
+			}
+		}
+
+		if ($error_exists) {
+			// set flashdata to session, this data will be used to re-entry the input value
+			sort($flashdata['back_button']['inputs']);
+			$this->CI->session->set_userdata($flashdata);
+		}
+		
+		// always add back button
+		$returns .= anchor($this->properties['uri'], t('Back'));
+		
+		return $returns;
+	}
+	
 	/**
 	 * Create checkbox on form
 	 * @param string $key_value Value of key field
@@ -484,10 +690,26 @@ class Crud {
 	 */
 	private function _get_valid_inputs($action) {
 		$data = NULL;
-		foreach ($this->fields[$action] as $field) {
-			$val = $this->CI->input->post($field);
-			$data[$field] = $val;
-		}		
+		switch ($action) {
+			case 'insert':
+				foreach ($this->fields[$action] as $field) {
+					$val = $this->CI->input->post($field);
+					$data[$field] = $val;
+				}
+				$data[$this->key_field] = $this->CI->input->post($this->key_field);
+				break;
+			case 'update':		
+			case 'delete':		
+				$field_num = $this->CI->input->post('field_num');
+				for ($i=0;$i<$field_num;$i++) {
+					foreach ($this->fields[$action] as $field) {
+						$val = $this->CI->input->post($field.'_'.$i);
+						$data[$i][$field] = $val;
+					}
+					$data[$i][$this->key_field] = $this->CI->input->post($this->key_field.'_'.$i);
+				}
+				break;
+		}
 		return $data;
 	}
 	
@@ -564,7 +786,16 @@ class Crud {
 		$returns = NULL;
 		
 		// get crud_action, insert, update, delete or handle actions
-		$crud_action = trim(strtolower($this->CI->input->post('crud_action')));
+		// can be from previous form or fresh
+		$back_button_data = $this->CI->session->userdata('back_button');
+		if (isset($back_button_data['crud_action'])) {
+			$crud_action = $back_button_data['crud_action'];
+		} else {
+			$crud_action = trim(strtolower($this->CI->input->post('crud_action')));
+		}
+		$this->flashdata = $back_button_data;
+		$this->CI->session->unset_userdata('back_button');
+		
 		switch ($crud_action) {
 			case 'insert':
 				$returns .= $this->_form_insert();
@@ -575,8 +806,8 @@ class Crud {
 				return $returns;
 				break;
 			case 'update':
-				$keys = $this->CI->input->post($this->key_field);
-				if (isset($keys[0])) {
+				$key = $this->CI->input->post($this->key_field.'_0');
+				if (isset($key)) {
 					$returns .= $this->_form_update();
 					return $returns;
 				}
@@ -586,8 +817,8 @@ class Crud {
 				return $returns;
 				break;
 			case 'delete':
-				$keys = $this->CI->input->post($this->key_field);
-				if (isset($keys[0])) {
+				$key = $this->CI->input->post($this->key_field.'_0');
+				if (isset($key)) {
 					$returns .= $this->_form_delete();
 					return $returns;
 				}
