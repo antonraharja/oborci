@@ -66,8 +66,8 @@ class Users extends CI_Controller {
 					'name' => 'password',
 					'label' => t('Password'),
 					'type' => 'password',
-					'confirm' => TRUE,
 					'mandatory' => TRUE,
+					'confirm' => TRUE,
 					'confirm_label' => t('Confirm password'),
 				),
 			),
@@ -102,8 +102,7 @@ class Users extends CI_Controller {
 					'name' => 'username',
 					'label' => t('Username'),
 					'type' => 'input',
-					'show_value' => TRUE,
-					'disabled' => TRUE,
+					'readonly' => TRUE,
 				),
 				array(
 					'name' => 'password',
@@ -111,7 +110,6 @@ class Users extends CI_Controller {
 					'type' => 'password',
 					'confirm' => TRUE,
 					'confirm_label' => t('Confirm password'),
-					'mandatory' => TRUE,
 				),
 			),
 			'delete' => array(

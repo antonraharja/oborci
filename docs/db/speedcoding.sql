@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 09, 2011 at 04:17 AM
+-- Generation Time: May 15, 2011 at 02:31 PM
 -- Server version: 5.5.8
 -- PHP Version: 5.3.5
 
@@ -25,6 +25,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Table structure for table `sc_menus`
 --
 
+DROP TABLE IF EXISTS `sc_menus`;
 CREATE TABLE IF NOT EXISTS `sc_menus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `module_id` int(11) NOT NULL,
@@ -52,6 +53,7 @@ INSERT INTO `sc_menus` (`id`, `module_id`, `parent`, `index`, `uri`, `text`, `ti
 -- Table structure for table `sc_modules`
 --
 
+DROP TABLE IF EXISTS `sc_modules`;
 CREATE TABLE IF NOT EXISTS `sc_modules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `path` varchar(100) NOT NULL,
@@ -73,6 +75,7 @@ INSERT INTO `sc_modules` (`id`, `path`, `name`, `status`) VALUES
 -- Table structure for table `sc_preferences`
 --
 
+DROP TABLE IF EXISTS `sc_preferences`;
 CREATE TABLE IF NOT EXISTS `sc_preferences` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `email` varchar(200) NOT NULL,
@@ -95,11 +98,12 @@ INSERT INTO `sc_preferences` (`id`, `email`, `first_name`, `last_name`) VALUES
 -- Table structure for table `sc_roles`
 --
 
+DROP TABLE IF EXISTS `sc_roles`;
 CREATE TABLE IF NOT EXISTS `sc_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `sc_roles`
@@ -115,6 +119,7 @@ INSERT INTO `sc_roles` (`id`, `name`) VALUES
 -- Table structure for table `sc_roles_menus`
 --
 
+DROP TABLE IF EXISTS `sc_roles_menus`;
 CREATE TABLE IF NOT EXISTS `sc_roles_menus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_id` int(11) NOT NULL,
@@ -139,6 +144,7 @@ INSERT INTO `sc_roles_menus` (`id`, `role_id`, `menu_id`) VALUES
 -- Table structure for table `sc_roles_screens`
 --
 
+DROP TABLE IF EXISTS `sc_roles_screens`;
 CREATE TABLE IF NOT EXISTS `sc_roles_screens` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role_id` int(11) NOT NULL,
@@ -163,6 +169,7 @@ INSERT INTO `sc_roles_screens` (`id`, `role_id`, `screen_id`) VALUES
 -- Table structure for table `sc_screens`
 --
 
+DROP TABLE IF EXISTS `sc_screens`;
 CREATE TABLE IF NOT EXISTS `sc_screens` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `module_id` int(11) NOT NULL,
@@ -186,6 +193,7 @@ INSERT INTO `sc_screens` (`id`, `module_id`, `name`, `uri`) VALUES
 -- Table structure for table `sc_sessions`
 --
 
+DROP TABLE IF EXISTS `sc_sessions`;
 CREATE TABLE IF NOT EXISTS `sc_sessions` (
   `session_id` varchar(40) NOT NULL DEFAULT '0',
   `ip_address` varchar(16) NOT NULL DEFAULT '0',
@@ -199,16 +207,13 @@ CREATE TABLE IF NOT EXISTS `sc_sessions` (
 -- Dumping data for table `sc_sessions`
 --
 
-INSERT INTO `sc_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
-('2e94cd38ff78ace37937cb2c363782db', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100', 1304876320, ''),
-('fd29369996d725c8f198e83ad0127467', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100', 1304911799, '');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `sc_users`
 --
 
+DROP TABLE IF EXISTS `sc_users`;
 CREATE TABLE IF NOT EXISTS `sc_users` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `role_id` int(11) NOT NULL,
@@ -216,12 +221,12 @@ CREATE TABLE IF NOT EXISTS `sc_users` (
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
 -- Dumping data for table `sc_users`
 --
 
 INSERT INTO `sc_users` (`id`, `role_id`, `preference_id`, `username`, `password`) VALUES
-(1, 1, 1, 'admin', 'password'),
-(2, 2, 2, 'manager', 'password');
+(1, 1, 1, 'admin', ''),
+(2, 1, 2, 'manager', '');
