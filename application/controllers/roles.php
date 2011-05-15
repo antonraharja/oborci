@@ -75,8 +75,10 @@ class Roles extends CI_Controller {
 					'label' => t('Role name'),
 				),
 			),
+			'datasource' => array(
+				'table' => 'sc_roles',
+			),
 			'properties' => array(
-				'datasource' => 'sc_roles',
 				'name' => 'roles',
 				'uri' => 'roles/index',
 				'index_column' => TRUE,
@@ -85,11 +87,11 @@ class Roles extends CI_Controller {
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE,
-				'crud_title' => '<h1>Role Management</h1>',
-				'crud_form_title' => '<h2>List of Roles</h2>',
-				'insert_form_title' => '<h2>Insert Data</h2>',
-				'update_form_title' => '<h2>Update Data</h2>',
-				'delete_form_title' => '<h2>Delete Data</h2>',
+				'crud_title' => '<h1>'.t('Role Management').'</h1>',
+				'crud_form_title' => '<h2>'.t('List of Roles').'</h2>',
+				'insert_form_title' => '<h2>'.t('Insert Data').'</h2>',
+				'update_form_title' => '<h2>'.t('Update Data').'</h2>',
+				'delete_form_title' => '<h2>'.t('Delete Data').'</h2>',
 			),
 		);
 		$this->crud->set_data($data);

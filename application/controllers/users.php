@@ -90,8 +90,10 @@ class Users extends CI_Controller {
 					'label' => t('Username'),
 				),
 			),
+			'datasource' => array(
+				'table' => 'sc_users',
+			),
 			'properties' => array(
-				'datasource' => 'sc_users',
 				'name' => 'users',
 				'uri' => 'users/index',
 				'index_column' => TRUE,
@@ -100,11 +102,11 @@ class Users extends CI_Controller {
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE,
-				'crud_title' => '<h1>User Management</h1>',
-				'crud_form_title' => '<h2>List of Users</h2>',
-				'insert_form_title' => '<h2>Insert Data</h2>',
-				'update_form_title' => '<h2>Update Data</h2>',
-				'delete_form_title' => '<h2>Delete Data</h2>',
+				'crud_title' => '<h1>'.t('User Management').'</h1>',
+				'crud_form_title' => '<h2>'.t('List of Users').'</h2>',
+				'insert_form_title' => '<h2>'.t('Insert Data').'</h2>',
+				'update_form_title' => '<h2>'.t('Update Data').'</h2>',
+				'delete_form_title' => '<h2>'.t('Delete Data').'</h2>',
 			),
 		);
 		$this->crud->set_data($data);

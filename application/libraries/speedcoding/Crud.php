@@ -12,6 +12,7 @@ class Crud {
 	private $select = NULL;
 	private $update = NULL;
 	private $delete = NULL;
+	private $datasource = NULL;
 	private $properties = NULL;
 	private $key_field = NULL;
 	private $fields = NULL;
@@ -128,29 +129,29 @@ class Crud {
 		$inputs = $this->_get_valid_inputs('insert');
 		
 		// set flashdata containing current inputs, incase we need it (on error for instance)
-		$flashdata['back_button']['crud_action'] = 'insert';
-		$flashdata['back_button']['inputs'] = $inputs;
+		$flashdata['crud_flashdata']['crud_action'] = 'insert';
+		$flashdata['crud_flashdata']['inputs'] = $inputs;
 		
 		// process answers or inputs
 		foreach ($inputs as $key => $val) {
 			// check if the field is unique
 			if ($data[$key]['unique']) {
-				$query = $this->CI->db->get_where($this->properties['datasource'], array( $key => $val ));
+				$query = $this->CI->db->get_where($this->datasource['table'], array( $key => $val ));
 				if ($query->num_rows()) {
-					$error[$key] = t('Data is already exists');
+					$error[$key] = t('data is already exists');
 				}
 			}
 			// check if the field need to be confirmed, password for instance
 			if ($data[$key]['confirm']) {
 				$confirm_val = $this->CI->input->post($key.'_confirm');
 				if ($confirm_val != $val) {
-					$error[$key] = t('Confirmation answer is different');
+					$error[$key] = t('confirmation answer is different');
 				}
 			}
 			// check if the field is mandatory 
 			if ($data[$key]['mandatory']) {
 				if (empty($val)) {
-					$error[$key] = t('You must fill this field');
+					$error[$key] = t('you must fill this field');
 				}
 			}
 			// check if the field is disabled or readonly, unset the inputs if it is
@@ -171,11 +172,11 @@ class Crud {
 			$this->CI->session->set_userdata($flashdata);
 			
 		} else {
-			$result = $this->CI->db->insert($this->properties['datasource'], $inputs);
+			$result = $this->CI->db->insert($this->datasource['table'], $inputs);
 			if ($result) { 
-				$returns .= '<p id="message_success">'.t('Data has been saved').'</p>';
+				$returns .= '<p id="message_success">'.t('data has been saved').'</p>';
 			} else {
-				$returns .= '<p id="message_error">'.t('Fail to save data').'</p>';
+				$returns .= '<p id="message_error">'.t('fail to save data').'</p>';
 			}
 		}
 		
@@ -222,7 +223,7 @@ class Crud {
 			);
 			$this->CI->db->select($this->fields['update']);
 			$this->CI->db->where($this->key_field, $val);
-			$query = $this->CI->db->get($this->properties['datasource']);
+			$query = $this->CI->db->get($this->datasource['table']);
 			foreach ($query->result_array() as $result) {
 				foreach ($this->update as $row) {
 					$original_name = $row['name'];
@@ -308,8 +309,8 @@ class Crud {
 		$inputs = $this->_get_valid_inputs('update');
 		
 		// set flashdata containing current inputs, incase we need it (on error for instance)
-		$flashdata['back_button']['crud_action'] = 'update';
-		$flashdata['back_button']['inputs'] = $inputs;
+		$flashdata['crud_flashdata']['crud_action'] = 'update';
+		$flashdata['crud_flashdata']['inputs'] = $inputs;
 		
 		// process answers or inputs
 		foreach ($inputs as $block_key => $block_val) {
@@ -317,22 +318,22 @@ class Crud {
 				if ($key != $this->key_field) {
 					// check if the field is unique
 					if ($data[$key]['unique']) {
-						$query = $this->CI->db->get_where($this->properties['datasource'], array( $key => $val ));
+						$query = $this->CI->db->get_where($this->datasource['table'], array( $key => $val ));
 						if ($query->num_rows()) {
-							$error[$block_key][$key] = t('Data is already exists');
+							$error[$block_key][$key] = t('data is already exists');
 						}
 					}
 					// check if the field need to be confirmed, password for instance
 					if ($data[$key]['confirm']) {
 						$confirm_val = $this->CI->input->post($key.'_confirm_'.$block_key);
 						if ($confirm_val != $val) {
-							$error[$block_key][$key] = t('Confirmation answer is different');
+							$error[$block_key][$key] = t('confirmation answer is different');
 						}
 					}
 					// check if the field is mandatory 
 					if ($data[$key]['mandatory']) {
 						if (empty($val)) {
-							$error[$block_key][$key] = t('You must fill this field');
+							$error[$block_key][$key] = t('you must fill this field');
 						}
 					}
 					// check if the field is disabled or readonly, unset the inputs if it is
@@ -350,17 +351,17 @@ class Crud {
 			if (count($error[$block_key]) > 0) {
 				$error_string = NULL;
 				foreach ($error[$block_key] as $key1 => $val1) {
-					$error_string .= '<p id="message_error">'.$this->key_field.':'.$key_field_val.' - '.$key1.' - '.$val1.'</p>';
+					$error_string .= '<p id="message_error">'.strtoupper($this->key_field).':'.$key_field_val.' - '.$key1.' - '.$val1.'</p>';
 				}
 				$returns .= $error_string;
 				$error_exists = TRUE;
 			} else {
-				$result = $this->CI->db->update($this->properties['datasource'], $block_val, array($this->key_field => $key_field_val));
+				$result = $this->CI->db->update($this->datasource['table'], $block_val, array($this->key_field => $key_field_val));
 				if ($result) { 
-					unset($flashdata['back_button']['inputs'][$block_key]);
-					$returns .= '<p id="message_success">'.$this->key_field.':'.$key_field_val.' - '.t('Data has been saved').'</p>';
+					unset($flashdata['crud_flashdata']['inputs'][$block_key]);
+					$returns .= '<p id="message_success">'.strtoupper($this->key_field).':'.$key_field_val.' - '.t('data has been saved').'</p>';
 				} else {
-					$returns .= '<p id="message_error">'.$this->key_field.':'.$key_field_val.' - '.t('Fail to save data').'</p>';
+					$returns .= '<p id="message_error">'.strtoupper($this->key_field).':'.$key_field_val.' - '.t('fail to save data').'</p>';
 					$error_exists = TRUE;
 				}
 			}
@@ -368,7 +369,7 @@ class Crud {
 
 		if ($error_exists) {
 			// set flashdata to session, this data will be used to re-entry the input value
-			sort($flashdata['back_button']['inputs']);
+			sort($flashdata['crud_flashdata']['inputs']);
 			$this->CI->session->set_userdata($flashdata);
 		}
 		
@@ -415,7 +416,7 @@ class Crud {
 			);
 			$this->CI->db->select($this->fields['delete']);
 			$this->CI->db->where($this->key_field, $val);
-			$query = $this->CI->db->get($this->properties['datasource']);
+			$query = $this->CI->db->get($this->datasource['table']);
 			foreach ($query->result_array() as $result) {
 				foreach ($this->delete as $row) {
 					$row['type'] = 'input';
@@ -490,27 +491,27 @@ class Crud {
 		$inputs = $this->_get_valid_inputs('delete');
 		
 		// set flashdata containing current inputs, incase we need it (on error for instance)
-		$flashdata['back_button']['crud_action'] = 'delete';
-		$flashdata['back_button']['inputs'] = $inputs;
+		$flashdata['crud_flashdata']['crud_action'] = 'delete';
+		$flashdata['crud_flashdata']['inputs'] = $inputs;
 
 		// process answers or inputs
 		// determine to returns error messages or success messages
 		$error_exists = FALSE;
 		foreach ($inputs as $block_key => $block_val) {
 			$key_field_val = $this->CI->input->post($this->key_field.'_'.$block_key);
-			$result = $this->CI->db->delete($this->properties['datasource'], array($this->key_field => $key_field_val));
+			$result = $this->CI->db->delete($this->datasource['table'], array($this->key_field => $key_field_val));
 			if ($result) { 
-				unset($flashdata['back_button']['inputs'][$block_key]);
-				$returns .= '<p id="message_success">'.$this->key_field.':'.$key_field_val.' - '.t('Data has been deleted').'</p>';
+				unset($flashdata['crud_flashdata']['inputs'][$block_key]);
+				$returns .= '<p id="message_success">'.$this->key_field.':'.$key_field_val.' - '.t('data has been deleted').'</p>';
 			} else {
-				$returns .= '<p id="message_error">'.$this->key_field.':'.$key_field_val.' - '.t('Fail to delete data').'</p>';
+				$returns .= '<p id="message_error">'.$this->key_field.':'.$key_field_val.' - '.t('fail to delete data').'</p>';
 				$error_exists = TRUE;
 			}
 		}
 
 		if ($error_exists) {
 			// set flashdata to session, this data will be used to re-entry the input value
-			sort($flashdata['back_button']['inputs']);
+			sort($flashdata['crud_flashdata']['inputs']);
 			$this->CI->session->set_userdata($flashdata);
 		}
 		
@@ -634,7 +635,7 @@ class Crud {
 				$this->pagination['per_page'],
 				$this->CI->uri->segment($this->CI->uri->total_segments()) * ($this->pagination['per_page'] - 1)
 			);
-			$query = $this->CI->db->get($this->properties['datasource']);
+			$query = $this->CI->db->get($this->datasource['table']);
 			$j =0;
 			foreach ($query->result_array() as $row) {
 				$j++;
@@ -742,6 +743,7 @@ class Crud {
 		$this->select = $data['select'];
 		$this->update = $data['update'];
 		$this->delete = $data['delete'];
+		$this->datasource = $data['datasource'];
 		$this->properties = $data['properties'];
 
 		foreach ($this->insert as $row) {
@@ -773,7 +775,7 @@ class Crud {
 			$this->CI->table->set_template($this->config['table_template']);
 		}
 
-		$this->pagination['total_rows'] = $this->CI->db->count_all($this->properties['datasource']);
+		$this->pagination['total_rows'] = $this->CI->db->count_all($this->datasource['table']);
 		$this->pagination['per_page'] = isset($this->properties['pagination_per_page']) ? $this->properties['pagination_per_page'] : '10';
 	}
 
@@ -787,14 +789,14 @@ class Crud {
 		
 		// get crud_action, insert, update, delete or handle actions
 		// can be from previous form or fresh
-		$back_button_data = $this->CI->session->userdata('back_button');
-		if (isset($back_button_data['crud_action'])) {
-			$crud_action = $back_button_data['crud_action'];
+		$crud_flashdata = $this->CI->session->userdata('crud_flashdata');
+		if (isset($crud_flashdata['crud_action'])) {
+			$crud_action = $crud_flashdata['crud_action'];
 		} else {
 			$crud_action = trim(strtolower($this->CI->input->post('crud_action')));
 		}
-		$this->flashdata = $back_button_data;
-		$this->CI->session->unset_userdata('back_button');
+		$this->flashdata = $crud_flashdata;
+		$this->CI->session->unset_userdata('crud_flashdata');
 		
 		switch ($crud_action) {
 			case 'insert':
