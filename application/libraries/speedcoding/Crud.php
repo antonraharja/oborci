@@ -608,8 +608,6 @@ class Crud {
 		$heading = NULL;
 		$column_size = 0;
 		
-		$data_select = $this->_get_data_by_name('select');
-		
 		// first column, index column
 		if ($this->properties['index_column']) {
 			$column_size = 1;
@@ -673,12 +671,14 @@ class Crud {
 				if ($this->properties['index_column']) {
 					$list[] = $index_column_count++; // index column
 				}
-
+				
+				$data_select = $this->_get_data_by_name('select');
 				foreach ($row as $key => $val) {
 					if (! $data_select[$key]['hidden']) {
 						$list[] = $row[$key]; // data columns
 					}
 				}
+				
 				if ($this->properties['update'] || $this->properties['delete']) {
 					$list[] = $this->_checkbox($row[$this->key_field]); // action column
 				}
@@ -776,6 +776,8 @@ class Crud {
 		$this->datasource = $data['datasource'];
 		$this->properties = $data['properties'];
 		
+		$this->key_field = $this->datasource['key_field'];
+		
 		// insert fields
 		foreach ($this->insert as $row) {
 			$fields['insert'][] = $row['name'];
@@ -788,9 +790,6 @@ class Crud {
 				$row_name = $row['table'].'.'.$row['name'];
 			}
 			$fields['select'][] = $row_name;
-			if (isset($row['key'])) {
-				$this->key_field = $row['name'];
-			}
 		}
 		$this->fields['select'] = $fields['select'];
 		
