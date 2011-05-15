@@ -77,6 +77,7 @@ class Form {
 	public function dropdown($data=NULL) {
 		$extra = NULL;
 		$returns = NULL;
+		$returns .= '<div id="form_dropdown">';
 		$name = $data['name'];
 		$options = $data['options'];
 		$selected = isset($data['selected']) ? $data['selected'] : '';
@@ -85,7 +86,12 @@ class Form {
 		foreach ($data['extra'] as $key => $val) {
 			$extra .= $key.'='.$val.' ';			
 		}		
+		if ($data['label']) {
+			$attr = array('id' => $data['extra']['id'].'_label');
+			$returns .= form_label($data['label'], $data['name'], $attr);
+		}
 		$returns .= form_dropdown($name, $options, $selected, $extra);
+		$returns .= "</div>";
 		return $returns;
 	}
 
@@ -123,6 +129,7 @@ class Form {
 	 */
 	public function input($data=NULL) {
 		$returns = NULL;
+		$returns .= '<div id="form_input">';
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['label']) {
 			$attr = array('id' => $data['id'].'_label');
@@ -140,6 +147,7 @@ class Form {
 		unset($data['confirm_label']);
 		unset($data['show_value']);
 		$returns .= form_input($data);
+		$returns .= "</div>";
 		return $returns;
 	}
 
@@ -150,6 +158,7 @@ class Form {
 	 */
 	public function password($data=NULL) {
 		$returns = NULL;
+		$returns .= '<div id="form_password">';
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['label']) {
 			$attr = array('id' => $data['id'].'_label');
@@ -161,6 +170,7 @@ class Form {
 		unset($data['confirm_label']);
 		unset($data['show_value']);
 		$returns .= form_password($data);
+		$returns .= "</div>";
 		return $returns;
 	}
 	

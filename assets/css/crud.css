@@ -49,14 +49,20 @@
 	background-color: #fed888;
 }
 
-#crud_th_name, #crud_th_username {
-	width: 100%;
+#crud_th_name {
+	width: auto;
+	border: 1px solid #f0f0f0;
+	background-color: #fed888;
+}
+
+#crud_th_username {
+	width: 70%;
 	border: 1px solid #f0f0f0;
 	background-color: #fed888;
 }
 
 #crud_th_id {
-	width: 20px;
+	width: auto;
 	border: 1px solid #f0f0f0;
 	background-color: #fed888;
 }

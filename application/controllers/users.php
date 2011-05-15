@@ -36,9 +36,25 @@ class Users extends CI_Controller {
 		}
 	}
 
+	private function _get_role_names() {
+		$returns = NULL;
+		$query = $this->db->get('sc_roles');
+		foreach ($query->result() as $row) {
+			$returns[$row->id] = $row->name;
+		}	
+		return $returns;
+	}
+	
 	private function _get_crud() {
 		$data = array(
 			'insert' => array(
+				array (
+					'name' => 'role_id',
+					'label' => t('Role Name'),
+					'type' => 'dropdown',
+					'options' => $this->_get_role_names(),
+					'mandatory' => TRUE,
+				),
 				array (
 					'name' => 'username',
 					'label' => t('Username'),
@@ -58,16 +74,30 @@ class Users extends CI_Controller {
 			'select' => array(
 				array(
 					'name' => 'id',
+					'table' => 'sc_users',
 					'label' => 'ID',
 					'key' => TRUE,
 					'hidden' => TRUE,
 				),
 				array(
+					'name' => 'name',
+					'table' => 'sc_roles',
+					'label' => 'Role Name',
+				),
+				array(
 					'name' => 'username',
+					'table' => 'sc_users',
 					'label' => 'Username',
 				),
 			),
 			'update' => array(
+				array (
+					'name' => 'role_id',
+					'label' => t('Role Name'),
+					'type' => 'dropdown',
+					'options' => $this->_get_role_names(),
+					'mandatory' => TRUE,
+				),
 				array (
 					'name' => 'username',
 					'label' => t('Username'),
@@ -92,6 +122,8 @@ class Users extends CI_Controller {
 			),
 			'datasource' => array(
 				'table' => 'sc_users',
+				'join_table' => 'sc_roles',
+				'join_param' => 'sc_users.role_id = sc_roles.id',
 			),
 			'properties' => array(
 				'name' => 'users',

@@ -25,8 +25,8 @@ class Crud {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
 		$this->CI->load->library(array('table', 'pagination', 'speedcoding/Form'));
-		$this->CI->load->config('speedcoding/crud', TRUE);
-		$this->config = $this->CI->config->item('crud');
+		$this->CI->load->config('speedcoding_crud', TRUE);
+		$this->config = $this->CI->config->item('speedcoding_crud');
 	}
 
 	/**
@@ -562,13 +562,11 @@ class Crud {
 	private function _dropdown() {
 		$options = array();
 		if ($this->properties['update']) {
-			$options1 = array('update' => t('Update'));
-			$options = array_merge($options, $options1);
+			$options += array('update' => t('Update'));
 		}
 		$options_delete = array();
 		if ($this->properties['delete']) {
-			$options1 = array('delete' => t('Delete'));
-			$options = array_merge($options, $options1);
+			$options += array('delete' => t('Delete'));
 		}
 		$dropdown = array(
 			'name' => 'crud_action', 
@@ -588,6 +586,8 @@ class Crud {
 		$returns = NULL;
 		$heading = NULL;
 		$column_size = 0;
+		
+		$data_select = $this->_get_data_by_name('select');
 		
 		// first column, index column
 		if ($this->properties['index_column']) {
@@ -631,6 +631,9 @@ class Crud {
 
 			// build table contents and push it to $list
 			$this->CI->db->select($this->fields['select']);
+			if (isset($this->datasource['join_table'])) {
+				$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param']);
+			}
 			$this->CI->db->limit(
 				$this->pagination['per_page'],
 				$this->CI->uri->segment($this->CI->uri->total_segments()) * ($this->pagination['per_page'] - 1)
@@ -639,14 +642,13 @@ class Crud {
 			$j =0;
 			foreach ($query->result_array() as $row) {
 				$j++;
-
 				if ($this->properties['index_column']) {
 					$list[] = $index_column_count++; // index column
 				}
 
-				for ($i=0;$i<count($this->fields['select']);$i++) {
-					if (! $this->select[$i]['hidden']) {
-						$list[] = $row[$this->fields['select'][$i]]; // data columns
+				foreach ($row as $key => $val) {
+					if (! $data_select[$key]['hidden']) {
+						$list[] = $row[$key]; // data columns
 					}
 				}
 				if ($this->properties['update'] || $this->properties['delete']) {
@@ -745,36 +747,45 @@ class Crud {
 		$this->delete = $data['delete'];
 		$this->datasource = $data['datasource'];
 		$this->properties = $data['properties'];
-
+		
+		// insert fields
 		foreach ($this->insert as $row) {
 			$fields['insert'][] = $row['name'];
 		}
 		$this->fields['insert'] = $fields['insert'];
-
+		
+		// select fields
 		foreach ($this->select as $row) {
-			$fields['select'][] = $row['name'];
+			if (isset($row['table'])) {
+				$row_name = $row['table'].'.'.$row['name'];
+			}
+			$fields['select'][] = $row_name;
 			if (isset($row['key'])) {
 				$this->key_field = $row['name'];
 			}
 		}
 		$this->fields['select'] = $fields['select'];
-
+		
+		// update fields
 		foreach ($this->update as $row) {
 			$fields['update'][] = $row['name'];
 		}
 		$this->fields['update'] = $fields['update'];
 
+		// delete fields
 		foreach ($this->delete as $row) {
 			$fields['delete'][] = $row['name'];
 		}
 		$this->fields['delete'] = $fields['delete'];
 
+		// table template options
 		if (isset($this->properties['table_template'])) {
 			$this->CI->table->set_template($this->properties['table_template']);
 		} else {
 			$this->CI->table->set_template($this->config['table_template']);
 		}
 
+		// pagination options
 		$this->pagination['total_rows'] = $this->CI->db->count_all($this->datasource['table']);
 		$this->pagination['per_page'] = isset($this->properties['pagination_per_page']) ? $this->properties['pagination_per_page'] : '10';
 	}
