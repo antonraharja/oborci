@@ -611,7 +611,7 @@ class Crud {
 		// first column, index column
 		if ($this->properties['index_column']) {
 			$column_size = 1;
-			$index_column_count = $this->properties['index_column_start'];
+			$index_column_count = $this->properties['index_column_start'] + $this->CI->uri->segment($this->CI->uri->total_segments()) * ($this->pagination['per_page'] - 1);
 			$heading[] = array('data' => t('No'), 'id' => 'crud_th_index');
 		}
 		
@@ -776,8 +776,6 @@ class Crud {
 		$this->datasource = $data['datasource'];
 		$this->properties = $data['properties'];
 		
-		$this->key_field = $this->datasource['key_field'];
-		
 		// insert fields
 		foreach ($this->insert as $row) {
 			$fields['insert'][] = $row['name'];
@@ -790,6 +788,9 @@ class Crud {
 				$row_name = $row['table'].'.'.$row['name'];
 			}
 			$fields['select'][] = $row_name;
+			if (isset($row['key'])) {
+				$this->key_field = $row['name'];
+			}
 		}
 		$this->fields['select'] = $fields['select'];
 		

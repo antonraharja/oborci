@@ -53,6 +53,7 @@ class Roles extends CI_Controller {
 					'name' => 'id',
 					'label' => 'ID',
 					'key' => TRUE,
+					'hidden' => TRUE,
 				),
 				array(
 					'name' => 'name',
@@ -65,7 +66,6 @@ class Roles extends CI_Controller {
 					'label' => t('Role name'),
 					'type' => 'input',
 					'unique' => TRUE,
-					'show_value' => TRUE,
 					'mandatory' => TRUE,
 				),
 			),

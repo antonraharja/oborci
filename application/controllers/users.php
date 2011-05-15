@@ -119,7 +119,6 @@ class Users extends CI_Controller {
 				),
 			),
 			'datasource' => array(
-				'key_field' => 'id',
 				'table' => 'sc_users',
 				'join_table' => 'sc_roles',
 				'join_type' => 'left',
