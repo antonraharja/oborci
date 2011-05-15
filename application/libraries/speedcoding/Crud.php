@@ -228,8 +228,9 @@ class Crud {
 				foreach ($this->update as $row) {
 					$original_name = $row['name'];
 					$row['name'] = $original_name.'_'.$i;
-					if ($row['show_value']) {
-						$row['value'] = $result[$original_name];
+					$row['value'] = $result[$original_name];
+					if ($row['type']=='password') {
+						$row['value'] = NULL;
 					}
 					if (isset($row['disabled'])) {
 						$row['readonly'] = $row['disabled'];
@@ -238,7 +239,7 @@ class Crud {
 					$data[] = array(
 						$row['type'] => $row
 					);
-					if ($row['confirm']) {
+					if (($row['type']=='input' || $row['type']=='password') && $row['confirm']) {
 						$row['name'] = $original_name.'_confirm'.'_'.$i;
 						$row['label'] = $row['confirm_label'];
 						$data[] = array(
@@ -334,6 +335,10 @@ class Crud {
 					if ($data[$key]['mandatory']) {
 						if (empty($val)) {
 							$error[$block_key][$key] = t('you must fill this field');
+						}
+					} else {
+						if ($data[$key]['type']=='password') {
+							unset($data[$key]);
 						}
 					}
 					// check if the field is disabled or readonly, unset the inputs if it is
