@@ -229,9 +229,15 @@ class Crud {
 					$original_name = $row['name'];
 					$row['name'] = $original_name.'_'.$i;
 					$row['value'] = $result[$original_name];
+					// if dropdown then selected is value
+					if ($row['type']=='dropdown') {
+						$row['selected'] = $row['value'];
+					}
+					// if password then value is NULLed
 					if ($row['type']=='password') {
 						$row['value'] = NULL;
 					}
+					// handle disabled, change it to readonly
 					if (isset($row['disabled'])) {
 						$row['readonly'] = $row['disabled'];
 						unset($row['disabled']);
@@ -239,6 +245,7 @@ class Crud {
 					$data[] = array(
 						$row['type'] => $row
 					);
+					// handle confirm
 					if (($row['type']=='input' || $row['type']=='password') && $row['confirm']) {
 						$row['name'] = $original_name.'_confirm'.'_'.$i;
 						$row['label'] = $row['confirm_label'];
@@ -246,6 +253,7 @@ class Crud {
 							$row['type'] => $row
 						);
 					}
+					// IDs
 					$data[] = array(
 						'hidden' => array(
 							'name' => $this->key_field.'_'.$i,
@@ -337,13 +345,13 @@ class Crud {
 							$error[$block_key][$key] = t('you must fill this field');
 						}
 					} else {
-						if ($data[$key]['type']=='password') {
-							unset($data[$key]);
+						if (empty($val) && $data[$key]['type']=='password') {
+							unset($inputs[$block_key][$key]);
 						}
 					}
 					// check if the field is disabled or readonly, unset the inputs if it is
 					if ($data[$block_key][$key]['disabled'] || $data[$block_key][$key]['readonly']) {
-						unset($data[$block_key][$key]);
+						unset($inputs[$block_key][$key]);
 					}
 				}
 			}
@@ -426,6 +434,14 @@ class Crud {
 				foreach ($this->delete as $row) {
 					$row['type'] = 'input';
 					$row['value'] = $result[$row['name']];
+					// if dropdown then selected is value
+					if ($row['type']=='dropdown') {
+						$row['selected'] = $row['value'];
+					}
+					// if password then value is NULLed
+					if ($row['type']=='password') {
+						$row['value'] = NULL;
+					}
 					unset($row['disabled']);
 					$row['readonly'] = TRUE;
 					$data[] = array(
@@ -636,13 +652,20 @@ class Crud {
 
 			// build table contents and push it to $list
 			$this->CI->db->select($this->fields['select']);
+			// handle relation with join options
 			if (isset($this->datasource['join_table'])) {
-				$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param']);
+				if (isset($this->datasource['join_type'])) { 
+					$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param'], $this->datasource['join_type']);
+				} else {
+					$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param']);
+				}
 			}
+			// add limit for pagination
 			$this->CI->db->limit(
 				$this->pagination['per_page'],
 				$this->CI->uri->segment($this->CI->uri->total_segments()) * ($this->pagination['per_page'] - 1)
 			);
+			// query
 			$query = $this->CI->db->get($this->datasource['table']);
 			$j =0;
 			foreach ($query->result_array() as $row) {
