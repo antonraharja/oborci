@@ -77,7 +77,7 @@ class Roles extends CI_Controller {
 			),
 			'datasource' => array(
 				'table' => 'sc_users',
-				//'where' => array('role_id' => $param),
+				'where' => array('role_id' => $param),
 			),
 			'properties' => array(
 				'name' => 'roles_members',
