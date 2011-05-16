@@ -83,11 +83,13 @@ class Users extends CI_Controller {
 					'name' => 'name',
 					'table' => 'sc_roles',
 					'label' => 'Role Name',
+					'link' => 'roles/members/{id}',
 				),
 				array(
 					'name' => 'username',
 					'table' => 'sc_users',
 					'label' => 'Username',
+					'link' => 'preference/view/{id}',
 				),
 			),
 			'update' => array(

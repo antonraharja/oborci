@@ -674,6 +674,12 @@ class Crud {
 				
 				$data_select = $this->_get_data_by_name('select');
 				foreach ($row as $key => $val) {
+					// if has link option then parse the link and set an anchor
+					if (isset($data_select[$key]['link'])) {
+						$parsed_link = $this->_parse_patterns($data_select[$key]['link'], $row);
+						$row[$key] = anchor($parsed_link, $row[$key], 'title='.$row[$key]);
+					}
+					// if not set hidden then show it
 					if (! $data_select[$key]['hidden']) {
 						$list[] = $row[$key]; // data columns
 					}
@@ -760,6 +766,20 @@ class Crud {
 		return $returns;
 	}
 
+	/**
+	 * Parsed specially formatted text. For example, the function will replace: preference/{id}
+	 * @param string $unparsed Source unparsed string
+	 * @param array $pair Key-Value pair array where part of unparsed string matched with the key and will be replaced by the value
+	 * @return $parsed Parsed string
+	 */
+	private function _parse_patterns($unparsed, $pair) {
+		$parsed = $unparsed;
+		foreach ($pair as $key => $val) {
+			$parsed = str_ireplace('{'.$key.'}', $val, $parsed);
+		}
+		return $parsed;
+	}
+	
 	/**
 	 * Set uniquely formatted data structure
 	 * Usage example: $this->crud->set_data($data);

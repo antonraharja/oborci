@@ -23,21 +23,10 @@ class Roles extends CI_Controller {
 	}
 
 	/**
-	 * Index Page for this controller.
-	 *
+	 * Helper function which creates grid for CRUD service
+	 * @return string HTML of CRUD grid
 	 */
-	public function index($param=NULL) {
-		if ($this->SC_auth->get_access()) {
-			$data['menu']['box'] = $this->template->menu_box();
-			$data['login'] = $this->template->get_login();
-			$data['crud'] = $this->_get_crud();
-			$this->load->view('roles_view', $data);
-		} else {
-			redirect('process/unauthorized');
-		}
-	}
-
-	private function _get_crud() {		
+	private function _get_crud_for_index() {		
 		$data = array(
 			'insert' => array(
 				array (
@@ -58,6 +47,7 @@ class Roles extends CI_Controller {
 				array(
 					'name' => 'name',
 					'label' => t('Role name'),
+					'link' => 'roles/members/{id}',
 				),
 			),
 			'update' => array(
@@ -96,6 +86,25 @@ class Roles extends CI_Controller {
 		);
 		$this->crud->set_data($data);
 		return $this->crud->render();
+	}
+
+	/**
+	 * Index Page for this controller.
+	 * 
+	 */
+	public function index($param=NULL) {
+		if ($this->SC_auth->get_access()) {
+			$data['menu']['box'] = $this->template->menu_box();
+			$data['login'] = $this->template->get_login();
+			$data['crud'] = $this->_get_crud_for_index();
+			$this->load->view('roles_view', $data);
+		} else {
+			redirect('process/unauthorized');
+		}
+	}
+	
+	public function members($param=NULL) {
+		
 	}
 
 }
