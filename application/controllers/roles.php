@@ -49,7 +49,7 @@ class Roles extends CI_Controller {
 			),
 			'properties' => array(
 				'name' => 'roles',
-				'uri' => 'roles',
+				'uri' => 'roles/index',
 				'index_column' => TRUE,
 				'index_column_start' => 1,
 				'pagination_per_page' => 2,
@@ -67,7 +67,7 @@ class Roles extends CI_Controller {
 		return $this->crud->render();
 	}
 
-	private function _get_roles_members($param=NULL) {
+	private function _get_roles_members($role_id=NULL) {
 		$data = array(
 			'select' => array(
 				array('name' => 'id', 'label' => 'ID', 
@@ -77,11 +77,11 @@ class Roles extends CI_Controller {
 			),
 			'datasource' => array(
 				'table' => 'sc_users',
-				'where' => array('role_id' => $param),
+				'where' => array('role_id' => $role_id),
 			),
 			'properties' => array(
 				'name' => 'roles_members',
-				'uri' => 'roles/members',
+				'uri' => 'roles/members/'.$role_id,
 				'index_column' => TRUE,
 				'index_column_start' => 1,
 				'pagination_per_page' => 2,

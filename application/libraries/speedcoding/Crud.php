@@ -609,6 +609,49 @@ class Crud {
 		return $returns;
 	}
 
+	private function _grid_query() {
+		// TODO if only I know the better way...
+		
+		// build table contents and push it to $list
+		$this->CI->db->select($this->fields['select']);
+		if (isset($this->datasource['where'])) {
+			$this->CI->db->where($this->datasource['where']);
+		}
+		// handle relation with join options
+		if (isset($this->datasource['join_table'])) {
+			if (isset($this->datasource['join_type'])) { 
+				$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param'], $this->datasource['join_type']);
+			} else {
+				$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param']);
+			}
+		}
+		$query = $this->CI->db->get($this->datasource['table']);
+		$total_rows = $query->num_rows();
+
+		$this->CI->db->flush_cache();
+		
+		// build table contents and push it to $list
+		$this->CI->db->select($this->fields['select']);
+		if (isset($this->datasource['where'])) {
+			$this->CI->db->where($this->datasource['where']);
+		}
+		// handle relation with join options
+		if (isset($this->datasource['join_table'])) {
+			if (isset($this->datasource['join_type'])) { 
+				$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param'], $this->datasource['join_type']);
+			} else {
+				$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param']);
+			}
+		}
+		// add limit for pagination
+		$this->CI->db->limit($this->pagination['per_page'], $this->_get_pagination_offset());
+		$query = $this->CI->db->get($this->datasource['table']);
+
+		//echo $this->pagination['per_page']." - ".$this->_get_pagination_offset()." - ".$this->CI->db->last_query()."<br>";
+		
+		return array($query, $total_rows);
+	}
+	
 	/**
 	 * Create grid
 	 * @return string $returns Grid
@@ -617,11 +660,11 @@ class Crud {
 		$returns = NULL;
 		$heading = NULL;
 		$column_size = 0;
-		
+
 		// first column, index column
 		if ($this->properties['index_column']) {
 			$column_size = 1;
-			$index_column_count = $this->properties['index_column_start'] + $this->CI->uri->segment($this->CI->uri->total_segments()) * ($this->pagination['per_page'] - 1);
+			$index_column_count = $this->properties['index_column_start'] + $this->_get_pagination_offset();
 			$heading[] = array('data' => t('No'), 'id' => 'crud_th_index');
 		}
 		
@@ -652,41 +695,24 @@ class Crud {
 		
 		if (count($this->fields['select']) > 0) {
 			
+			// insert button
+			if ($this->properties['insert']) {
+				$returns .= $this->_button_insert();
+			}
+			
 			// open form
 			$returns .= $this->CI->form->open(array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_form'));
 
 			// set table heading
 			$this->CI->table->set_heading($heading);
-
-			// build table contents and push it to $list
-			$this->CI->db->select($this->fields['select']);
-			if (isset($this->datasource['where'])) {
-				$this->CI->db->where($this->datasource['where']);
-			}
-			// handle relation with join options
-			if (isset($this->datasource['join_table'])) {
-				if (isset($this->datasource['join_type'])) { 
-					$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param'], $this->datasource['join_type']);
-				} else {
-					$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param']);
-				}
-			}
-			// add limit for pagination
-			/* FIXME
-			$this->CI->db->limit(
-				$this->pagination['per_page'],
-				$this->CI->uri->segment($this->CI->uri->total_segments()) * ($this->pagination['per_page'] - 1)
-			);
-			*/
-			// query
-			$query = $this->CI->db->get($this->datasource['table']);
+			
+			// get query results and total number of rows
+			list($query, $total_rows) = $this->_grid_query();
 			$j =0;
 			foreach ($query->result_array() as $row) {
 				$j++;
-				// FIXME
-				//print_r($row);
 				if ($this->properties['index_column']) {
-					$list[] = $index_column_count++; // index column
+					$list[] = array('data' => $index_column_count++, 'id' => 'crud_td_index'); // index column
 				}
 				
 				$data_select = $this->_get_data_by_name('select');
@@ -704,12 +730,12 @@ class Crud {
 					}
 					// if not set hidden then show it
 					if (! $data_select[$key]['hidden']) {
-						$list[] = $row[$key]; // data columns
+						$list[] = array('data' => $row[$key], 'id' => 'crud_td_'.$key); // data columns
 					}
 				}
 				
 				if ($this->properties['update'] || $this->properties['delete']) {
-					$list[] = $this->_checkbox($row[$this->key_field]); // action column
+					$list[] = array('data' => $this->_checkbox($row[$this->key_field]), 'id' => 'crud_td_action'); // action column
 				}
 			}
 			
@@ -719,9 +745,10 @@ class Crud {
 			
 			// pagination
 			$config = NULL;
-			$config['base_url'] = base_url().'/'.$this->properties['uri'];
-			$config['total_rows'] = $this->pagination['total_rows'];
+			$config['base_url'] = base_url().$this->properties['uri'];
+			$config['total_rows'] = $total_rows;
 			$config['per_page'] = $this->pagination['per_page'];
+			//print_r($config);
 			$this->CI->pagination->initialize($config);
 			$returns .= "<div id='crud_pagination'>";
 			$returns .= $this->CI->pagination->create_links();
@@ -740,6 +767,20 @@ class Crud {
 		// grid ends
 		$returns .= "</div>";
 		
+		return $returns;
+	}
+	
+	/**
+	 * Get pagination offset, used by query limit and index column start
+	 * @return number $returns Offset
+	 */
+	private function _get_pagination_offset() {
+		$page = (integer) $this->CI->uri->segment($this->CI->uri->total_segments());
+		if ($this->properties['uri'] == $this->CI->uri->uri_string()) {
+			$page = 0;
+		}
+		//echo $page." -- ".$this->properties['uri']." == ".$this->CI->uri->uri_string()." <br>";
+		$returns = $page * ($this->pagination['per_page'] - 1);
 		return $returns;
 	}
 	
@@ -911,7 +952,6 @@ class Crud {
 		}
 
 		// pagination options
-		$this->pagination['total_rows'] = $this->CI->db->count_all($this->datasource['table']);
 		$this->pagination['per_page'] = isset($this->properties['pagination_per_page']) ? $this->properties['pagination_per_page'] : '10';
 	}
 
@@ -969,11 +1009,6 @@ class Crud {
 		
 		// grid
 		$returns .= $this->_grid();
-		// insert button
-		if ($this->properties['insert']) {
-			$returns .= $this->_button_insert();
-		}
-		
 		return $returns;
 	}
 
