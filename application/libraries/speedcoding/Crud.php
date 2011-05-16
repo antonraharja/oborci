@@ -134,6 +134,12 @@ class Crud {
 		
 		// process answers or inputs
 		foreach ($inputs as $key => $val) {
+			// apply functions
+			if (isset($data_select[$key]['apply_function'])) {
+				foreach ($data_select[$key]['apply_function'] as $i => $function) {
+					$row[$key] = call_user_func($function, $row[$key]);
+				}
+			}
 			// check if the field is unique
 			if ($data[$key]['unique']) {
 				$query = $this->CI->db->get_where($this->datasource['table'], array( $key => $val ));
@@ -325,6 +331,12 @@ class Crud {
 		foreach ($inputs as $block_key => $block_val) {
 			foreach ($block_val as $key => $val) {
 				if ($key != $this->key_field) {
+					// apply functions
+					if (isset($data_select[$key]['apply_function'])) {
+						foreach ($data_select[$key]['apply_function'] as $i => $function) {
+							$row[$key] = call_user_func($function, $row[$key]);
+						}
+					}
 					// check if the field is unique
 					if ($data[$key]['unique']) {
 						$query = $this->CI->db->get_where($this->datasource['table'], array( $key => $val ));
@@ -674,10 +686,16 @@ class Crud {
 				
 				$data_select = $this->_get_data_by_name('select');
 				foreach ($row as $key => $val) {
+					// apply functions
+					if (isset($data_select[$key]['apply_function'])) {
+						foreach ($data_select[$key]['apply_function'] as $i => $function) {
+							$row[$key] = call_user_func($function, $row[$key]);
+						}
+					}
 					// if has link option then parse the link and set an anchor
 					if (isset($data_select[$key]['link'])) {
 						$parsed_link = $this->_parse_patterns($data_select[$key]['link'], $row);
-						$row[$key] = anchor($parsed_link, $row[$key], 'title='.$row[$key]);
+						$row[$key] = anchor($parsed_link, $row[$key], 'title="'.$row[$key].'"');
 					}
 					// if not set hidden then show it
 					if (! $data_select[$key]['hidden']) {

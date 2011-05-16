@@ -33,9 +33,9 @@ class Roles extends CI_Controller {
 					'rules' => array('unique', 'required', 'max_length' => 30, 'min_length' => 3, 'trim', 'xss_clean'),),
 			),
 			'select' => array(
-				array('name' => 'id', 'label' => 'ID', 'rules' => array('key', 'hidden', 'trim', 'htmlspecialchars'),),
+				array('name' => 'id', 'label' => 'ID', 'rules' => array('key', 'hidden', 'trim'),),
 				array('name' => 'name',	'label' => t('Role name'), 'link' => 'roles/members/{id}', 
-					'rules' => array('key', 'hidden', 'trim', 'htmlspecialchars'),),
+					'rules' => array('trim', 'htmlspecialchars'),),
 			),
 			'update' => array(
 				array('name' => 'name',	'label' => t('Role name'), 'type' => 'input', 

@@ -57,11 +57,11 @@ class Users extends CI_Controller {
 			),
 			'select' => array(
 				array('name' => 'id', 'table' => 'sc_users', 'label' => 'ID', 
-					'rules' => array('key', 'hidden', 'trim', 'htmlspecialchars'),),
+					'rules' => array('key', 'hidden', 'trim'),),
 				array('name' => 'name',	'table' => 'sc_roles', 'label' => 'Role Name', 'link' => 'roles/members/{id}',
 					'rules' => array('trim', 'htmlspecialchars'),),
 				array('name' => 'username', 'table' => 'sc_users', 'label' => 'Username', 'link' => 'preference/view/{id}',
-					'rules' => array('trim', 'htmlspecialchars'),),
+					'rules' => array('trim',  'htmlspecialchars'),),
 			),
 			'update' => array(
 				array ('name' => 'role_id', 'label' => t('Role Name'), 'type' => 'dropdown', 'options' => $this->_get_role_names(),
@@ -69,7 +69,7 @@ class Users extends CI_Controller {
 				array ('name' => 'username', 'label' => t('Username'), 'type' => 'input',
 					'rules' => array('readonly'),),
 				array('name' => 'password',	'label' => t('Password'), 'type' => 'password', 'confirm_label' => t('Confirm password'),
-					'rules' => array('confirm', 'required', 'max_length' => 30, 'min_length' => 6, 'trim', 'xss_clean'),),
+					'rules' => array('confirm', 'max_length' => 30, 'min_length' => 6, 'trim', 'xss_clean'),),
 			),
 			'delete' => array(
 				array ('name' => 'username', 'label' => t('Username'),),
