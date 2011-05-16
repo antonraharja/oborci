@@ -29,41 +29,20 @@ class Roles extends CI_Controller {
 	private function _get_crud_for_index() {		
 		$data = array(
 			'insert' => array(
-				array (
-					'name' => 'name',
-					'label' => t('Role name'),
-					'type' => 'input',
-					'unique' => TRUE,
-					'required' => TRUE,
-				),
+				array ('name' => 'name', 'label' => t('Role name'),	'type' => 'input',
+					'rules' => array('unique', 'required', 'max_length' => 30, 'min_length' => 3, 'trim', 'xss_clean'),),
 			),
 			'select' => array(
-				array(
-					'name' => 'id',
-					'label' => 'ID',
-					'key' => TRUE,
-					'hidden' => TRUE,
-				),
-				array(
-					'name' => 'name',
-					'label' => t('Role name'),
-					'link' => 'roles/members/{id}',
-				),
+				array('name' => 'id', 'label' => 'ID', 'rules' => array('key', 'hidden', 'trim', 'htmlspecialchars'),),
+				array('name' => 'name',	'label' => t('Role name'), 'link' => 'roles/members/{id}', 
+					'rules' => array('key', 'hidden', 'trim', 'htmlspecialchars'),),
 			),
 			'update' => array(
-				array(
-					'name' => 'name',
-					'label' => t('Role name'),
-					'type' => 'input',
-					'unique' => TRUE,
-					'required' => TRUE,
-				),
+				array('name' => 'name',	'label' => t('Role name'), 'type' => 'input', 
+					'rules' => array('unique', 'required', 'max_length' => 30, 'min_length' => 3, 'trim', 'xss_clean'),),
 			),
 			'delete' => array(
-				array(
-					'name' => 'name',
-					'label' => t('Role name'),
-				),
+				array('name' => 'name', 'label' => t('Role name'),),
 			),
 			'datasource' => array(
 				'table' => 'sc_roles',

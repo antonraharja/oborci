@@ -148,8 +148,8 @@ class Crud {
 					$error[$key] = t('confirmation answer is different');
 				}
 			}
-			// check if the field is required 
-			if ($data[$key]['required']) {
+			// check if the field is mandatory 
+			if ($data[$key]['mandatory']) {
 				if (empty($val)) {
 					$error[$key] = t('you must fill this field');
 				}
@@ -339,8 +339,8 @@ class Crud {
 							$error[$block_key][$key] = t('confirmation answer is different');
 						}
 					}
-					// check if the field is required 
-					if ($data[$key]['required']) {
+					// check if the field is mandatory 
+					if ($data[$key]['mandatory']) {
 						if (empty($val)) {
 							$error[$block_key][$key] = t('you must fill this field');
 						}
@@ -765,6 +765,41 @@ class Crud {
 		}
 		return $returns;
 	}
+	
+	/**
+	 * Get valid crud options, mainly breakdown rules options
+	 * @param array $data Data set in the controller
+	 * @return array $returns Validated data
+	 */
+	private function _get_crud_options($data) {
+		$returns = NULL;
+		$array_block = array('insert', 'select', 'update', 'delete');
+		$array_rules = array('unique', 'required', 'readonly', 'disabled', 'confirm', 'key', 'hidden');
+		foreach ($data as $block_key => $block_val) {
+			if (in_array($block_key, $array_block)) {
+				foreach ($block_val as $row_key => $row_val) {
+					foreach ($row_val as $option_key => $option_val) {
+						if ($option_key == 'rules') {
+							foreach ($option_val as $rules_key => $rules_val) {
+								if (in_array($rules_val, $array_rules)) {
+									$returns[$block_key][$row_key][$rules_val] = TRUE;
+								} else if (($rules_key=='max_length') || ($rules_key=='min_length')) {
+									$returns[$block_key][$row_key][$rules_key] = $rules_val;
+								} else {
+									$returns[$block_key][$row_key]['apply_function'][] = $rules_val;
+								}
+							}
+						} else {
+							$returns[$block_key][$row_key][$option_key] = $option_val;
+						}
+					}
+				}
+			} else {
+				$returns[$block_key] = $block_val;
+			}
+		}
+		return $returns;
+	}
 
 	/**
 	 * Parsed specially formatted text. For example, the function will replace: preference/{id}
@@ -787,8 +822,9 @@ class Crud {
 	 * @return NULL
 	 */
 	public function set_data($data) {
+		$data = $this->_get_crud_options($data);
+		
 		$this->data = $data;
-
 		$this->insert = $data['insert'];
 		$this->select = $data['select'];
 		$this->update = $data['update'];
