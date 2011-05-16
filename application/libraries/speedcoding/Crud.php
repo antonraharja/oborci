@@ -25,8 +25,6 @@ class Crud {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
 		$this->CI->load->library(array('table', 'pagination', 'speedcoding/Form'));
-		$this->CI->load->config('speedcoding_crud', TRUE);
-		$this->config = $this->CI->config->item('speedcoding_crud');
 	}
 
 	/**
@@ -845,6 +843,7 @@ class Crud {
 	 * @return NULL
 	 */
 	public function set_data($data) {
+		$this->config = NULL;
 		$this->data = NULL;
 		$this->insert = NULL;
 		$this->select = NULL;
@@ -854,10 +853,12 @@ class Crud {
 		$this->properties = NULL;
 		$this->key_field = NULL;
 		$this->fields = NULL;
-		$this->config = NULL;
 		$this->pagination = NULL;
 		$this->flashdata = NULL;
-			
+		
+		$this->CI->load->config('speedcoding_crud', TRUE);
+		$this->config = $this->CI->config->item('speedcoding_crud');
+		
 		$data = $this->_get_crud_options($data);
 		
 		$this->data = $data;
