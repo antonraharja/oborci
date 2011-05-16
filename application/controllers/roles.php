@@ -49,7 +49,7 @@ class Roles extends CI_Controller {
 			),
 			'properties' => array(
 				'name' => 'roles',
-				'uri' => 'roles/index',
+				'uri' => 'roles',
 				'index_column' => TRUE,
 				'index_column_start' => 1,
 				'pagination_per_page' => 2,
@@ -81,7 +81,7 @@ class Roles extends CI_Controller {
 			),
 			'properties' => array(
 				'name' => 'roles_members',
-				'uri' => 'roles/members/index',
+				'uri' => 'roles/members',
 				'index_column' => TRUE,
 				'index_column_start' => 1,
 				'pagination_per_page' => 2,

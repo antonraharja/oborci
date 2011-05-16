@@ -672,10 +672,12 @@ class Crud {
 				}
 			}
 			// add limit for pagination
+			/* FIXME
 			$this->CI->db->limit(
 				$this->pagination['per_page'],
 				$this->CI->uri->segment($this->CI->uri->total_segments()) * ($this->pagination['per_page'] - 1)
 			);
+			*/
 			// query
 			$query = $this->CI->db->get($this->datasource['table']);
 			$j =0;
