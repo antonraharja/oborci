@@ -67,6 +67,35 @@ class Roles extends CI_Controller {
 		return $this->crud->render();
 	}
 
+	private function _get_roles_members($param=NULL) {
+		$data = array(
+			'select' => array(
+				array('name' => 'id', 'label' => 'ID', 
+					'rules' => array('key', 'hidden', 'trim'),),
+				array('name' => 'username', 'label' => 'Username', 'link' => 'preference/view/{id}',
+					'rules' => array('trim',  'htmlspecialchars'),),
+			),
+			'datasource' => array(
+				'table' => 'sc_users',
+				//'where' => array('role_id' => $param),
+			),
+			'properties' => array(
+				'name' => 'roles_members',
+				'uri' => 'roles/members/index',
+				'index_column' => TRUE,
+				'index_column_start' => 1,
+				'pagination_per_page' => 2,
+				'crud_title' => '<h1>'.t('Members List').'</h1>',
+				'crud_form_title' => '<h2>'.t('List of Members').'</h2>',
+				'insert_form_title' => '<h2>'.t('Insert Data').'</h2>',
+				'update_form_title' => '<h2>'.t('Update Data').'</h2>',
+				'delete_form_title' => '<h2>'.t('Delete Data').'</h2>',
+			),
+		);
+		$this->crud->set_data($data);
+		return $this->crud->render();
+	}
+	
 	/**
 	 * Index Page for this controller.
 	 * 
@@ -83,7 +112,14 @@ class Roles extends CI_Controller {
 	}
 	
 	public function members($param=NULL) {
-		
+		if ($this->SC_auth->get_access()) {
+			$data['menu']['box'] = $this->template->menu_box();
+			$data['login'] = $this->template->get_login();
+			$data['members_list'] = $this->_get_roles_members($param);
+			$this->load->view('roles_members_view', $data);
+		} else {
+			redirect('process/unauthorized');
+		}
 	}
 
 }

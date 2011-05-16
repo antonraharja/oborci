@@ -22,20 +22,9 @@ class Users extends CI_Controller {
 	}
 
 	/**
-	 * Index Page for this controller.
-	 *
+	 * Helper function to get role names
+	 * @return string $returns HTML role names
 	 */
-	public function index($param=NULL) {
-		if ($this->SC_auth->get_access()) {
-			$data['menu']['box'] = $this->template->menu_box();
-			$data['login'] = $this->template->get_login();
-			$data['crud'] = $this->_get_crud();
-			$this->load->view('users_view', $data);
-		} else {
-			redirect('process/unauthorized');
-		}
-	}
-
 	private function _get_role_names() {
 		$returns = NULL;
 		$query = $this->db->get('sc_roles');
@@ -45,6 +34,10 @@ class Users extends CI_Controller {
 		return $returns;
 	}
 	
+	/**
+	 * Helper function which creates grid for CRUD service
+	 * @return string HTML of CRUD grid
+	 */
 	private function _get_crud() {
 		$data = array(
 			'insert' => array(
@@ -99,6 +92,22 @@ class Users extends CI_Controller {
 		$this->crud->set_data($data);
 		return $this->crud->render();
 	}
+
+	/**
+	 * Index Page for this controller.
+	 *
+	 */
+	public function index($param=NULL) {
+		if ($this->SC_auth->get_access()) {
+			$data['menu']['box'] = $this->template->menu_box();
+			$data['login'] = $this->template->get_login();
+			$data['crud'] = $this->_get_crud();
+			$this->load->view('users_view', $data);
+		} else {
+			redirect('process/unauthorized');
+		}
+	}
+	
 }
 
 /* End of file users.php */

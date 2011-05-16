@@ -662,6 +662,9 @@ class Crud {
 
 			// build table contents and push it to $list
 			$this->CI->db->select($this->fields['select']);
+			if (isset($this->datasource['where'])) {
+				$this->CI->db->where($this->datasource['where']);
+			}
 			// handle relation with join options
 			if (isset($this->datasource['join_table'])) {
 				if (isset($this->datasource['join_type'])) { 
@@ -680,6 +683,8 @@ class Crud {
 			$j =0;
 			foreach ($query->result_array() as $row) {
 				$j++;
+				// FIXME
+				//print_r($row);
 				if ($this->properties['index_column']) {
 					$list[] = $index_column_count++; // index column
 				}
@@ -840,15 +845,28 @@ class Crud {
 	 * @return NULL
 	 */
 	public function set_data($data) {
+		$this->data = NULL;
+		$this->insert = NULL;
+		$this->select = NULL;
+		$this->update = NULL;
+		$this->delete = NULL;
+		$this->datasource = NULL;
+		$this->properties = NULL;
+		$this->key_field = NULL;
+		$this->fields = NULL;
+		$this->config = NULL;
+		$this->pagination = NULL;
+		$this->flashdata = NULL;
+			
 		$data = $this->_get_crud_options($data);
 		
 		$this->data = $data;
-		$this->insert = $data['insert'];
-		$this->select = $data['select'];
-		$this->update = $data['update'];
-		$this->delete = $data['delete'];
-		$this->datasource = $data['datasource'];
-		$this->properties = $data['properties'];
+		$this->insert = $this->data['insert'];
+		$this->select = $this->data['select'];
+		$this->update = $this->data['update'];
+		$this->delete = $this->data['delete'];
+		$this->datasource = $this->data['datasource'];
+		$this->properties = $this->data['properties'];
 		
 		// insert fields
 		foreach ($this->insert as $row) {
@@ -858,10 +876,12 @@ class Crud {
 		
 		// select fields
 		foreach ($this->select as $row) {
+			$row_name = $row['name'];
 			if (isset($row['table'])) {
-				$row_name = $row['table'].'.'.$row['name'];
+				$row_name = $row['table'].'.'.$row_name;
 			}
 			$fields['select'][] = $row_name;
+			// set key field
 			if (isset($row['key'])) {
 				$this->key_field = $row['name'];
 			}
