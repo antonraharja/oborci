@@ -55,7 +55,7 @@ class Users extends CI_Controller {
 					'rules' => array('key', 'hidden', 'trim'),),
 				array('name' => 'name',	'table' => 'sc_roles', 'label' => 'Role Name', 'link' => 'roles/members/{role_id}',
 					'rules' => array('trim', 'htmlspecialchars'),),
-				array('name' => 'username', 'table' => 'sc_users', 'label' => 'Username', 'link' => 'preference/view/{id}',
+				array('name' => 'username', 'table' => 'sc_users', 'label' => 'Username', 'link' => 'preference/show/{id}',
 					'rules' => array('trim',  'htmlspecialchars'),),
 			),
 			'update' => array(

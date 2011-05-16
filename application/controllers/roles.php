@@ -115,7 +115,7 @@ class Roles extends CI_Controller {
 		if ($this->SC_auth->get_access()) {
 			$data['menu']['box'] = $this->template->menu_box();
 			$data['login'] = $this->template->get_login();
-			$data['members_list'] = $this->_get_roles_members($param);
+			$data['crud'] = $this->_get_roles_members($param);
 			$this->load->view('roles_members_view', $data);
 		} else {
 			redirect('process/unauthorized');

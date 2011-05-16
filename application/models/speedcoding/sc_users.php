@@ -16,32 +16,18 @@ class SC_users extends CI_Model {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model('speedcoding/SC_preferences');
 	}
 
 	/**
-	 * Insert a new user login and preferences to database
-	 * $data format:
-	 * $data['preferences'] = array( 'email' => $email, 'first_name' => $first_name, 'last_name' => $last_name )
-	 * $data['users'] = array( 'role_id' => $role_id, 'preference_id' => $preference_id, 'username' => $username, 'password' => $password )
-	 * @param array $data Array of user data and its preferences to be inserted to database
-	 * @return integer,boolean User ID or FALSE when failed
+	 * Insert a new user to database
+	 * @param array $data Array of user data to be inserted to database
+	 * @return integer,boolean user ID or FALSE when failed
 	 */
 	public function insert($data) {
-		if (!$this->get_user_id($data['users']['username'])) {
-			$preference_id = $this->SC_preferences->insert($data['preferences']);
-			if ($preference_id) {
-				$data['users']['preference_id'] = $preference_id;
-				if ($preference_id && $this->db->insert($this->table_users, $data['users'])) {
-					$user_id = $this->db->insert_id();
-					if ($preference_id && $user_id) {
-						return $user_id;
-					} else {
-						return FALSE;
-					}
-				} else {
-					return FALSE;
-				}
+		if ($this->db->insert($this->table_users, $data)) {
+			$user_id = $this->db->insert_id();
+			if ($user_id) {
+				return $user_id;
 			} else {
 				return FALSE;
 			}
@@ -51,9 +37,9 @@ class SC_users extends CI_Model {
 	}
 
 	/**
-	 * Get all users or specific user login when $user_id given
+	 * Get all users or specific user when $user_id given
 	 * @param integer $user_id User ID
-	 * @return array Array of user data
+	 * @return array Array of objects containing user items
 	 */
 	public function get($user_id=NULL) {
 		if (isset($user_id)) {
@@ -65,52 +51,30 @@ class SC_users extends CI_Model {
 	}
 
 	/**
-	 * Update user login and preferences
-	 * $data format:
-	 * $data['preferences'] = array( 'email' => $email, 'first_name' => $first_name, 'last_name' => $last_name )
-	 * $data['users'] = array( 'role_id' => $role_id, 'preference_id' => $preference_id, 'username' => $username, 'password' => $password )
-	 * @param array $data Array of user data and its preferences to be updated
+	 * Update user
+	 * @param array $data Array of user data to be updated
 	 * @param integer $user_id User ID
 	 * @return boolean TRUE if update success
 	 */
 	public function update($data, $user_id) {
-		if ($this->get_user_id($data['users']['username'])) {
-			$ok1 = FALSE;
-			if (count($data['users']) > 0) {
-				$this->db->update($this->table_users, $data['users'], array('id' => $user_id));
-				$ok1 = $this->db->affected_rows();
-			}
-			$ok2 = FALSE;
-			if ($ok1 && $data['users']['preference_id']) {
-				if ($this->SC_preferences->update($data, $data['users']['preference_id'])) {
-					$ok2 = TRUE;
-				}
-			}
-			if ($ok1 || $ok2) {
-				return TRUE;
-			} else {
-				return FALSE;
-			}
+		if (count($data) > 0) {
+			$this->db->update($this->table_users, $data, array('id' => $user_id));
+		}
+		if ($this->db->affected_rows()) {
+			return TRUE;
 		} else {
 			return FALSE;
 		}
 	}
 
 	/**
-	 * Delete user login and preferences
+	 * Delete user
 	 * @param integer $user_id User ID
-	 * @return boolean TRUE if user successfully deleted
+	 * @return boolean TRUE if deletion success
 	 */
 	public function delete($user_id) {
-		$preference_id = get_preference_id($user_id);
-		$ok = FALSE;
-		if ($preference_id) {
-			if ($this->db->delete($this->table_users, array('id' => $user_id))) {
-				$ok = TRUE;
-				$this->SC_preferences->delete($preference_id);
-			}
-		}
-		if ($ok) {
+		$this->db->delete($this->table_users, array('id' => $user_id));
+		if ($this->db->affected_rows()) {
 			return TRUE;
 		} else {
 			return FALSE;
