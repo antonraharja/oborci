@@ -148,8 +148,8 @@ class Crud {
 					$error[$key] = t('confirmation answer is different');
 				}
 			}
-			// check if the field is mandatory 
-			if ($data[$key]['mandatory']) {
+			// check if the field is required 
+			if ($data[$key]['required']) {
 				if (empty($val)) {
 					$error[$key] = t('you must fill this field');
 				}
@@ -339,8 +339,8 @@ class Crud {
 							$error[$block_key][$key] = t('confirmation answer is different');
 						}
 					}
-					// check if the field is mandatory 
-					if ($data[$key]['mandatory']) {
+					// check if the field is required 
+					if ($data[$key]['required']) {
 						if (empty($val)) {
 							$error[$block_key][$key] = t('you must fill this field');
 						}
