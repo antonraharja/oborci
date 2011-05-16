@@ -33,18 +33,9 @@ class Crud {
 	 */
 	private function _button_insert() {
 		$data = array(
-			array('open' => array(
-					'uri' => $this->properties['uri'],
-					'name' => $this->properties['name'].'_button_insert',
-			),),
-			array('hidden' => array(
-					'name' => 'crud_action',
-					'value' => 'insert',
-			),),
-			array('submit' => array(
-					'name' => 'crud_submit_insert',
-					'value' => t('Add'),
-			),),
+			array('open' => array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_button_insert'),),
+			array('hidden' => array('name' => 'crud_action', 'value' => 'insert'),),
+			array('submit' => array('name' => 'crud_submit_insert', 'value' => t('Add')),),
 		);
 		$this->CI->form->set_data($data);
 		$returns = "<div id='crud_button_insert'>";
@@ -60,17 +51,8 @@ class Crud {
 	private function _form_insert() {
 		$flashdata = $this->flashdata;
 		$data = array(
-			array(
-				'open' => array(
-					'uri' => $this->properties['uri'],
-					'name' => $this->properties['name'].'_form_insert',
-			),),
-			array(
-				'hidden' => array(
-					'name' => 'crud_action',
-					'value' => 'insert_action',
-			),),
-		);
+			array('open' => array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_form_insert')),
+			array('hidden' => array('name' => 'crud_action', 'value' => 'insert_action')));
 		foreach ($this->insert as $row) {
 			$row['value'] = $flashdata['inputs'][$row['name']];
 			$data[] = array(
@@ -83,12 +65,7 @@ class Crud {
 				$data[] = array($row['type'] => $row);
 			}
 		}
-		$data[] = array(
-			'submit' => array(
-				'name' => 'crud_submit_insert',
-				'value' => t('Add')
-			),
-		);
+		$data[] = array('submit' => array('name' => 'crud_submit_insert', 'value' => t('Add')));
 		$this->CI->form->set_data($data);
 
 		$returns = "<div id='crud_grid'>";
@@ -161,6 +138,8 @@ class Crud {
 			// check if the field is disabled or readonly, unset the inputs if it is
 			if ($data[$key]['disabled'] || $data[$key]['readonly']) {
 				unset($data[$key]);
+			} else {
+				$inputs[$key] = $val;
 			}
 		}
 		
@@ -197,34 +176,18 @@ class Crud {
 	private function _form_update() {
 		$flashdata = $this->flashdata;
 		$data = array(
-			array(
-				'open' => array(
-					'uri' => $this->properties['uri'],
-					'name' => $this->properties['name'].'_form_update',
-			),),
-			array(
-				'hidden' => array(
-					'name' => 'crud_action',
-					'value' => 'update_action',
-			),),
-		);
-		if (isset($flashdata['inputs'][0]['id'])) {
+			array('open' => array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_form_update')),
+			array('hidden' => array('name' => 'crud_action', 'value' => 'update_action')));
+		if (isset($flashdata['inputs'][0][$this->key_field])) {
 			foreach ($flashdata['inputs'] as $row) {
-				$keys[] = $row['id'];
+				$keys[] = $row[$this->key_field];
 			}
 		} else {
 			$keys = $this->CI->input->post($this->key_field);
 		}
 		$i = 0;
 		foreach ($keys as $val) {
-			$data[] = array(
-				'input' => array(
-					'name' => $this->key_field.'__',
-					'label' => $this->key_field,
-					'value' => $val,
-					'readonly' => TRUE,
-				),
-			);
+			$data[] = array('input' => array('name' => $this->key_field.'__', 'label' => $this->key_field, 'value' => $val, 'readonly' => TRUE));
 			$this->CI->db->select($this->fields['update']);
 			$this->CI->db->where($this->key_field, $val);
 			$query = $this->CI->db->get($this->datasource['table']);
@@ -253,37 +216,17 @@ class Crud {
 					if (($row['type']=='input' || $row['type']=='password') && $row['confirm']) {
 						$row['name'] = $original_name.'_confirm'.'_'.$i;
 						$row['label'] = $row['confirm_label'];
-						$data[] = array(
-							$row['type'] => $row
-						);
+						$data[] = array($row['type'] => $row);
 					}
 					// IDs
-					$data[] = array(
-						'hidden' => array(
-							'name' => $this->key_field.'_'.$i,
-							'value' => $val,
-						),
-					);
-					$data[] = array(
-						'hidden' => array(
-							'name' => $this->key_field.'[]',
-							'value' => $val,
-						),
-					);
+					$data[] = array('hidden' => array('name' => $this->key_field.'_'.$i, 'value' => $val));
+					$data[] = array('hidden' => array('name' => $this->key_field.'[]', 'value' => $val));
 				}
 			}
 			$i++;
 		}
-		$data[] = array(
-			'hidden' => array(
-				'name' => 'field_num',
-				'value' => $i,
-		),);
-		$data[] = array(
-			'submit' => array(
-				'name' => 'crud_submit_update',
-				'value' => t('Submit')
-		),);
+		$data[] = array('hidden' => array('name' => 'field_num', 'value' => $i));
+		$data[] = array('submit' => array('name' => 'crud_submit_update', 'value' => t('Submit')));
 		$this->CI->form->set_data($data);
 
 		$returns = "<div id='crud_grid'>";
@@ -362,6 +305,8 @@ class Crud {
 					// check if the field is disabled or readonly, unset the inputs if it is
 					if ($data[$block_key][$key]['disabled'] || $data[$block_key][$key]['readonly']) {
 						unset($inputs[$block_key][$key]);
+					} else {
+						$inputs[$block_key][$key] = $val;
 					}
 				}
 			}
@@ -409,34 +354,18 @@ class Crud {
 	private function _form_delete() {
 		$flashdata = $this->flashdata;
 		$data = array(
-			array(
-				'open' => array(
-					'uri' => $this->properties['uri'],
-					'name' => $this->properties['name'].'_form_delete',
-			),),
-			array(
-				'hidden' => array(
-					'name' => 'crud_action',
-					'value' => 'delete_action',
-			),),
-		);
-		if (isset($flashdata['inputs'][0]['id'])) {
+			array('open' => array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_form_delete')),
+			array('hidden' => array('name' => 'crud_action', 'value' => 'delete_action')));
+		if (isset($flashdata['inputs'][0][$this->key_field])) {
 			foreach ($flashdata['inputs'] as $row) {
-				$keys[] = $row['id'];
+				$keys[] = $row[$this->key_field];
 			}
 		} else {
 			$keys = $this->CI->input->post($this->key_field);
 		}
 		$i = 0;
 		foreach ($keys as $val) {
-			$data[] = array(
-				'input' => array(
-					'name' => $this->key_field.'__',
-					'label' => $this->key_field,
-					'value' => $val,
-					'readonly' => TRUE,
-				),
-			);
+			$data[] = array('input' => array('name' => $this->key_field.'__', 'label' => $this->key_field, 'value' => $val, 'readonly' => TRUE));
 			$this->CI->db->select($this->fields['delete']);
 			$this->CI->db->where($this->key_field, $val);
 			$query = $this->CI->db->get($this->datasource['table']);
@@ -457,33 +386,14 @@ class Crud {
 					$data[] = array(
 						$row['type'] => $row
 					);
-					$data[] = array(
-						'hidden' => array(
-							'name' => $this->key_field.'_'.$i,
-							'value' => $val,
-						),
-					);
-					$data[] = array(
-						'hidden' => array(
-							'name' => $this->key_field.'[]',
-							'value' => $val,
-						),
-					);
+					$data[] = array('hidden' => array('name' => $this->key_field.'_'.$i, 'value' => $val));
+					$data[] = array('hidden' => array('name' => $this->key_field.'[]', 'value' => $val));
 				}
 			}
 			$i++;
 		}
-		$data[] = array(
-			'hidden' => array(
-				'name' => 'field_num',
-				'value' => $i,
-		),);
-		$data[] = array(
-			'submit' => array(
-				'name' => 'crud_submit_delete',
-				'value' => t('Submit')
-			),
-		);
+		$data[] = array('hidden' => array('name' => 'field_num', 'value' => $i));
+		$data[] = array('submit' => array('name' => 'crud_submit_delete', 'value' => t('Submit')));
 		$this->CI->form->set_data($data);
 
 		$returns = "<div id='crud_grid'>";
