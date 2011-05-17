@@ -21,7 +21,7 @@ class Preference extends CI_Controller {
 		parent::__construct();
                 $this->load->model(array('speedcoding/SC_preferences', 'speedcoding/SC_users'));
                 $this->load->library(array('speedcoding/Auth', 'speedcoding/Crud', 'speedcoding/Template'));
-		$this->SC_auth->validate();
+		$this->auth->validate();
 	}
 
 	/**
@@ -29,7 +29,7 @@ class Preference extends CI_Controller {
 	 * 
 	 */
 	public function index($param=NULL) {
-		if ($this->SC_auth->get_access()) {
+		if ($this->auth->get_access()) {
 			$data['menu']['box'] = $this->template->menu_box();
 			$data['login'] = $this->template->get_login();
 			// $data['crud'] = $this->_get_crud_for_index();
@@ -40,40 +40,40 @@ class Preference extends CI_Controller {
 	}
 	
 	public function show($param=NULL) {
-		if ($this->SC_auth->get_access()) {
+		if ($this->auth->get_access()) {
 			$data['menu']['box'] = $this->template->menu_box();
 			$data['login'] = $this->template->get_login();
 
 			$ok = FALSE;
 			$user_id = $param;
 			if (isset($user_id)) {
-				$preference_id = $this->SC_users->get_preference_id($user_id);
-				if ($preference_id) {
+                                $query = $this->SC_users->get($user_id);
+                                $data_user = $query->row();
+                                $preference_id = (integer) $data_user->preference_id;
+				if ($preference_id > 0) {
 					$ok = TRUE;
 				} else {
-					$data_user = $this->SC_users->get($user_id);
-					$data_pref = array('first_name' => $data_user[0]->username);
-					$new_preference_id = $this->SC_preferences->insert($data_pref);
-					if ($new_preference_id > 0) {
-						$data_pref = array('preference_id' => $new_preference_id);
-						if ($this->SC_users->update($data_pref, $user_id)) {
-							$data['crud'] = t('New preferences has been created');
-							$preference_id = $new_preference_id;
-							$ok = TRUE;
-						} else {
-							$data['crud'] = t('Fail to update user data');
-						}
-					} else {
-						$data['crud'] = t('Fail to create new user preferences');
-					}
+                                        $data_pref = array('first_name' => $data_user->username);
+                                        $new_preference_id = $this->SC_preferences->insert($data_pref);
+                                        if ($new_preference_id > 0) {
+                                                $data_pref = array('preference_id' => $new_preference_id);
+                                                if ($this->SC_users->update($user_id, $data_pref)) {
+                                                        $data['crud'] = t('New preferences has been created');
+                                                        $preference_id = $new_preference_id;
+                                                        $ok = TRUE;
+                                                } else {
+                                                        $data['crud'] = t('Fail to update user data');
+                                                }
+                                        } else {
+                                                $data['crud'] = t('Fail to create new user preferences');
+                                        }
 				}
 			}
 			
 			if ($ok) {
-				$data_pref = $this->SC_preferences->get($preference_id);
-				foreach ($data_pref as $row) {
-					$data['crud'] = print_r($row, TRUE);
-				}
+				$query = $this->SC_preferences->get($preference_id);
+                                $row = $query->result_array();
+				$data['crud'] = print_r($row, TRUE);
 			} else {
 				$data['crud'] = t('No such user or preferences data');
 			}

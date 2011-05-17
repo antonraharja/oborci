@@ -71,7 +71,7 @@ class Roles extends CI_Controller {
 			'select' => array(
 				array('name' => 'id', 'label' => 'ID', 
 					'rules' => array('key', 'hidden', 'trim'),),
-				array('name' => 'username', 'label' => 'Username', 'link' => 'preference/view/{id}',
+				array('name' => 'username', 'label' => 'Username', 'link' => 'preference/show/{id}',
 					'rules' => array('trim',  'htmlspecialchars'),),
 			),
 			'datasource' => array(

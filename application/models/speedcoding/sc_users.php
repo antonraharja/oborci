@@ -85,8 +85,8 @@ class SC_users extends CI_Model {
 
 	/**
 	 * Update user
-	 * @param array $data Array of user data to be updated
 	 * @param integer $id user ID
+	 * @param array $data Array of user data to be updated
 	 * @return boolean TRUE if update success
 	 */
 	public function update($id, $data=NULL) {
