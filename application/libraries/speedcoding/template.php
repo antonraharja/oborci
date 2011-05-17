@@ -6,7 +6,6 @@ exit('No direct script access allowed');
 /**
  * Template library
  *
- * @property auth $auth
  * @property SC_menus $SC_menus
  * @property SC_preferences $SC_preferences
  * @property SC_roles $SC_roles
@@ -124,6 +123,7 @@ class Template {
 				'id_css' => 'menu_home'
 			);
 		}
+                sort($data);
 		return $data;
 	}
 
