@@ -6,7 +6,7 @@ exit('No direct script access allowed');
 /**
  * Process controller
  *
- * @property SC_auth $SC_auth
+ * @property auth $auth
  * @property template $template
  *
  * @author Anton Raharja
@@ -16,9 +16,7 @@ class Process extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model(array('speedcoding/SC_auth', 'template'));
-		$this->load->helper(array('form'));
-		$this->load->library(array('uri'));
+                $this->load->library(array('uri', 'speedcoding/Auth', 'speedcoding/Template'));
 	}
 
 	/**
@@ -43,8 +41,8 @@ class Process extends CI_Controller {
 		$ok = FALSE;
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
-		if ($this->SC_auth->auth($username, $password)) {
-			if ($this->SC_auth->login()) {
+		if ($this->auth->auth($username, $password)) {
+			if ($this->auth->login()) {
 				$ok = TRUE;
 			}
 		}
@@ -71,7 +69,7 @@ class Process extends CI_Controller {
 	 * Process logout
 	 */
 	public function logout() {
-		$this->SC_auth->logout();
+		$this->auth->logout();
 		$data['menu']['box'] = $this->template->menu_box();
 		$this->load->view('process/logout_view', $data);
 	}

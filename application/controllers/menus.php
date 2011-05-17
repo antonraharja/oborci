@@ -6,10 +6,7 @@ exit('No direct script access allowed');
 /**
  * Menus controller
  *
- * @property SC_auth $SC_auth
  * @property SC_menus $SC_menus
- * @property crud $crud
- * @property template $template
  *
  * @author Anton Raharja
  *

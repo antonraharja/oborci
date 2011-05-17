@@ -6,9 +6,9 @@ exit('No direct script access allowed');
 /**
  * Roles controller
  *
- * @property SC_auth $SC_auth
  * @property SC_users $SC_users
  * @property SC_preferences $SC_preferences
+ * @property auth $auth
  * @property crud $crud
  * @property template $template
  *
@@ -19,8 +19,8 @@ class Preference extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model(array('speedcoding/SC_auth', 'template'));
-		$this->load->library('speedcoding/Crud');
+                $this->load->model(array('speedcoding/SC_preferences', 'speedcoding/SC_users'));
+                $this->load->library(array('speedcoding/Auth', 'speedcoding/Crud', 'speedcoding/Template'));
 		$this->SC_auth->validate();
 	}
 

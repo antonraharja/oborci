@@ -6,7 +6,7 @@ exit('No direct script access allowed');
 /**
  * Users controller
  *
- * @property SC_auth $SC_auth
+ * @property auth $auth
  * @property template $template
  *
  * @author Anton Raharja
@@ -16,9 +16,8 @@ class Users extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model(array('speedcoding/SC_auth', 'template'));
-		$this->load->library('speedcoding/Crud');
-		$this->SC_auth->validate();
+                $this->load->library(array('speedcoding/Auth', 'speedcoding/Crud', 'speedcoding/Template'));
+		$this->auth->validate();
 	}
 
 	/**
@@ -100,7 +99,7 @@ class Users extends CI_Controller {
 	 *
 	 */
 	public function index($param=NULL) {
-		if ($this->SC_auth->get_access()) {
+		if ($this->auth->get_access()) {
 			$data['menu']['box'] = $this->template->menu_box();
 			$data['login'] = $this->template->get_login();
 			$data['crud'] = $this->_get_crud();

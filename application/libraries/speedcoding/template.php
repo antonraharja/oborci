@@ -4,30 +4,33 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Template model
+ * Template library
  *
- * @property SC_auth $SC_auth
+ * @property auth $auth
  * @property SC_menus $SC_menus
  * @property SC_preferences $SC_preferences
  * @property SC_roles $SC_roles
  * @property SC_users $SC_users
+ * @property auth $auth
+ * @property form $form
  *
  * @author Anton Raharja
  */
-class Template extends CI_Model {
+class Template {
+        
+        private $CI = NULL;
 
 	function __construct() {
-		parent::__construct();
-		$this->load->model(
+                $this->CI =& get_instance();
+		$this->CI->load->model(
 			array(
-				'speedcoding/SC_auth', 
 				'speedcoding/SC_menus', 
 				'speedcoding/SC_preferences', 
 				'speedcoding/SC_roles', 
 				'speedcoding/SC_users'
 			)
 		);
-		$this->load->library(array('table', 'speedcoding/Form'));
+		$this->CI->load->library(array('table', 'speedcoding/Auth', 'speedcoding/Form'));
 	}
 
 	/**
@@ -36,12 +39,12 @@ class Template extends CI_Model {
 	 */
 	public function get_login() {
                 $data = NULL;
-		$query = $this->SC_preferences->get($this->SC_auth->preference_id);
+		$query = $this->CI->SC_preferences->get($this->CI->auth->preference_id);
                 $pref = $query->row_array();
 		if (isset($pref['id'])) {
                         $data = $pref;
 		}
-		$query = $this->SC_roles->get($this->SC_auth->role_id);
+		$query = $this->CI->SC_roles->get($this->CI->auth->role_id);
                 $role = $query->row();
 		if (isset($role->id)) {
 			$data['role'] = $role->name;
@@ -84,8 +87,8 @@ class Template extends CI_Model {
 				),
 			),
 		);
-		$this->form->set_data($data);
-		$data = $this->form->render();
+		$this->CI->form->set_data($data);
+		$data = $this->CI->form->render();
 		return $data;
 	}
 
@@ -95,10 +98,10 @@ class Template extends CI_Model {
 	 */
 	public function menu_array() {
 		$data = array();
-		if ($this->SC_auth->get_access()) {
-			$returns = $this->SC_roles->get_menu_id($this->SC_auth->role_id);
+		if ($this->CI->auth->get_access()) {
+			$returns = $this->CI->SC_roles->get_menu_id($this->CI->auth->role_id);
 			foreach ($returns as $row) {
-				$query = $this->SC_menus->get($row->menu_id);
+				$query = $this->CI->SC_menus->get($row->menu_id);
                                 $menu = $query->row();
 				if (isset($menu->id)) {
 					$data[] = array(
