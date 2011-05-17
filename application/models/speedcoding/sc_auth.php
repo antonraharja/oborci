@@ -14,10 +14,15 @@ exit('No direct script access allowed');
  */
 class SC_auth extends CI_Model {
 
-	private $user_id = NULL;
+	public $username = NULL;
+	public $password = NULL;
+	public $user_id = NULL;
+	public $role_id = NULL;
+	public $preference_id = NULL;
+
 	private $login_state = FALSE;
 	private $access = FALSE;
-
+	
 	function __construct() {
 		parent::__construct();
 		$this->load->model(
@@ -28,25 +33,10 @@ class SC_auth extends CI_Model {
 			)
 		);
 		if ($this->session->userdata('login_state')) {
-			$this->set_user_id($this->session->userdata('user_id'));
+			$this->user_id = $this->session->userdata('user_id');
 			$this->set_login_state(TRUE);
+                        $this->get_login_id();
 		}
-	}
-
-	/**
-	 * Get user ID
-	 * @return integer Current logged in user ID
-	 */
-	public function get_user_id() {
-		return $this->user_id;
-	}
-
-	/**
-	 * Set user ID
-	 * @param integer $user_id User ID
-	 */
-	private function set_user_id($user_id) {
-		$this->user_id = $user_id;
 	}
 
 	/**
@@ -82,12 +72,25 @@ class SC_auth extends CI_Model {
 	}
 
 	/**
+	 * Get user ID, preference ID and role ID information
+	 */
+	private function get_login_id() {
+		$user_id = $this->user_id;
+                $query = $this->SC_users->get($user_id);
+                $row = $query->row();
+                if ($query->num_rows() > 0) {
+                        $this->preference_id = $row->preference_id;
+                        $this->role_id = $row->role_id;
+                }
+	}
+
+	/**
 	 * Process login
 	 * @return boolean TRUE when login process successed
 	 */
 	public function login() {
 		if ($this->get_login_state()) {
-			$data['user_id'] = $this->get_user_id();
+			$data['user_id'] = $this->user_id;
 			$data['login_state'] = $this->get_login_state();
 			$this->session->set_userdata($data);
 			return TRUE;
@@ -102,69 +105,45 @@ class SC_auth extends CI_Model {
 	 */
 	public function logout() {
 		$this->session->sess_destroy();
-		$this->set_user_id(NULL);
+		$this->user_id = NULL;
 		$this->set_login_state(FALSE);
-		$data['user_id'] = $this->get_user_id();
+		$data['user_id'] = $this->user_id;
 		$data['login_state'] = $this->get_login_state();
-		$this->session->set_userdata($data);
+		$this->session->unset_userdata($data);
 	}
 
 	/**
-	 * Authentication, validate username and password
+	 * Authentication, validate username and password, and also set user ID, role ID and preference ID in this object
 	 * @param string $username Username from a login form
 	 * @param string $password Password from a login form
 	 * @return boolean TRUE if username and password authenticated
 	 */
-	public function auth($username, $password) {
+	public function auth($username=NULL, $password=NULL) {
+		$return = FALSE;
 		$test_password = NULL;
 		$test_user_id = NULL;
-		if ($username && $password) {
-			$user_id = $this->SC_users->get_user_id($username);
-			if ($user_id) {
-				$returns = $this->SC_users->get($user_id);
-				if (count($returns) > 0) {
-					$test_password = $returns[0]->password;
-					$test_user_id = $user_id;
-				} else {
-					return FALSE;
-				}
-			} else {
-				return FALSE;
+		$username = isset($this->username) ? $this->username : $username;
+		$password = isset($this->password) ? $this->password : $password;
+                $this->username = $username;
+                $this->password = $password;
+		if ($this->username && $this->password) {
+                        $row = $this->SC_users->get_by_username($this->username);
+			if (isset($row->id)) {
+                                $test_password = $row->password;
+                                $test_user_id = $row->id;
 			}
-			if ($test_password && $test_user_id) {
+			if (isset($test_password) && isset($test_user_id)) {
 				if ($password == $test_password) {
-					$this->set_user_id($test_user_id);
+					$this->user_id = $test_user_id;
 					$this->set_login_state(TRUE);
+                                        $this->get_login_id();
 					return TRUE;
-				} else {
-					return FALSE;
 				}
-			} else {
-				return FALSE;
-			}
-		} else {
-			return FALSE;
-		}
-	}
-
-	/**
-	 * Get user ID, preference ID and role ID information
-	 * @param integer $user_id User ID, if user ID omitted get_login() will get user ID from session
-	 * @return array,boolean Array of logged in user data or FALSE when user not authenticated
-	 */
-	public function get_login_id($user_id=NULL) {
-		if (!isset($user_id)) {
-			$user_id = $this->get_user_id();
-			if (!isset($user_id)) {
-				return FALSE;
 			}
 		}
-		$preference_id = $this->SC_users->get_preference_id($user_id);
-		$role_id = $this->SC_users->get_role_id($user_id);
-		$data['user_id'] = $user_id;
-		$data['preference_id'] = $preference_id;
-		$data['role_id'] = $role_id;
-		return $data;
+		$this->username = NULL;
+		$this->password = NULL;
+		return FALSE;
 	}
 
 	/**
@@ -173,8 +152,6 @@ class SC_auth extends CI_Model {
 	 */
 	public function validate() {
 		if ($this->get_login_state()) {
-			$data = $this->get_login_id();
-			$role_id = $data['role_id'];
 			$uri = NULL;
 			if ($this->uri->rsegment(1)) {
 				$uri = $this->uri->rsegment(1);
@@ -182,10 +159,10 @@ class SC_auth extends CI_Model {
 			if ($this->uri->rsegment(2) && ($this->uri->rsegment(2) != 'index')) {
 				$uri .= '/' . $this->uri->rsegment(2);
 			}
-			$returns = $this->SC_screens->get_by_uri($uri);
-			if (count($returns) > 0) {
-				$screen_id = $returns[0]->id;
-				$id = $this->SC_roles->get_roles_screens_id($role_id, $screen_id);
+			$row = $this->SC_screens->get_by_uri($uri);
+			if (isset($row->id)) {
+				$screen_id = $row->id;
+				$id = $this->SC_roles->get_roles_screens_id($this->role_id, $screen_id);
 				if ($id) {
 					$this->set_access(TRUE);
 				} else {

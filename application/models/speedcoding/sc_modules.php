@@ -10,73 +10,110 @@ exit('No direct script access allowed');
  */
 class SC_modules extends CI_Model {
 
-	private $table_modules = 'sc_modules';
+        public $id = NULL;
+        public $path = NULL;
+        public $name = NULL;
+        public $status = NULL;
+        
+	private $table = 'sc_modules';
+        private $fields = array('id', 'path', 'name', 'status');
+        private $key_field = 'id';
 
 	function __construct() {
 		parent::__construct();
 	}
 
-	/**
+        /**
+         * Get array from object
+         * @return array Data
+         */
+        private function _sc_get_data() {
+                $data = NULL;
+                foreach ($this->fields as $field) {
+                        if (isset($this->$field)) {
+                                $data[$field] = $this->$field;
+                        }
+                }
+                return $data;
+        }
+        
+        /**
+         * Nullify data object
+         */
+        private function _sc_null_data() {
+                foreach ($this->fields as $field) {
+                        $this->$field = NULL;
+                }
+        }
+        
+        /**
 	 * Insert a new module to database
 	 * @param array $data Array of module data to be inserted to database
-	 * @return integer,boolean Module ID or FALSE when failed
+	 * @return integer|boolean module ID or FALSE when failed
 	 */
-	public function insert($data) {
-		if ($this->db->insert($this->table_modules, $data)) {
-			$module_id = $this->db->insert_id();
-			if ($module_id) {
-				return $module_id;
-			} else {
-				return FALSE;
+	public function insert($data=NULL) {
+                $returns = FALSE;
+                if (! isset($data)) {
+                        $data = $this->_sc_get_data();
+                }
+		if ($this->db->insert($this->table, $data)) {
+			$insert_id = $this->db->insert_id();
+			if ($insert_id) {
+				$returns = $insert_id;
 			}
-		} else {
-			return FALSE;
 		}
+                $this->_sc_null_data();
+                return $returns;
 	}
 
 	/**
-	 * Get all modules or specific module when $module_id given
-	 * @param integer $module_id Module ID
-	 * @return array Array of objects containing module items
+	 * Get all modules or specific module when $id is given
+	 * @param integer $id module ID
+	 * @return array Query containing module items
 	 */
-	public function get($module_id=NULL) {
-		if (isset($module_id)) {
-			$query = $this->db->get_where($this->table_modules, array('id' => $module_id));
+	public function get($id=NULL) {
+                $query = NULL;
+		if (isset($id)) {
+			$query = $this->db->get_where($this->table, array($this->key_field => $id));
 		} else {
-			$query = $this->db->get_where($this->table_modules);
+			$query = $this->db->get_where($this->table);
 		}
-		return $query->result();
+		return $query;
 	}
 
 	/**
 	 * Update module
 	 * @param array $data Array of module data to be updated
-	 * @param integer $module_id Module ID
+	 * @param integer $id module ID
 	 * @return boolean TRUE if update success
 	 */
-	public function update($data, $module_id) {
+	public function update($id, $data=NULL) {
+                $returns = FALSE;
+                if (! isset($data)) {
+                        $data = $this->_sc_get_data_array();
+                }
 		if (count($data) > 0) {
-			$this->db->update($this->table_modules, $data, array('id' => $module_id));
+			$this->db->update($this->table, $data, array($this->key_field => $id));
 		}
 		if ($this->db->affected_rows()) {
-			return TRUE;
-		} else {
-			return FALSE;
+			$returns = TRUE;
 		}
+                $this->_sc_null_data();
+                return $returns;
 	}
 
 	/**
 	 * Delete module
-	 * @param integer $module_id Module ID
+	 * @param integer $id module ID
 	 * @return boolean TRUE if deletion success
 	 */
-	public function delete($module_id) {
-		$this->db->delete($this->table_modules, array('id' => $module_id));
+	public function delete($id) {
+                $returns = FALSE;
+		$this->db->delete($this->table, array($this->key_field => $id));
 		if ($this->db->affected_rows()) {
-			return TRUE;
-		} else {
-			return FALSE;
+			$returns = TRUE;
 		}
+                return $returns;
 	}
 
 }

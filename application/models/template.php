@@ -32,25 +32,19 @@ class Template extends CI_Model {
 
 	/**
 	 * Get login information
-	 * @param integer $user_id User ID, if user ID omitted get_login() will get user ID from session
-	 * @return array,boolean Array of logged in user data or FALSE when user not authenticated
+	 * @return array|boolean Array of logged in user data or FALSE when user not authenticated
 	 */
-	public function get_login($user_id=NULL) {
-		if (!isset($user_id)) {
-			$user_id = $this->SC_auth->get_user_id();
-			if (!isset($user_id)) {
-				return FALSE;
-			}
+	public function get_login() {
+                $data = NULL;
+		$query = $this->SC_preferences->get($this->SC_auth->preference_id);
+                $pref = $query->row_array();
+		if (isset($pref['id'])) {
+                        $data = $pref;
 		}
-		$data = $this->SC_auth->get_login_id($user_id);
-		$preferences = $this->SC_preferences->get($data['preference_id']);
-		if (count($preferences) > 0) {
-			$data['first_name'] = $preferences[0]->first_name;
-			$data['last_name'] = $preferences[0]->last_name;
-		}
-		$role = $this->SC_roles->get($data['role_id']);
-		if (count($role) > 0) {
-			$data['role'] = $role[0]->name;
+		$query = $this->SC_roles->get($this->SC_auth->role_id);
+                $role = $query->row();
+		if (isset($role->id)) {
+			$data['role'] = $role->name;
 		}
 		return $data;
 	}
@@ -102,18 +96,18 @@ class Template extends CI_Model {
 	public function menu_array() {
 		$data = array();
 		if ($this->SC_auth->get_access()) {
-			$role_id = $this->SC_users->get_role_id($this->SC_auth->get_user_id());
-			$returns = $this->SC_roles->get_menu_id($role_id);
+			$returns = $this->SC_roles->get_menu_id($this->SC_auth->role_id);
 			foreach ($returns as $row) {
-				$menu = $this->SC_menus->get($row->menu_id);
-				if (count($menu) > 0) {
+				$query = $this->SC_menus->get($row->menu_id);
+                                $menu = $query->row();
+				if (isset($menu->id)) {
 					$data[] = array(
-						'parent' => $menu[0]->parent,
-						'index' => $menu[0]->index,
-						'uri' => $menu[0]->uri,
-						'text' => t($menu[0]->text),
-						'title' => t($menu[0]->title),
-						'id_css' => $menu[0]->id_css
+						'parent' => $menu->parent,
+						'index' => $menu->index,
+						'uri' => $menu->uri,
+						'text' => t($menu->text),
+						'title' => t($menu->title),
+						'id_css' => $menu->id_css
 					);
 				}
 			}

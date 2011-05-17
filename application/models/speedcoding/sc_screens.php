@@ -10,83 +10,120 @@ exit('No direct script access allowed');
  */
 class SC_screens extends CI_Model {
 
-	private $table_screens = 'sc_screens';
+	public $id = NULL;
+        public $module_id = NULL;
+        public $name = NULL;
+        public $uri = NULL;
+        
+        private $table = 'sc_screens';
+        private $fields = array('id', 'module_id', 'name', 'uri');
+        private $key_field = 'id';
 
 	function __construct() {
 		parent::__construct();
 	}
 
-	/**
+        /**
+         * Get array from object
+         * @return array Data
+         */
+        private function _sc_get_data() {
+                $data = NULL;
+                foreach ($this->fields as $field) {
+                        if (isset($this->$field)) {
+                                $data[$field] = $this->$field;
+                        }
+                }
+                return $data;
+        }
+        
+        /**
+         * Nullify data object
+         */
+        private function _sc_null_data() {
+                foreach ($this->fields as $field) {
+                        $this->$field = NULL;
+                }
+        }
+        
+        /**
 	 * Insert a new screen to database
 	 * @param array $data Array of screen data to be inserted to database
-	 * @return integer,boolean Screen ID or FALSE when failed
+	 * @return integer|boolean screen ID or FALSE when failed
 	 */
-	public function insert($data) {
-		if ($this->db->insert($this->table_screens, $data)) {
-			$screen_id = $this->db->insert_id();
-			if ($screen_id) {
-				return $screen_id;
-			} else {
-				return FALSE;
+	public function insert($data=NULL) {
+                $returns = FALSE;
+                if (! isset($data)) {
+                        $data = $this->_sc_get_data();
+                }
+		if ($this->db->insert($this->table, $data)) {
+			$insert_id = $this->db->insert_id();
+			if ($insert_id) {
+				$returns = $insert_id;
 			}
-		} else {
-			return FALSE;
 		}
+                $this->_sc_null_data();
+                return $returns;
 	}
 
 	/**
-	 * Get all screens or specific screen when $screen_id given
-	 * @param integer $screen_id Screen ID
-	 * @return array Array of objects containing screen items
+	 * Get all screens or specific screen when $id is given
+	 * @param integer $id screen ID
+	 * @return array Query containing screen items
 	 */
-	public function get($screen_id=NULL) {
-		if (isset($screen_id)) {
-			$query = $this->db->get_where($this->table_screens, array('id' => $screen_id));
+	public function get($id=NULL) {
+                $query = NULL;
+		if (isset($id)) {
+			$query = $this->db->get_where($this->table, array($this->key_field => $id));
 		} else {
-			$query = $this->db->get_where($this->table_screens);
+			$query = $this->db->get_where($this->table);
 		}
-		return $query->result();
+		return $query;
 	}
 
 	/**
 	 * Update screen
 	 * @param array $data Array of screen data to be updated
-	 * @param integer $screen_id Screen ID
+	 * @param integer $id screen ID
 	 * @return boolean TRUE if update success
 	 */
-	public function update($data, $screen_id) {
+	public function update($id, $data=NULL) {
+                $returns = FALSE;
+                if (! isset($data)) {
+                        $data = $this->_sc_get_data_array();
+                }
 		if (count($data) > 0) {
-			$this->db->update($this->table_screens, $data, array('id' => $screen_id));
+			$this->db->update($this->table, $data, array($this->key_field => $id));
 		}
 		if ($this->db->affected_rows()) {
-			return TRUE;
-		} else {
-			return FALSE;
+			$returns = TRUE;
 		}
+                $this->_sc_null_data();
+                return $returns;
 	}
 
 	/**
 	 * Delete screen
-	 * @param integer $screen_id Screen ID
+	 * @param integer $id screen ID
 	 * @return boolean TRUE if deletion success
 	 */
-	public function delete($screen_id) {
-		$this->db->delete($this->table_screens, array('id' => $screen_id));
+	public function delete($id) {
+                $returns = FALSE;
+		$this->db->delete($this->table, array($this->key_field => $id));
 		if ($this->db->affected_rows()) {
-			return TRUE;
-		} else {
-			return FALSE;
+			$returns = TRUE;
 		}
+                return $returns;
 	}
 
 	/**
-	 * Get screen by URI data
-	 * @param integer $uri URI in screen
-	 * @return array Array of screen ID
+	 * Get screen by URI
+	 * @param integer $uri URI
+	 * @return object Object of screen
 	 */
 	public function get_by_uri($uri) {
-		$query = $this->db->get_where($this->table_screens, array('uri' => $uri));
-		return $query->result();
+		$query = $this->db->get_where($this->table, array('uri' => $uri));
+		return $query->row();
 	}
 
 }
