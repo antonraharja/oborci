@@ -120,7 +120,7 @@ class Auth {
 	 * @param string $password Password from a login form
 	 * @return boolean TRUE if username and password authenticated
 	 */
-	public function auth($username=NULL, $password=NULL) {
+	public function authenticate($username=NULL, $password=NULL) {
 		$return = FALSE;
 		$test_password = NULL;
 		$test_user_id = NULL;

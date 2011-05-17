@@ -41,7 +41,7 @@ class Process extends CI_Controller {
 		$ok = FALSE;
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
-		if ($this->auth->auth($username, $password)) {
+		if ($this->auth->authenticate($username, $password)) {
 			if ($this->auth->login()) {
 				$ok = TRUE;
 			}
