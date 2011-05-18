@@ -7,11 +7,13 @@
  */
 class Form {
 
-	private $data = NULL;
-	private $hidden = NULL;
-	private $submit = NULL;
-	private $CI = NULL;
+        public $uri = NULL;
+        public $name = NULL;
+        
+        private $data = NULL;
+        private $rules = NULL;
 	private $form_name = 'Form';
+	private $CI = NULL;
 
 	function __construct() {
 		$this->CI =& get_instance();
@@ -24,8 +26,19 @@ class Form {
 	 * @return string $returns Form open
 	 */
 	public function open($data=NULL) {
-		$id = isset($data['id']) ? $data['id'] : $data['name'];
-		$returns = form_open($data['uri'], array('name' => $data['name'], 'id' => $id));
+                $uri = isset($this->uri) ? $this->uri : $data['uri'];
+                if (empty($uri)) {
+                        $uri = current_url();
+                }
+                $this->data['uri'] = $uri;
+                $name = isset($this->name) ? $this->name : $data['name'];
+                if (empty($name)) {
+                        $name = 'form'.mktime();
+                }
+                $data['name'] = $name;
+		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
+		$returns = form_open($uri, $data);
+                $this->data[] = array('open' => $data);
 		return $returns;
 	}
 
@@ -36,6 +49,7 @@ class Form {
 	 */
 	public function close($data=NULL) {
 		$returns = form_close($data['value']);
+                $this->data[] = array('close' => $data);
 		return $returns;
 	}
 
@@ -51,6 +65,7 @@ class Form {
 			$data['checked'] =  'checked';
 		}
 		$returns .= form_checkbox($data);
+                $this->data[] = array('checkbox' => $data);
 		return $returns;
 	}
 
@@ -66,6 +81,7 @@ class Form {
 			$data['checked'] =  'checked';
 		}
 		$returns .= form_radio($data);
+                $this->data[] = array('radio' => $data);
 		return $returns;
 	}
 
@@ -92,6 +108,7 @@ class Form {
 		}
 		$returns .= form_dropdown($name, $options, $selected, $extra);
 		$returns .= "</div>";
+                $this->data[] = array('dropdown' => $data);
 		return $returns;
 	}
 
@@ -104,6 +121,7 @@ class Form {
 		$name = $data['name'];
 		$value = $data['value'];
 		$returns = form_hidden($name, $value);
+                $this->data[] = array('hidden' => $data);
 		return $returns;
 	}
 
@@ -119,6 +137,7 @@ class Form {
 			$attr = array('id' => $data['id'].'_label');
 			$returns .= form_label($data['label'], $data['name'], $attr);
 		}
+                $this->data[] = array('label' => $data);
 		return $returns;
 	}
 
@@ -141,13 +160,9 @@ class Form {
 		if ($data['disabled']) {
 			$data['disabled'] = 'disabled';
 		}
-		unset($data['label']);
-		unset($data['unique']);
-		unset($data['confirm']);
-		unset($data['confirm_label']);
-		unset($data['show_value']);
 		$returns .= form_input($data);
 		$returns .= "</div>";
+                $this->data[] = array('input' => $data);
 		return $returns;
 	}
 
@@ -164,13 +179,9 @@ class Form {
 			$attr = array('id' => $data['id'].'_label');
 			$returns .= form_label($data['label'], $data['name'], $attr);
 		}
-		unset($data['label']);
-		unset($data['unique']);
-		unset($data['confirm']);
-		unset($data['confirm_label']);
-		unset($data['show_value']);
 		$returns .= form_password($data);
 		$returns .= "</div>";
+                $this->data[] = array('password' => $data);
 		return $returns;
 	}
 	
@@ -185,6 +196,7 @@ class Form {
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		$returns = form_submit($data);
+                $this->data[] = array('submit' => $data);
 		return $returns;
 	}
 
@@ -199,6 +211,7 @@ class Form {
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		$returns = form_reset($data);
+                $this->data[] = array('reset' => $data);
 		return $returns;
 	}
 
@@ -213,19 +226,10 @@ class Form {
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		$returns = form_button($data);
+                $this->data[] = array('button' => $data);
 		return $returns;
 	}
-	
-	/**
-	 * Set uniquely formatted data structure
-	 * Usage example: $this->form->set_data($data);
-	 * @param array $data Data array
-	 * @return NULL
-	 */
-	public function set_data($data) {
-		$this->data = $data;
-	}
-
+        
 	/**
 	 * Print form element
 	 * Usage example: $this->form->show('submit', array('value' => 'Submit');
@@ -240,6 +244,39 @@ class Form {
 		}
 		echo $data;
 	}
+        
+        /**
+         * Initialize form, nullify all parameters and start fresh
+         */
+        public function initilize() {
+                $this->_nullify_params();
+        }
+
+	/**
+         * Set rules to each field
+         * @param array $data Rules array
+         */
+        public function set_rules($data) {
+                $this->rules = $data;
+        }
+        
+        /**
+	 * Set uniquely formatted data structure
+	 * Usage example: $this->form->set_data($data);
+	 * @param array $data Data array
+	 * @return NULL
+	 */
+	public function set_data($data) {
+		$this->data = $data;
+	}
+        
+        /**
+         * Call function on event on_success
+         * @param array $data Function
+         */
+        public function on_success($data) {
+                $this->data['events']['on_success'] = $data;
+        }
 
 	/**
 	 * Render form
@@ -250,25 +287,45 @@ class Form {
 		$returns = NULL;
 		$form_open_exists = FALSE;
 		$form_close_exists = FALSE;
-		foreach ($this->data as $row) {
-			foreach ($row as $key => $val) {
-				if (method_exists($this->form_name, $key)) {
-					$returns .= call_user_func_array(array($this->form_name, $key), array($val));
-				}
-				if ($key == 'open') {
-					$form_open_exists = TRUE;
-				}
-				if ($key == 'close') {
-					$form_close_exists = TRUE;
-				}
-			}
+                
+                $data = $this->data;
+                $rules = $this->rules;
+                $this->_nullify_params();
+                
+		foreach ($data as $field_key => $field_val) {
+                        // echo $field_key.' -- '.print_r($field_val, TRUE).'<br />';
+                        foreach ($field_val as $key => $val) {
+                                $data[$field_key][$key]['rules'] = $rules[$val['name']];
+                                if (method_exists($this->form_name, $key)) {
+                                        $returns .= call_user_func_array(array($this->form_name, $key), array($val));
+                                }
+                                if ($key == 'open') {
+                                        $form_open_exists = TRUE;
+                                }
+                                if ($key == 'close') {
+                                        $form_close_exists = TRUE;
+                                }
+                        }
 		}
 		if ($form_open_exists && !$form_close_exists) {
 			$returns .= $this->close();
 		}
+                
+                // echo print_r($data, TRUE).'<br /><br />'.print_r($rules, TRUE);
+                
+                $this->_nullify_params();
 		return $returns;
 	}
 
+        /**
+         * Helper function to nullify parameters
+         */
+        private function _nullify_params() {
+                $this->data = NULL;
+                $this->rules = NULL;
+                $this->uri = NULL;
+                $this->name = NULL;
+        }
 }
 
 /* End of file Form.php */

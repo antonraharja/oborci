@@ -83,7 +83,7 @@ class Users extends CI_Controller {
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE,
-				'crud_title' => '<h1>'.t('User Management').'</h1>',
+				'crud_title' => NULL,
 				'crud_form_title' => '<h2>'.t('List of Users').'</h2>',
 				'insert_form_title' => '<h2>'.t('Insert Data').'</h2>',
 				'update_form_title' => '<h2>'.t('Update Data').'</h2>',

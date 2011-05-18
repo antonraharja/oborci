@@ -9,7 +9,7 @@ exit('No direct script access allowed');
  * @property SC_users $SC_users
  * @property SC_preferences $SC_preferences
  * @property auth $auth
- * @property crud $crud
+ * @property form $form
  * @property template $template
  *
  * @author Anton Raharja
@@ -20,68 +20,84 @@ class Preference extends CI_Controller {
 	function __construct() {
 		parent::__construct();
                 $this->load->model(array('speedcoding/SC_preferences', 'speedcoding/SC_users'));
-                $this->load->library(array('speedcoding/Auth', 'speedcoding/Crud', 'speedcoding/Template'));
-		$this->auth->validate();
+                $this->load->library(array('speedcoding/Auth', 'speedcoding/Form', 'speedcoding/Template'));
+                if (! $this->auth->validate()) {
+                        redirect('process/unauthorized');
+                }
 	}
 
+        private function show_form($content) {
+                $this->form->initilize();
+                $this->form->name = 'show';
+                $this->form->set_rules(
+                        array(
+                        'id' => array('readonly', 'key'),
+                        'email' => array('required', array('max_length' => 200), 'trim', 'xss_clean'),
+                        'first_name' => array('required', array('max_length' => 50), 'trim', 'xss_clean'),
+                        'last_name' => array(array('max_length' => 50), 'trim', 'xss_clean')));
+                $this->form->open();
+                // $this->form->hidden(array('name' => 'id', 'value' => $content['id']));
+                foreach ($content as $key => $val) {
+                        $label = str_replace('_', ' ', $key);
+                        $this->form->input(array('name' => $key, 'label' => ucwords(t($label)), 'value' => $val));
+                }
+                $this->form->submit(array('value' => t('Submit')));
+                $this->form->close();
+                $this->form->on_success('save_form');
+                $returns = $this->form->render();
+                return $returns;
+        }
+        
 	/**
 	 * Index Page for this controller.
-	 * 
 	 */
-	public function index($param=NULL) {
-		if ($this->auth->get_access()) {
-			$data['menu']['box'] = $this->template->menu_box();
-			$data['login'] = $this->template->get_login();
-			// $data['crud'] = $this->_get_crud_for_index();
-			$this->load->view('roles_view', $data);
-		} else {
-			redirect('process/unauthorized');
-		}
-	}
+	public function index() {
+                redirect('home');
+        }
 	
-	public function show($param=NULL) {
-		if ($this->auth->get_access()) {
-			$data['menu']['box'] = $this->template->menu_box();
-			$data['login'] = $this->template->get_login();
+	/**
+         * Show preferences
+         * @param integer $param User ID
+         */
+        public function show($param=NULL) {
+                $data['menu']['box'] = $this->template->menu_box();
+                $data['login'] = $this->template->get_login();
 
-			$ok = FALSE;
-			$user_id = $param;
-			if (isset($user_id)) {
-                                $query = $this->SC_users->get($user_id);
-                                $data_user = $query->row();
-                                $preference_id = (integer) $data_user->preference_id;
-				if ($preference_id > 0) {
-					$ok = TRUE;
-				} else {
-                                        $data_pref = array('first_name' => $data_user->username);
-                                        $new_preference_id = $this->SC_preferences->insert($data_pref);
-                                        if ($new_preference_id > 0) {
-                                                $data_pref = array('preference_id' => $new_preference_id);
-                                                if ($this->SC_users->update($user_id, $data_pref)) {
-                                                        $data['crud'] = t('New preferences has been created');
-                                                        $preference_id = $new_preference_id;
-                                                        $ok = TRUE;
-                                                } else {
-                                                        $data['crud'] = t('Fail to update user data');
-                                                }
+                $ok = FALSE;
+                $user_id = $param;
+                if (isset($user_id)) {
+                        $query = $this->SC_users->get($user_id);
+                        $data_user = $query->row();
+                        $preference_id = (integer) $data_user->preference_id;
+                        if ($preference_id > 0) {
+                                $ok = TRUE;
+                        } else {
+                                $data_pref = array('first_name' => $data_user->username);
+                                $new_preference_id = $this->SC_preferences->insert($data_pref);
+                                if ($new_preference_id > 0) {
+                                        $data_pref = array('preference_id' => $new_preference_id);
+                                        if ($this->SC_users->update($user_id, $data_pref)) {
+                                                $preference_id = $new_preference_id;
+                                                $ok = TRUE;
                                         } else {
-                                                $data['crud'] = t('Fail to create new user preferences');
+                                                $data['crud'] = t('Fail to update user data');
                                         }
-				}
-			}
-			
-			if ($ok) {
-				$query = $this->SC_preferences->get($preference_id);
-                                $row = $query->result_array();
-				$data['crud'] = print_r($row, TRUE);
-			} else {
-				$data['crud'] = t('No such user or preferences data');
-			}
-			
-			$this->load->view('preference_show_view', $data);
-		} else {
-			redirect('process/unauthorized');
-		}
+                                } else {
+                                        $data['crud'] = t('Fail to create new user preferences');
+                                }
+                        }
+                }
+
+                if ($ok) {
+                        $query = $this->SC_preferences->get($preference_id);
+                        $row = $query->row_array();
+                        $data['crud'] = $this->show_form($row);
+                        $data['pref']['username'] = $data_user->username;
+                } else {
+                        $data['crud'] = t('No such user or preferences data');
+                }
+
+                $this->load->view('preference_show_view', $data);
 	}
 
 }

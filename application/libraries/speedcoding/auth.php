@@ -37,7 +37,7 @@ class Auth {
 		if ($this->CI->session->userdata('login_state')) {
 			$this->user_id = $this->CI->session->userdata('user_id');
 			$this->set_login_state(TRUE);
-                        $this->get_login_id();
+                        $this->populate_ids();
 		}
 	}
 
@@ -76,7 +76,7 @@ class Auth {
 	/**
 	 * Get user ID, preference ID and role ID information
 	 */
-	private function get_login_id() {
+	private function populate_ids() {
 		$user_id = $this->user_id;
                 $query = $this->CI->SC_users->get($user_id);
                 $row = $query->row();
@@ -138,7 +138,7 @@ class Auth {
 				if ($password == $test_password) {
 					$this->user_id = $test_user_id;
 					$this->set_login_state(TRUE);
-                                        $this->get_login_id();
+                                        $this->populate_ids();
 					return TRUE;
 				}
 			}
@@ -150,7 +150,7 @@ class Auth {
 
 	/**
 	 * Validate if user has access to this URI
-	 * @return NULL Validation result is accessible through get_access() method
+	 * @return boolean TRUE if user validated. Validation result is also accessible through get_access() method
 	 */
 	public function validate() {
 		if ($this->get_login_state()) {
@@ -167,12 +167,15 @@ class Auth {
 				$id = $this->CI->SC_roles->get_roles_screens_id($this->role_id, $screen_id);
 				if ($id) {
 					$this->set_access(TRUE);
+                                        return TRUE;
 				} else {
 					$this->set_access(FALSE);
+                                        return FALSE;
 				}
 			}
 		} else {
 			$this->set_access(FALSE);
+                        return FALSE;
 		}
 	}
 	
