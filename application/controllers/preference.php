@@ -26,8 +26,8 @@ class Preference extends CI_Controller {
                 }
 	}
 
-        private function show_form($content) {
-                $this->form->initilize();
+        private function show_form($row) {
+                $this->form->init();
                 $this->form->name = 'show';
                 $this->form->set_rules(
                         array(
@@ -35,15 +35,14 @@ class Preference extends CI_Controller {
                         'email' => array('required', array('max_length' => 200), 'trim', 'xss_clean'),
                         'first_name' => array('required', array('max_length' => 50), 'trim', 'xss_clean'),
                         'last_name' => array(array('max_length' => 50), 'trim', 'xss_clean')));
+                $this->form->on_success('save_form');
                 $this->form->open();
-                // $this->form->hidden(array('name' => 'id', 'value' => $content['id']));
-                foreach ($content as $key => $val) {
+                foreach ($row as $key => $val) {
                         $label = str_replace('_', ' ', $key);
                         $this->form->input(array('name' => $key, 'label' => ucwords(t($label)), 'value' => $val));
                 }
                 $this->form->submit(array('value' => t('Submit')));
                 $this->form->close();
-                $this->form->on_success('save_form');
                 $returns = $this->form->render();
                 return $returns;
         }

@@ -37,9 +37,10 @@ class Crud {
 			array('hidden' => array('name' => 'crud_action', 'value' => 'insert'),),
 			array('submit' => array('name' => 'crud_submit_insert', 'value' => t('Add')),),
 		);
+                $this->CI->form->init();
 		$this->CI->form->set_data($data);
 		$returns = "<div id='crud_button_insert'>";
-		$returns .= $this->CI->form->render();
+                $returns .= $this->CI->form->render();
 		$returns .= "</div>";
 		return $returns;
 	}
@@ -66,6 +67,8 @@ class Crud {
 			}
 		}
 		$data[] = array('submit' => array('name' => 'crud_submit_insert', 'value' => t('Add')));
+                
+                $this->CI->form->init();
 		$this->CI->form->set_data($data);
 
 		$returns = "<div id='crud_grid'>";
@@ -227,6 +230,8 @@ class Crud {
 		}
 		$data[] = array('hidden' => array('name' => 'field_num', 'value' => $i));
 		$data[] = array('submit' => array('name' => 'crud_submit_update', 'value' => t('Submit')));
+                
+                $this->CI->form->init();
 		$this->CI->form->set_data($data);
 
 		$returns = "<div id='crud_grid'>";
@@ -394,6 +399,8 @@ class Crud {
 		}
 		$data[] = array('hidden' => array('name' => 'field_num', 'value' => $i));
 		$data[] = array('submit' => array('name' => 'crud_submit_delete', 'value' => t('Submit')));
+                
+                $this->CI->form->init();
 		$this->CI->form->set_data($data);
 
 		$returns = "<div id='crud_grid'>";
@@ -592,7 +599,7 @@ class Crud {
 		if ($this->properties['update'] || $this->properties['delete']) {
 			$column_size += 1;
 			$checkbox_id_main =  $this->key_field.'_main';
-			$js_checkbox = $this->_checkbox_checkall_js($checkbox_id_main, $this->key_field);
+			$js_checkbox = $this->_checkbox_checkall_js($checkbox_id_main);
 			$data = array( 'name' => $checkbox_id_main);
 			$heading[] = array('data' => $this->CI->form->checkbox($data), 'id' => 'crud_th_action');
 		}
@@ -658,7 +665,6 @@ class Crud {
 			$config['base_url'] = base_url().$this->properties['uri'];
 			$config['total_rows'] = $total_rows;
 			$config['per_page'] = $this->pagination['per_page'];
-			//print_r($config);
 			$this->CI->pagination->initialize($config);
 			$returns .= "<div id='crud_pagination'>";
 			$returns .= $this->CI->pagination->create_links();
