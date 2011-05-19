@@ -28,7 +28,6 @@ class Form {
 	 */
 	public function open($data=NULL) {
                 $form_action = NULL;
-                $data = $this->_setup_rules($data);
                 if (isset($this->uri)) {
                         $uri = $this->uri;
                 } else {
@@ -38,11 +37,11 @@ class Form {
                                 $form_action = array('form_action' => 'auto');
                         }
                 }
-                $this->data[]['uri'] = $uri;
                 $name = isset($this->name) ? $this->name : $data['name'];
                 $data['name'] = $name;
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
                 $this->data[] = array('open' => $data);
+                $data = $this->_sanitize_param($data);
 		$returns = form_open($uri, $data, $form_action);
                 $this->returns[] = $returns;
                 return $returns;
@@ -54,8 +53,8 @@ class Form {
          * @return string HTML form close
 	 */
 	public function close($data=NULL) {
-                $data = $this->_setup_rules($data);
                 $this->data[] = array('close' => $data);
+                $data = $this->_sanitize_param($data);
 		$returns = form_close($data['value']);
                 $this->returns[] = $returns;
                 return $returns;
@@ -67,12 +66,12 @@ class Form {
          * @return string HTML form checkbox
 	 */
 	public function checkbox($data=NULL) {
-                $data = $this->_setup_rules($data);
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['checked']) {
 			$data['checked'] =  'checked';
 		}
                 $this->data[] = array('checkbox' => $data);
+                $data = $this->_sanitize_param($data);
 		$returns = form_checkbox($data);
                 $this->returns[] = $returns;
                 return $returns;
@@ -84,12 +83,12 @@ class Form {
          * @return string HTML form radio
 	 */
 	public function radio($data=NULL) {
-                $data = $this->_setup_rules($data);
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['checked']) {
 			$data['checked'] =  'checked';
 		}
                 $this->data[] = array('radio' => $data);
+                $data = $this->_sanitize_param($data);
 		$returns = form_radio($data);
                 $this->returns[] = $returns;
                 return $returns;
@@ -101,7 +100,6 @@ class Form {
          * @return string HTML form dropdown
 	 */
 	public function dropdown($data=NULL) {
-                $data = $this->_setup_rules($data);
 		$extra = NULL;
 		$returns = '<div id="form_dropdown">';
 		$name = $data['name'];
@@ -129,10 +127,10 @@ class Form {
          * @return HTML form hidden
 	 */
 	public function hidden($data=NULL) {
-                $data = $this->_setup_rules($data);
 		$name = $data['name'];
 		$value = $data['value'];
                 $this->data[] = array('hidden' => $data);
+                $data = $this->_sanitize_param($data);
 		$returns = form_hidden($name, $value);
                 $this->returns[] = $returns;
                 return $returns;
@@ -144,7 +142,6 @@ class Form {
          * @return string HTML form label
 	 */
 	public function label($data=NULL) {
-                $data = $this->_setup_rules($data);
 		$returns = NULL;
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['label']) {
@@ -162,7 +159,6 @@ class Form {
          * @return string HTML form input
 	 */
 	public function input($data=NULL) {
-                $data = $this->_setup_rules($data);
 		$returns = '<div id="form_input">';
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['label']) {
@@ -175,9 +171,10 @@ class Form {
 		if ($data['disabled']) {
 			$data['disabled'] = 'disabled';
 		}
+                $this->data[] = array('input' => $data);
+                $data = $this->_sanitize_param($data);
 		$returns .= form_input($data);
 		$returns .= "</div>";
-                $this->data[] = array('input' => $data);
                 $this->returns[] = $returns;
                 return $returns;
 	}
@@ -188,16 +185,16 @@ class Form {
          * @return string HTML form password
 	 */
 	public function password($data=NULL) {
-                $data = $this->_setup_rules($data);
 		$returns = '<div id="form_password">';
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
 		if ($data['label']) {
 			$attr = array('id' => $data['id'].'_label');
 			$returns .= form_label($data['label'], $data['name'], $attr);
 		}
+                $this->data[] = array('password' => $data);
+                $data = $this->_sanitize_param($data);
 		$returns .= form_password($data);
 		$returns .= "</div>";
-                $this->data[] = array('password' => $data);
                 $this->returns[] = $returns;
                 return $returns;
 	}
@@ -208,12 +205,12 @@ class Form {
          * @return string HTML form submit
 	 */
 	public function submit($data=NULL) {
-                $data = $this->_setup_rules($data);
 		if (! isset($data['name'])) {
 			$data['name'] = 'form_submit';
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
                 $this->data[] = array('submit' => $data);
+                $data = $this->_sanitize_param($data);
 		$returns = form_submit($data);
                 $this->returns[] = $returns;
                 return $returns;
@@ -225,12 +222,12 @@ class Form {
          * @return string HTML form reset
 	 */
 	public function reset($data=NULL) {
-                $data = $this->_setup_rules($data);
 		if (! isset($data['name'])) {
 			$data['name'] = 'form_reset';
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
                 $this->data[] = array('reset' => $data);
+                $data = $this->_sanitize_param($data);
 		$returns = form_reset($data);
                 $this->returns[] = $returns;
                 return $returns;
@@ -242,12 +239,12 @@ class Form {
          * @return string HTML form button
 	 */
 	public function button($data=NULL) {
-                $data = $this->_setup_rules($data);
 		if (! isset($data['name'])) {
 			$data['name'] = 'form_button';
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
                 $this->data[] = array('button' => $data);
+                $data = $this->_sanitize_param($data);
 		$returns = form_button($data);
                 $this->returns[] = $returns;
                 return $returns;
@@ -308,6 +305,7 @@ class Form {
 	 * @return string $returns HTML form
 	 */
 	public function render() {
+                $this->_setup_rules();
                 $form_action = $this->CI->input->post('form_action');
                 if ($form_action=='auto') {
                         list($valid, $inputs) = $this->_validate();
@@ -330,8 +328,8 @@ class Form {
                 foreach ($data as $field_key => $field_val) {
                         foreach ($field_val as $method => $param) {
                                 if (! (in_array($method, $array_ignored))) {
+                                        $name = $data[$field_key][$method]['name'];
                                         $value = $data[$field_key][$method]['value'];
-                                        
                                 }
                         }
                 }
@@ -345,17 +343,10 @@ class Form {
         private function _form() {
 		$form_open_exists = FALSE;
 		$form_close_exists = FALSE;
-                $data = $this->data;
-                $rules = $this->rules;
-                $this->_nullify_params();
-		foreach ($data as $field_key => $field_val) {
+                $this->returns = NULL;
+		foreach ($this->data as $field_key => $field_val) {
                         foreach ($field_val as $method => $param) {
                                 if (method_exists($this->form_name, $method)) {
-                                        if (! isset($param['rules'])) {
-                                                if (isset($rules[$param['name']])) {
-                                                        $param['rules'] = $rules[$param['name']];
-                                                }
-                                        }
                                         call_user_func_array(array($this->form_name, $method), array($param));
                                 }
                                 if ($method == 'open') {
@@ -375,6 +366,23 @@ class Form {
         }
 
         /**
+         * Sanitize parameters, removed unknow field options to HTML 
+         * @param array Parameters
+         * @return array Sanitized parameters
+         */
+        private function _sanitize_param($param) {
+                unset($param['apply_function']);
+                unset($param['max_length']);
+                unset($param['min_length']);
+                unset($param['key']);
+                unset($param['unique']);
+                unset($param['confirm']);
+                unset($param['hidden']);
+                unset($param['label']);
+                return $param;
+        }
+        
+        /**
          * Helper function to nullify parameters
          */
         private function _nullify_params() {
@@ -389,27 +397,33 @@ class Form {
         /**
          * Helper function to setup rules in data array
          */
-        private function _setup_rules($data) {
+        private function _setup_rules() {
                 $array_rules = array('unique', 'required', 'readonly', 'disabled', 'confirm', 'key', 'hidden');
-                // get rules array into data array properly
-                if (isset($data['rules'])) {
-                        $rules = $data['rules'];
-                        foreach ($rules as $rule_key => $rule_val) {
-                                if (is_array($rule_val)) {
-                                        foreach ($rule_val as $sub_rule_key => $sub_rule_val) {
-                                                $data[$sub_rule_key] = $sub_rule_val;
-                                        }
-                                } else {
-                                        if (in_array($rule_val, $array_rules)) {
-                                                $data[$rule_val] = TRUE;
-                                        } else {
-                                                $data['apply_function'][] = $rule_val;
+                $data = $this->data;
+                $rules = $this->rules;
+                if (isset($this->rules)) {
+                        foreach ($data as $field_key => $field_val) {
+                                foreach ($field_val as $method => $param) {
+                                        $name = $data[$field_key][$method]['name'];
+                                        foreach ($rules[$name] as $rule_key => $rule_val) {
+                                                if (is_array($rule_val)) {
+                                                        foreach ($rule_val as $sub_rule_key => $sub_rule_val) {
+                                                                $data[$field_key][$method][$sub_rule_key] = $sub_rule_val;
+                                                        }
+                                                } else {
+                                                        if (in_array($rule_val, $array_rules)) {
+                                                                $data[$field_key][$method][$rule_val] = TRUE;
+                                                        } else {
+                                                                $data[$field_key][$method]['apply_function'][] = $rule_val;
+                                                        }
+                                                }
                                         }
                                 }
                         }
                 }
-                unset($data['rules']);
-                return $data;
+                unset($data[$field_key][$method]['rules']);
+                $this->data = $data;
+                $this->rules = $rules;
         }
 }
 
