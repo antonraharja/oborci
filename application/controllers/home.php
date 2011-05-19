@@ -16,7 +16,7 @@ class Home extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->library(array('speedcoding/Auth', 'speedcoding/Template'));
+                $this->load->library(array('oborci/Auth', 'oborci/Template'));
 		$this->auth->validate();
 	}
 

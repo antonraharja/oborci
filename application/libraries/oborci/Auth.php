@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Authentication model
+ * Authentication library
  *
  * @property SC_screens $SC_screens
  * @property SC_roles $SC_roles
@@ -12,7 +12,7 @@ exit('No direct script access allowed');
  *  *
  * @author Anton Raharja
  */
-class SC_auth extends CI_Model {
+class Auth {
 
 	public $username = NULL;
 	public $password = NULL;
@@ -22,20 +22,22 @@ class SC_auth extends CI_Model {
 
 	private $login_state = FALSE;
 	private $access = FALSE;
+        
+        private $CI = NULL;
 	
 	function __construct() {
-		parent::__construct();
-		$this->load->model(
+                $this->CI =& get_instance();
+		$this->CI->load->model(
 			array(
-				'speedcoding/SC_roles', 
-				'speedcoding/SC_screens', 
-				'speedcoding/SC_users'
+				'oborci/SC_roles', 
+				'oborci/SC_screens', 
+				'oborci/SC_users'
 			)
 		);
-		if ($this->session->userdata('login_state')) {
-			$this->user_id = $this->session->userdata('user_id');
+		if ($this->CI->session->userdata('login_state')) {
+			$this->user_id = $this->CI->session->userdata('user_id');
 			$this->set_login_state(TRUE);
-                        $this->get_login_id();
+                        $this->populate_ids();
 		}
 	}
 
@@ -74,9 +76,9 @@ class SC_auth extends CI_Model {
 	/**
 	 * Get user ID, preference ID and role ID information
 	 */
-	private function get_login_id() {
+	private function populate_ids() {
 		$user_id = $this->user_id;
-                $query = $this->SC_users->get($user_id);
+                $query = $this->CI->SC_users->get($user_id);
                 $row = $query->row();
                 if ($query->num_rows() > 0) {
                         $this->preference_id = $row->preference_id;
@@ -92,7 +94,7 @@ class SC_auth extends CI_Model {
 		if ($this->get_login_state()) {
 			$data['user_id'] = $this->user_id;
 			$data['login_state'] = $this->get_login_state();
-			$this->session->set_userdata($data);
+			$this->CI->session->set_userdata($data);
 			return TRUE;
 		} else {
 			return FALSE;
@@ -104,12 +106,12 @@ class SC_auth extends CI_Model {
 	 * @return NULL
 	 */
 	public function logout() {
-		$this->session->sess_destroy();
+		$this->CI->session->sess_destroy();
 		$this->user_id = NULL;
 		$this->set_login_state(FALSE);
 		$data['user_id'] = $this->user_id;
 		$data['login_state'] = $this->get_login_state();
-		$this->session->unset_userdata($data);
+		$this->CI->session->unset_userdata($data);
 	}
 
 	/**
@@ -118,7 +120,7 @@ class SC_auth extends CI_Model {
 	 * @param string $password Password from a login form
 	 * @return boolean TRUE if username and password authenticated
 	 */
-	public function auth($username=NULL, $password=NULL) {
+	public function authenticate($username=NULL, $password=NULL) {
 		$return = FALSE;
 		$test_password = NULL;
 		$test_user_id = NULL;
@@ -127,7 +129,7 @@ class SC_auth extends CI_Model {
                 $this->username = $username;
                 $this->password = $password;
 		if ($this->username && $this->password) {
-                        $row = $this->SC_users->get_by_username($this->username);
+                        $row = $this->CI->SC_users->get_by_username($this->username);
 			if (isset($row->id)) {
                                 $test_password = $row->password;
                                 $test_user_id = $row->id;
@@ -136,7 +138,7 @@ class SC_auth extends CI_Model {
 				if ($password == $test_password) {
 					$this->user_id = $test_user_id;
 					$this->set_login_state(TRUE);
-                                        $this->get_login_id();
+                                        $this->populate_ids();
 					return TRUE;
 				}
 			}
@@ -148,29 +150,32 @@ class SC_auth extends CI_Model {
 
 	/**
 	 * Validate if user has access to this URI
-	 * @return NULL Validation result is accessible through get_access() method
+	 * @return boolean TRUE if user validated. Validation result is also accessible through get_access() method
 	 */
 	public function validate() {
 		if ($this->get_login_state()) {
 			$uri = NULL;
-			if ($this->uri->rsegment(1)) {
-				$uri = $this->uri->rsegment(1);
+			if ($this->CI->uri->rsegment(1)) {
+				$uri = $this->CI->uri->rsegment(1);
 			}
-			if ($this->uri->rsegment(2) && ($this->uri->rsegment(2) != 'index')) {
-				$uri .= '/' . $this->uri->rsegment(2);
+			if ($this->CI->uri->rsegment(2) && ($this->CI->uri->rsegment(2) != 'index')) {
+				$uri .= '/' . $this->CI->uri->rsegment(2);
 			}
-			$row = $this->SC_screens->get_by_uri($uri);
+			$row = $this->CI->SC_screens->get_by_uri($uri);
 			if (isset($row->id)) {
 				$screen_id = $row->id;
-				$id = $this->SC_roles->get_roles_screens_id($this->role_id, $screen_id);
+				$id = $this->CI->SC_roles->get_roles_screens_id($this->role_id, $screen_id);
 				if ($id) {
 					$this->set_access(TRUE);
+                                        return TRUE;
 				} else {
 					$this->set_access(FALSE);
+                                        return FALSE;
 				}
 			}
 		} else {
 			$this->set_access(FALSE);
+                        return FALSE;
 		}
 	}
 	

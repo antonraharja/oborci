@@ -36,7 +36,7 @@ httpd.conf:
 LoadModule rewrite_module modules/mod_rewrite.so
 
 RewriteEngine On
-RewriteBase /speedcoding/
+RewriteBase /oborci/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
@@ -157,7 +157,7 @@ Array
 (
     [0] => Array
         (
-            [uri] => http://localhost/speedcoding/preference/show/1
+            [uri] => http://localhost/oborci/preference/show/1
         )
 
     [1] => Array

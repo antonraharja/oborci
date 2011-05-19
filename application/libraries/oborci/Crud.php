@@ -24,7 +24,7 @@ class Crud {
 	function __construct() {
 		$this->CI =& get_instance();
 		$this->CI->load->database();
-		$this->CI->load->library(array('table', 'pagination', 'speedcoding/Form'));
+		$this->CI->load->library(array('table', 'pagination', 'oborci/Form'));
 	}
 
 	/**
@@ -809,8 +809,8 @@ class Crud {
 		$this->pagination = NULL;
 		$this->flashdata = NULL;
 		
-		$this->CI->load->config('speedcoding_crud', TRUE);
-		$this->config = $this->CI->config->item('speedcoding_crud');
+		$this->CI->load->config('oborci_crud', TRUE);
+		$this->config = $this->CI->config->item('oborci_crud');
 		
 		$data = $this->_get_crud_options($data);
 		

@@ -19,8 +19,8 @@ class Preference extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('speedcoding/SC_preferences', 'speedcoding/SC_users'));
-                $this->load->library(array('speedcoding/Auth', 'speedcoding/Form', 'speedcoding/Template'));
+                $this->load->model(array('oborci/SC_preferences', 'oborci/SC_users'));
+                $this->load->library(array('oborci/Auth', 'oborci/Form', 'oborci/Template'));
                 if (! $this->auth->validate()) {
                         redirect('process/unauthorized');
                 }

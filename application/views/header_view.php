@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>SpeedCoding</title>
+<title>oborci</title>
 <script
 	type="text/javascript"
 	src="<?php echo base_url(); ?>assets/js/jquery-1.6.min.js"></script>

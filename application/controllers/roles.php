@@ -17,7 +17,7 @@ class Roles extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->library(array('speedcoding/Auth', 'speedcoding/Crud', 'speedcoding/Template'));
+                $this->load->library(array('oborci/Auth', 'oborci/Crud', 'oborci/Template'));
 		$this->auth->validate();
 	}
 

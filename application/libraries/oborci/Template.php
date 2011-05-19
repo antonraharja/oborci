@@ -23,13 +23,13 @@ class Template {
                 $this->CI =& get_instance();
 		$this->CI->load->model(
 			array(
-				'speedcoding/SC_menus', 
-				'speedcoding/SC_preferences', 
-				'speedcoding/SC_roles', 
-				'speedcoding/SC_users'
+				'oborci/SC_menus', 
+				'oborci/SC_preferences', 
+				'oborci/SC_roles', 
+				'oborci/SC_users'
 			)
 		);
-		$this->CI->load->library(array('table', 'speedcoding/Auth', 'speedcoding/Form'));
+		$this->CI->load->library(array('table', 'oborci/Auth', 'oborci/Form'));
 	}
 
 	/**

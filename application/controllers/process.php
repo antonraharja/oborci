@@ -16,7 +16,7 @@ class Process extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->library(array('uri', 'speedcoding/Auth', 'speedcoding/Template'));
+                $this->load->library(array('uri', 'oborci/Auth', 'oborci/Template'));
 	}
 
 	/**
