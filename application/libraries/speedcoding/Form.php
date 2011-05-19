@@ -6,14 +6,13 @@
  * @author Anton Raharja
  */
 class Form {
-
-        public $uri = NULL;
-        public $name = NULL;
         
         private $data = NULL;
         private $returns = NULL;
-        
+        private $uri = NULL;
+        private $name = NULL;
         private $rules = NULL;
+        private $on_success = NULL;
 	private $form_name = 'Form';
 	private $CI = NULL;
 
@@ -28,20 +27,23 @@ class Form {
          * @return string HTML form open
 	 */
 	public function open($data=NULL) {
+                $form_action = NULL;
                 $data = $this->_setup_rules($data);
-                $uri = isset($this->uri) ? $this->uri : $data['uri'];
-                if (empty($uri)) {
-                        $uri = current_url();
+                if (isset($this->uri)) {
+                        $uri = $this->uri;
+                } else {
+                        $uri = $data['uri'];
+                        if (empty($uri)) {
+                                $uri = current_url();
+                                $form_action = array('form_action' => 'auto');
+                        }
                 }
                 $this->data[]['uri'] = $uri;
                 $name = isset($this->name) ? $this->name : $data['name'];
-                if (empty($name)) {
-                        $name = 'form'.mktime();
-                }
                 $data['name'] = $name;
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
                 $this->data[] = array('open' => $data);
-		$returns = form_open($uri, $data);
+		$returns = form_open($uri, $data, $form_action);
                 $this->returns[] = $returns;
                 return $returns;
 	}
@@ -266,6 +268,22 @@ class Form {
                 $this->rules = $data;
         }
         
+	/**
+         * Set name of the form
+         * @param string $data Form name
+         */
+        public function set_name($data) {
+                $this->name = $data;
+        }
+        
+	/**
+         * Set action URI of the form
+         * @param string $data Form action URI
+         */
+        public function set_uri($data) {
+                $this->uri = $data;
+        }
+        
         /**
 	 * Set uniquely formatted data structure
 	 * Usage example: $this->form->set_data($data);
@@ -281,7 +299,7 @@ class Form {
          * @param array $data Function
          */
         public function on_success($data) {
-                $this->data[]['events']['on_success'] = $data;
+                $this->on_success = $data;
         }
 
 	/**
@@ -290,7 +308,32 @@ class Form {
 	 * @return string $returns HTML form
 	 */
 	public function render() {
-		$returns = NULL;
+                $form_action = $this->CI->input->post('form_action');
+                if ($form_action=='auto') {
+                        list($valid, $inputs) = $this->_validate();
+                        if ($valid && isset($this->on_success)) {
+                                call_user_func_array(array($this->form_name, $this->on_success), array($inputs));
+                        }
+                }
+                $returns = $this->_form();
+                return $returns;
+	}
+
+        
+        /**
+         * Validate user inputs from form
+         * @return array Valid status and data inputs
+         */
+        private function _validate() {
+                // TODO code valid status based on rules and generate valid inputs
+                return array($valid, $inputs);
+        }
+        
+        /**
+         * Helper funtion to process form generation
+         * @return string HTML form
+         */
+        private function _form() {
 		$form_open_exists = FALSE;
 		$form_close_exists = FALSE;
                 $data = $this->data;
@@ -320,7 +363,7 @@ class Form {
                 $returns = implode($this->returns);
                 $this->_nullify_params();
                 return $returns;
-	}
+        }
 
         /**
          * Helper function to nullify parameters
@@ -331,12 +374,15 @@ class Form {
                 $this->rules = NULL;
                 $this->uri = NULL;
                 $this->name = NULL;
+                $this->on_success = NULL;
         }
         
         /**
          * Helper function to setup rules in data array
          */
         private function _setup_rules($data) {
+                $array_rules = array('unique', 'required', 'readonly', 'disabled', 'confirm', 'key', 'hidden');
+                // get rules array into data array properly
                 if (isset($data['rules'])) {
                         $rules = $data['rules'];
                         foreach ($rules as $rule_key => $rule_val) {
@@ -345,7 +391,11 @@ class Form {
                                                 $data[$sub_rule_key] = $sub_rule_val;
                                         }
                                 } else {
-                                        $data[$rule_val] = TRUE;
+                                        if (in_array($rule_val, $array_rules)) {
+                                                $data[$rule_val] = TRUE;
+                                        } else {
+                                                $data['apply_function'][] = $rule_val;
+                                        }
                                 }
                         }
                 }
