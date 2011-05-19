@@ -766,11 +766,12 @@ class Crud {
         private function _get_form($action, $data) {
                 $this->CI->form->init();
                 $this->CI->form->set_data($data);
+                $form .= $this->CI->form->render();
                 $returns = "<div id='crud_grid'>";
                 $returns .= $this->properties['crud_title'];
                 $returns .= $this->properties[$action.'_form_title'];
-                $returns .= "<div id='crud_form_'.$action.'>";
-                $returns .= $this->CI->form->render();
+                $returns .= "<div id='crud_form_".$action."'>";
+                $returns .= $form;
                 $returns .= "</div></div>";
                 return $returns;
         }
