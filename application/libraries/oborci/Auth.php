@@ -37,13 +37,13 @@ class Auth {
 		if ($this->CI->session->userdata('login_state')) {
 			$this->user_id = $this->CI->session->userdata('user_id');
 			$this->set_login_state(TRUE);
-                        $this->populate_ids();
+                        $this->_populate_ids();
 		}
 	}
 
 	/**
 	 * Get login state
-	 * @return boolean TRUE if user ID is authenticated
+	 * @return boolean TRUE if user is authenticated
 	 */
 	public function get_login_state() {
 		return $this->login_state;
@@ -59,7 +59,7 @@ class Auth {
 
 	/**
 	 * Get access state
-	 * @return boolean TRUE if visitor has access to current URI
+	 * @return boolean TRUE if user has access to current URI
 	 */
 	public function get_access() {
 		return $this->access;
@@ -74,9 +74,9 @@ class Auth {
 	}
 
 	/**
-	 * Get user ID, preference ID and role ID information
+	 * Helper function to get user ID, preference ID and role ID information
 	 */
-	private function populate_ids() {
+	private function _populate_ids() {
 		$user_id = $this->user_id;
                 $query = $this->CI->SC_users->get($user_id);
                 $row = $query->row();
@@ -88,7 +88,7 @@ class Auth {
 
 	/**
 	 * Process login
-	 * @return boolean TRUE when login process successed
+	 * @return boolean TRUE when login process succeeded
 	 */
 	public function login() {
 		if ($this->get_login_state()) {
@@ -138,7 +138,7 @@ class Auth {
 				if ($password == $test_password) {
 					$this->user_id = $test_user_id;
 					$this->set_login_state(TRUE);
-                                        $this->populate_ids();
+                                        $this->_populate_ids();
 					return TRUE;
 				}
 			}
@@ -149,7 +149,7 @@ class Auth {
 	}
 
 	/**
-	 * Validate if user has access to this URI
+	 * Validate if user has access to current URI
 	 * @return boolean TRUE if user validated. Validation result is also accessible through get_access() method
 	 */
 	public function validate() {
@@ -181,5 +181,5 @@ class Auth {
 	
 }
 
-/* End of file sc_auth.php */
-/* Location: ./application/models/sc_auth.php */
+/* End of file Auth.php */
+/* Location: ./application/libraries/Auth.php */
