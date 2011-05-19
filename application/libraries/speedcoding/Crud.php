@@ -56,6 +56,10 @@ class Crud {
 			array('hidden' => array('name' => 'crud_action', 'value' => 'insert_action')));
 		foreach ($this->insert as $row) {
 			$row['value'] = $flashdata['inputs'][$row['name']];
+        		// if password then value is NULLed
+			if ($row['type']=='password') {
+				unset($row['value']);
+			}
 			$data[] = array(
 				$row['type'] => $row
 			);
@@ -205,7 +209,7 @@ class Crud {
 					}
 					// if password then value is NULLed
 					if ($row['type']=='password') {
-						$row['value'] = NULL;
+						unset($row['value']);
 					}
 					// handle disabled, change it to readonly
 					if (isset($row['disabled'])) {
