@@ -72,15 +72,7 @@ class Crud {
 		}
 		$data[] = array('submit' => array('name' => 'crud_submit_insert', 'value' => t('Add')));
                 
-                $this->CI->form->init();
-		$this->CI->form->set_data($data);
-
-		$returns = "<div id='crud_grid'>";
-		$returns .= $this->properties['crud_title'];
-		$returns .= $this->properties['insert_form_title'];
-		$returns .= "<div id='crud_form_insert'>";
-		$returns .= $this->CI->form->render();
-		$returns .= "</div></div>";
+                $returns = $this->_get_form('insert', $data);
 		return $returns;
 	}
 
@@ -119,7 +111,7 @@ class Crud {
 			// apply functions
 			if (isset($data_select[$key]['apply_function'])) {
 				foreach ($data_select[$key]['apply_function'] as $i => $function) {
-					$row[$key] = call_user_func($function, $row[$key]);
+					$inputs[$key] = call_user_func($function, $val);
 				}
 			}
 			// check if the field is unique
@@ -136,17 +128,15 @@ class Crud {
 					$error[$key] = t('confirmation answer is different');
 				}
 			}
-			// check if the field is mandatory 
-			if ($data[$key]['mandatory']) {
+			// check if the field is required 
+			if ($data[$key]['required']) {
 				if (empty($val)) {
 					$error[$key] = t('you must fill this field');
 				}
 			}
 			// check if the field is disabled or readonly, unset the inputs if it is
 			if ($data[$key]['disabled'] || $data[$key]['readonly']) {
-				unset($data[$key]);
-			} else {
-				$inputs[$key] = $val;
+				unset($inputs[$key]);
 			}
 		}
 		
@@ -234,16 +224,8 @@ class Crud {
 		}
 		$data[] = array('hidden' => array('name' => 'field_num', 'value' => $i));
 		$data[] = array('submit' => array('name' => 'crud_submit_update', 'value' => t('Submit')));
-                
-                $this->CI->form->init();
-		$this->CI->form->set_data($data);
 
-		$returns = "<div id='crud_grid'>";
-		$returns .= $this->properties['crud_title'];
-		$returns .= $this->properties['update_form_title'];
-		$returns .= "<div id='crud_form_update'>";
-		$returns .= $this->CI->form->render();
-		$returns .= "</div></div>";
+                $returns = $this->_get_form('update', $data);
 		return $returns;
 	}
 
@@ -284,7 +266,7 @@ class Crud {
 					// apply functions
 					if (isset($data_select[$key]['apply_function'])) {
 						foreach ($data_select[$key]['apply_function'] as $i => $function) {
-							$row[$key] = call_user_func($function, $row[$key]);
+							$inputs[$block_key][$key] = call_user_func($function, $val);
 						}
 					}
 					// check if the field is unique
@@ -301,8 +283,8 @@ class Crud {
 							$error[$block_key][$key] = t('confirmation answer is different');
 						}
 					}
-					// check if the field is mandatory 
-					if ($data[$key]['mandatory']) {
+					// check if the field is required 
+					if ($data[$key]['required']) {
 						if (empty($val)) {
 							$error[$block_key][$key] = t('you must fill this field');
 						}
@@ -314,8 +296,6 @@ class Crud {
 					// check if the field is disabled or readonly, unset the inputs if it is
 					if ($data[$block_key][$key]['disabled'] || $data[$block_key][$key]['readonly']) {
 						unset($inputs[$block_key][$key]);
-					} else {
-						$inputs[$block_key][$key] = $val;
 					}
 				}
 			}
@@ -404,15 +384,7 @@ class Crud {
 		$data[] = array('hidden' => array('name' => 'field_num', 'value' => $i));
 		$data[] = array('submit' => array('name' => 'crud_submit_delete', 'value' => t('Submit')));
                 
-                $this->CI->form->init();
-		$this->CI->form->set_data($data);
-
-		$returns = "<div id='crud_grid'>";
-		$returns .= $this->properties['crud_title'];
-		$returns .= $this->properties['delete_form_title'];
-		$returns .= "<div id='crud_form_delete'>";
-		$returns .= $this->CI->form->render();
-		$returns .= "</div></div>";
+                $returns = $this->_get_form('delete', $data);
 		return $returns;
 	}
 
@@ -785,6 +757,24 @@ class Crud {
 		return $returns;
 	}
 
+        /**
+         * Get form on insert, update and delete
+         * @param string $action Action insert, update or delete
+         * @param array $data Form data array
+         * @return string HTML form
+         */
+        private function _get_form($action, $data) {
+                $this->CI->form->init();
+                $this->CI->form->set_data($data);
+                $returns = "<div id='crud_grid'>";
+                $returns .= $this->properties['crud_title'];
+                $returns .= $this->properties[$action.'_form_title'];
+                $returns .= "<div id='crud_form_'.$action.'>";
+                $returns .= $this->CI->form->render();
+                $returns .= "</div></div>";
+                return $returns;
+        }
+        
 	/**
 	 * Parsed specially formatted text. For example, the function will replace: preference/{id}
 	 * @param string $unparsed Source unparsed string
