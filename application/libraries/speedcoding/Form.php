@@ -318,14 +318,23 @@ class Form {
                 $returns = $this->_form();
                 return $returns;
 	}
-
         
         /**
          * Validate user inputs from form
          * @return array Valid status and data inputs
          */
         private function _validate() {
-                // TODO code valid status based on rules and generate valid inputs
+                $array_ignored = array('open', 'close', 'submit', 'reset', 'button');
+                $data = $this->data;
+                $rules = $this->rules;
+                foreach ($data as $field_key => $field_val) {
+                        foreach ($field_val as $method => $param) {
+                                if (! (in_array($method, $array_ignored))) {
+                                        $value = $data[$field_key][$method]['value'];
+                                        
+                                }
+                        }
+                }
                 return array($valid, $inputs);
         }
         
