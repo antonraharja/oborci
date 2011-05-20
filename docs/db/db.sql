@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 15, 2011 at 02:31 PM
+-- Generation Time: May 20, 2011 at 06:26 AM
 -- Server version: 5.5.8
 -- PHP Version: 5.3.5
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `sc_menus` (
   `title` varchar(100) DEFAULT NULL,
   `id_css` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `sc_menus`
@@ -45,7 +45,10 @@ CREATE TABLE IF NOT EXISTS `sc_menus` (
 INSERT INTO `sc_menus` (`id`, `module_id`, `parent`, `index`, `uri`, `text`, `title`, `id_css`) VALUES
 (1, 1, 0, 0, 'home', 'Home', 'Home', 'menu_home'),
 (2, 1, 0, 1, 'roles', 'Roles', 'Role Manager', 'menu_roles'),
-(3, 1, 0, 2, 'users', 'Users', 'User Manager', 'menu_user');
+(3, 1, 0, 2, 'users', 'Users', 'User Manager', 'menu_user'),
+(10, 1, 0, 4, 'menus', 'Menus', 'Menu Management', 'menu_menus'),
+(11, 1, 0, 5, 'screens', 'Screens', 'Screen Management', 'menu_screens'),
+(12, 1, 0, 3, 'modules', 'Modules', 'Module Management', 'menu_modules');
 
 -- --------------------------------------------------------
 
@@ -82,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `sc_preferences` (
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
 
 --
 -- Dumping data for table `sc_preferences`
@@ -90,7 +93,15 @@ CREATE TABLE IF NOT EXISTS `sc_preferences` (
 
 INSERT INTO `sc_preferences` (`id`, `email`, `first_name`, `last_name`) VALUES
 (1, 'anton@itmn.co.id', 'Anton', 'Raharja'),
-(2, 'kristy.d@gmail.com', 'Kristy', 'Damayanti');
+(2, 'kristy.d@gmail.com', 'Kristy', 'Damayanti'),
+(19, '', 'nini', ''),
+(18, '', 'odli', ''),
+(17, '', 'anton', ''),
+(16, '', 'kristy', ''),
+(15, '', 'ajew', ''),
+(20, '', 'aki', ''),
+(21, '', 'teteh', ''),
+(22, '', 'aki', '');
 
 -- --------------------------------------------------------
 
@@ -103,15 +114,17 @@ CREATE TABLE IF NOT EXISTS `sc_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `sc_roles`
 --
 
 INSERT INTO `sc_roles` (`id`, `name`) VALUES
-(1, 'Administrator'),
-(2, 'Manager');
+(1, 'Administrators'),
+(2, 'Managers'),
+(10, 'Alpha Testers'),
+(9, 'Beta Testers');
 
 -- --------------------------------------------------------
 
@@ -125,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `sc_roles_menus` (
   `role_id` int(11) NOT NULL,
   `menu_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `sc_roles_menus`
@@ -136,7 +149,10 @@ INSERT INTO `sc_roles_menus` (`id`, `role_id`, `menu_id`) VALUES
 (2, 1, 2),
 (3, 1, 3),
 (4, 2, 1),
-(5, 2, 2);
+(5, 2, 2),
+(6, 1, 10),
+(7, 1, 11),
+(8, 1, 12);
 
 -- --------------------------------------------------------
 
@@ -150,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `sc_roles_screens` (
   `role_id` int(11) NOT NULL,
   `screen_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `sc_roles_screens`
@@ -161,7 +177,12 @@ INSERT INTO `sc_roles_screens` (`id`, `role_id`, `screen_id`) VALUES
 (2, 1, 2),
 (3, 1, 3),
 (4, 2, 1),
-(5, 2, 2);
+(5, 2, 2),
+(6, 1, 4),
+(7, 1, 5),
+(8, 1, 6),
+(9, 1, 7),
+(10, 1, 8);
 
 -- --------------------------------------------------------
 
@@ -176,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `sc_screens` (
   `name` varchar(100) NOT NULL,
   `uri` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `sc_screens`
@@ -185,7 +206,12 @@ CREATE TABLE IF NOT EXISTS `sc_screens` (
 INSERT INTO `sc_screens` (`id`, `module_id`, `name`, `uri`) VALUES
 (1, 1, 'Home', 'home'),
 (2, 1, 'Role Management', 'roles'),
-(3, 1, 'User Managemenet', 'users');
+(3, 1, 'User Managemenet', 'users'),
+(4, 1, 'Role Member List', 'roles/members'),
+(5, 1, 'User preferences', 'preference/show'),
+(6, 1, 'Menu Management', 'menus'),
+(7, 1, 'Screen Management', 'screens'),
+(8, 1, 'Module Management', 'modules');
 
 -- --------------------------------------------------------
 
@@ -207,6 +233,13 @@ CREATE TABLE IF NOT EXISTS `sc_sessions` (
 -- Dumping data for table `sc_sessions`
 --
 
+INSERT INTO `sc_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
+('360f0eb3ba7e12cc30343e85c851e778', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100', 1305870913, 'a:2:{s:7:"user_id";s:1:"1";s:11:"login_state";b:1;}'),
+('bda16e39bacbfa1884a52db8f4e35015', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100', 1305866840, 'a:2:{s:7:"user_id";s:1:"1";s:11:"login_state";b:1;}'),
+('da776c360a35b58639442d4877b2b6ae', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100', 1305869380, 'a:2:{s:7:"user_id";s:1:"1";s:11:"login_state";b:1;}'),
+('81239a661e589b5c89ad3a08315a1928', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100', 1305869046, 'a:2:{s:7:"user_id";s:1:"1";s:11:"login_state";b:1;}'),
+('0849ab78d3d94cc311e2bf10ee42c16e', '127.0.0.1', 'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100', 1305872593, 'a:2:{s:7:"user_id";s:1:"1";s:11:"login_state";b:1;}');
+
 -- --------------------------------------------------------
 
 --
@@ -220,13 +253,19 @@ CREATE TABLE IF NOT EXISTS `sc_users` (
   `preference_id` int(11) NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
+  `salt` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
 --
 -- Dumping data for table `sc_users`
 --
 
-INSERT INTO `sc_users` (`id`, `role_id`, `preference_id`, `username`, `password`) VALUES
-(1, 1, 1, 'admin', ''),
-(2, 1, 2, 'manager', '');
+INSERT INTO `sc_users` (`id`, `role_id`, `preference_id`, `username`, `password`, `salt`) VALUES
+(1, 1, 1, 'admin', 'password', ''),
+(2, 2, 2, 'manager', 'password', ''),
+(14, 10, 21, 'teteh', 'pwd', ''),
+(16, 9, 0, 'ajew', 'ajew123', ''),
+(17, 9, 0, 'odli', 'odli123', ''),
+(18, 9, 0, 'dede', 'dede123', ''),
+(19, 9, 22, 'aki', 'asdf1234', '');
