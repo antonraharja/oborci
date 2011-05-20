@@ -737,13 +737,25 @@ class Crud {
 					foreach ($row_val as $option_key => $option_val) {
 						if ($option_key == 'rules') {
 							foreach ($option_val as $rules_key => $rules_val) {
+                                                                /*
 								if (in_array($rules_val, $array_rules)) {
 									$returns[$block_key][$row_key][$rules_val] = TRUE;
 								} else if (($rules_key=='max_length') || ($rules_key=='min_length')) {
 									$returns[$block_key][$row_key][$rules_key] = $rules_val;
 								} else {
 									$returns[$block_key][$row_key]['apply_function'][] = $rules_val;
-								}
+								} */
+                                                                if (is_array($rules_val)) {
+                                                                        foreach ($rules_val as $sub_rules_key => $sub_rules_val) {
+                                                                                $returns[$block_key][$row_key][$sub_rules_key] = $sub_rules_val;
+                                                                        }
+                                                                } else {
+                                                                        if (in_array($rules_val, $array_rules)) {
+                                                                                $returns[$block_key][$row_key][$rules_val] = TRUE;
+                                                                        } else {
+                                                                                $returns[$block_key][$row_key]['apply_function'][] = $rules_val;
+                                                                        }
+                                                                }
 							}
 						} else {
 							$returns[$block_key][$row_key][$option_key] = $option_val;

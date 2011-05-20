@@ -43,9 +43,9 @@ class Users extends CI_Controller {
 				array ('name' => 'role_id', 'label' => t('Role Name'), 'type' => 'dropdown', 'options' => $this->_get_role_names(),
 					'rules' => array('required'),),
 				array ('name' => 'username', 'label' => t('Username'), 'type' => 'input',
-					'rules' => array('unique', 'required', 'max_length' => 30, 'min_length' => 6, 'trim', 'xss_clean'),),
+					'rules' => array('unique', 'required', array('max_length' => 30), array('min_length' => 6), 'trim', 'xss_clean'),),
 				array('name' => 'password', 'label' => t('Password'), 'type' => 'password', 'confirm_label' => t('Confirm password'),
-					'rules' => array('confirm', 'required', 'max_length' => 30, 'min_length' => 6, 'trim', 'xss_clean'),),
+					'rules' => array('confirm', 'required', array('max_length' => 30), array('min_length' => 6), 'trim', 'xss_clean'),),
 			),
 			'select' => array(
 				array('name' => 'id', 'table' => 'sc_users', 'label' => 'ID', 
@@ -63,7 +63,7 @@ class Users extends CI_Controller {
 				array ('name' => 'username', 'label' => t('Username'), 'type' => 'input',
 					'rules' => array('readonly'),),
 				array('name' => 'password', 'label' => t('Password'), 'type' => 'password', 'confirm_label' => t('Confirm password'),
-					'rules' => array('confirm', 'max_length' => 30, 'min_length' => 6, 'trim', 'xss_clean'),),
+					'rules' => array('confirm', array('max_length' => 30), array('min_length' => 6), 'trim', 'xss_clean'),),
 			),
 			'delete' => array(
 				array ('name' => 'username', 'label' => t('Username'),),
@@ -91,7 +91,8 @@ class Users extends CI_Controller {
 			),
 		);
 		$this->crud->set_data($data);
-		return $this->crud->render();
+		$returns = $this->crud->render();
+                return $returns;
 	}
 
 	/**
@@ -103,6 +104,7 @@ class Users extends CI_Controller {
 			$data['menu']['box'] = $this->template->menu_box();
 			$data['login'] = $this->template->get_login();
 			$data['crud'] = $this->_get_crud();
+                        // print_r($data); die();
 			$this->load->view('users_view', $data);
 		} else {
 			redirect('process/unauthorized');

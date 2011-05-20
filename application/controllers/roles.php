@@ -29,7 +29,7 @@ class Roles extends CI_Controller {
 		$data = array(
 			'insert' => array(
 				array ('name' => 'name', 'label' => t('Role name'),	'type' => 'input',
-					'rules' => array('unique', 'required', 'max_length' => 30, 'min_length' => 3, 'trim', 'xss_clean'),),
+					'rules' => array('unique', 'required', array('max_length' => 30, 'min_length' => 3), 'trim', 'xss_clean'),),
 			),
 			'select' => array(
 				array('name' => 'id', 'label' => 'ID', 'rules' => array('key', 'hidden', 'trim'),),
@@ -38,7 +38,7 @@ class Roles extends CI_Controller {
 			),
 			'update' => array(
 				array('name' => 'name',	'label' => t('Role name'), 'type' => 'input', 
-					'rules' => array('unique', 'required', 'max_length' => 30, 'min_length' => 3, 'trim', 'xss_clean'),),
+					'rules' => array('unique', 'required', array('max_length' => 30, 'min_length' => 3), 'trim', 'xss_clean'),),
 			),
 			'delete' => array(
 				array('name' => 'name', 'label' => t('Role name'),),
