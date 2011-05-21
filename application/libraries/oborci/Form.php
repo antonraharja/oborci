@@ -9,12 +9,12 @@ class Form {
         
         private $data = NULL;
         private $returns = NULL;
+        private $message = NULL;
         private $uri = NULL;
         private $name = NULL;
         private $rules = NULL;
         private $on_success = NULL;
         private $render = FALSE;
-	private $form_name = 'Form';
 	private $CI = NULL;
 
 	function __construct() {
