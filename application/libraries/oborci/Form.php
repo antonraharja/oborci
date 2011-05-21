@@ -331,7 +331,9 @@ class Form {
 	 */
 	public function render() {
                 $this->render = TRUE;
-                $this->_setup_rules();
+                list($data, $rules) = $this->_setup_rules();
+                $this->data = $data;
+                $this->rules = $rules;
                 $form_action = $this->CI->input->post('form_action');
                 if ($form_action=='auto') {
                         list($valid, $inputs) = $this->_validate();
@@ -360,6 +362,7 @@ class Form {
                                 }
                         }
                 }
+                // FIXME validate !
                 $valid = FALSE;
                 return array($valid, $inputs);
         }
@@ -456,6 +459,8 @@ class Form {
                 unset($data[$field_key][$method]['rules']);
                 $this->data = $data;
                 $this->rules = $rules;
+                //print_r($this->data);
+                return array($this->data, $this->rules);
         }
 }
 
