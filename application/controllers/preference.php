@@ -26,24 +26,38 @@ class Preference extends CI_Controller {
                 }
 	}
 
-        private function show_form($row) {
+        private function _show_form($row) {
                 $this->form->init();
+                $this->form->set_name('show');
+                $this->form->set_rules(
+                        array(
+                        'id' => array('readonly'),
+                        'email' => array('required', array('max_length' => 200), 'trim'),
+                        'first_name' => array('required', array('max_length' => 50), 'trim'),
+                        'last_name' => array(array('max_length' => 50), 'trim')));
+                $this->form->set_on_success(array(__CLASS__, 'save_form'));
                 $this->form->open();
                 foreach ($row as $key => $val) {
+                        if ($key=='id') {
+                                $this->form->hidden(array('name' => 'key_id', 'value' => $val));
+                        }
                         $label = str_replace('_', ' ', $key);
                         $this->form->input(array('name' => $key, 'label' => ucwords(t($label)), 'value' => $val));
                 }
                 $this->form->submit(array('value' => t('Submit')));
                 $this->form->close();
-                $this->form->set_name('show');
-                $this->form->set_rules(
-                        array(
-                        'id' => array('readonly', 'key'),
-                        'email' => array('required', array('max_length' => 200), 'trim', 'xss_clean'),
-                        'first_name' => array('required', array('max_length' => 50), 'trim', 'xss_clean'),
-                        'last_name' => array(array('max_length' => 50), 'trim', 'xss_clean')));
-                $this->form->on_success('save_form');
                 $returns = $this->form->render();
+                return $returns;
+        }
+        
+        public  function _save_form($inputs) {
+                $id = $inputs['key_id'];
+                unset($inputs['key_id']);
+                $CI =& get_instance();
+                $CI->SC_preferences->update($id, $inputs);
+                // redirect(current_url());
+                $returns = '<p>'.t('Preferences has been updated').'</p>';
+                $returns .= '<p>'.  anchor(current_url(), t('Back'), 'title="'.t('Back').'"').'</p>';
                 return $returns;
         }
         
@@ -90,7 +104,7 @@ class Preference extends CI_Controller {
                 if ($ok) {
                         $query = $this->SC_preferences->get($preference_id);
                         $row = $query->row_array();
-                        $data['crud'] = $this->show_form($row);
+                        $data['crud'] = $this->_show_form($row);
                         $data['pref']['username'] = $data_user->username;
                 } else {
                         $data['crud'] = t('No such user or preferences data');
