@@ -197,7 +197,7 @@ class Form {
 		$returns .= form_input($data);
                 if (is_array($messages)) {
                         foreach ($messages as $message) {
-                                $returns .= '<div id="'.$data['id'].'_message">'.$message.'</div>';
+                                $returns .= '<div id="form_invalid_message">'.$message.'</div>';
                         }
                 }
 		$returns .= "</div>";
@@ -225,7 +225,7 @@ class Form {
 		$returns .= form_password($data);
                 if (is_array($messages)) {
                         foreach ($messages as $message) {
-                                $returns .= '<div id="'.$data['id'].'_message">'.$message.'</div>';
+                                $returns .= '<div id="form_invalid_message">'.$message.'</div>';
                         }
                 }
 		$returns .= "</div>";
