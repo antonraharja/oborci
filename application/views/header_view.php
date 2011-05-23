@@ -15,3 +15,9 @@
 <body>
 
 <h1><?php echo t('Administration Panel'); ?></h1>
+
+<p>
+<?php echo t('Welcome'); ?> <?= $login['first_name'] ?> <?= $login['last_name'] ?><br />
+<?php echo t('Your role'); ?>: <?= $login['role'] ?>
+</p>
+

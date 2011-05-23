@@ -51,7 +51,7 @@ class Roles extends CI_Controller {
 				'uri' => 'roles/index',
 				'index_column' => TRUE,
 				'index_column_start' => 1,
-				'pagination_per_page' => 10,
+				'pagination_per_page' => 5,
 				'insert' => TRUE,
 				'update' => TRUE,
 				'delete' => TRUE,
