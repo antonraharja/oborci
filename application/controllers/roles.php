@@ -22,14 +22,14 @@ class Roles extends CI_Controller {
 	}
 
 	/**
-	 * Helper function which creates grid for CRUD service
+	 * Helper function which creates grid for CRUD service on index page
 	 * @return string HTML of CRUD grid
 	 */
 	private function _get_crud_for_index() {		
 		$data = array(
 			'insert' => array(
-				array ('name' => 'name', 'label' => t('Role name'),	'type' => 'input',
-					'rules' => array('unique', 'required', array('max_length' => 30, 'min_length' => 3), 'trim', 'xss_clean'),),
+				array ('name' => 'name', 'label' => t('Role name'), 'type' => 'input',
+					'rules' => array('unique', 'required', array('max_length' => 30, 'min_length' => 3), 'trim'),),
 			),
 			'select' => array(
 				array('name' => 'id', 'label' => 'ID', 'rules' => array('key', 'hidden', 'trim'),),
@@ -38,7 +38,7 @@ class Roles extends CI_Controller {
 			),
 			'update' => array(
 				array('name' => 'name',	'label' => t('Role name'), 'type' => 'input', 
-					'rules' => array('unique', 'required', array('max_length' => 30, 'min_length' => 3), 'trim', 'xss_clean'),),
+					'rules' => array('unique', 'required', array('max_length' => 30, 'min_length' => 3), 'trim'),),
 			),
 			'delete' => array(
 				array('name' => 'name', 'label' => t('Role name'),),
@@ -66,7 +66,11 @@ class Roles extends CI_Controller {
 		return $this->crud->render();
 	}
 
-	private function _get_roles_members($role_id=NULL) {
+	/**
+	 * Helper function which creates grid for CRUD service on members page
+	 * @return string HTML of CRUD grid
+	 */
+	private function _get_crud_for_members($role_id=NULL) {
 		$data = array(
 			'select' => array(
 				array('name' => 'id', 'label' => 'ID', 
@@ -96,8 +100,8 @@ class Roles extends CI_Controller {
 	}
 	
 	/**
-	 * Index Page for this controller.
-	 * 
+	 * Index page
+	 * @param array $param Parameters
 	 */
 	public function index($param=NULL) {
 		if ($this->auth->get_access()) {
@@ -110,11 +114,15 @@ class Roles extends CI_Controller {
 		}
 	}
 	
-	public function members($param=NULL) {
+	/**
+         * Members page
+         * @param array $param Parameters 
+         */
+        public function members($param=NULL) {
 		if ($this->auth->get_access()) {
 			$data['menu']['box'] = $this->template->menu_box();
 			$data['login'] = $this->template->get_login();
-			$data['crud'] = $this->_get_roles_members($param);
+			$data['crud'] = $this->_get_crud_for_members($param);
 			$this->load->view('roles_members_view', $data);
 		} else {
 			redirect('process/unauthorized');

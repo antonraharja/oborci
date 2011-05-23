@@ -256,7 +256,6 @@ Array
                 )
 
             [2] => trim
-            [3] => xss_clean
         )
 
     [first_name] => Array
@@ -268,7 +267,6 @@ Array
                 )
 
             [2] => trim
-            [3] => xss_clean
         )
 
     [last_name] => Array
@@ -279,7 +277,6 @@ Array
                 )
 
             [1] => trim
-            [2] => xss_clean
         )
 
 )

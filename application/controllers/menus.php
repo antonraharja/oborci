@@ -29,7 +29,7 @@ class Menus extends CI_Controller {
 		$data = array(
 			'insert' => array(
 				array ('name' => 'name', 'label' => t('Menu name'),	'type' => 'input',
-					'rules' => array('unique', 'required', 'max_length' => 30, 'min_length' => 3, 'trim', 'xss_clean'),),
+					'rules' => array('unique', 'required', 'max_length' => 30, 'min_length' => 3, 'trim'),),
 			),
 			'select' => array(
 				array('name' => 'id', 'label' => 'ID', 'rules' => array('key', 'hidden', 'trim'),),
@@ -38,7 +38,7 @@ class Menus extends CI_Controller {
 			),
 			'update' => array(
 				array('name' => 'name',	'label' => t('Menu name'), 'type' => 'input', 
-					'rules' => array('unique', 'required', 'max_length' => 30, 'min_length' => 3, 'trim', 'xss_clean'),),
+					'rules' => array('unique', 'required', 'max_length' => 30, 'min_length' => 3, 'trim'),),
 			),
 			'delete' => array(
 				array('name' => 'name', 'label' => t('Menu name'),),
