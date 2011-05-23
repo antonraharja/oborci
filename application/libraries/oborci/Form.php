@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Form generation library
+ * Form generation library for CodeIgniter
  *
  * @author Anton Raharja
  * @version 0.9
