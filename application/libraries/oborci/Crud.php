@@ -1,9 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * CRUD library
+ * CRUD library for CodeIgniter
  *
  * @author Anton Raharja
+ * @version 0.9
+ * @see http://github.com/antonraharja/oborci
  */
 class Crud {
 
