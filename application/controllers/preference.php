@@ -35,7 +35,7 @@ class Preference extends CI_Controller {
                         'email' => array('required', array('max_length' => 200), 'trim'),
                         'first_name' => array('required', array('max_length' => 50), 'trim'),
                         'last_name' => array(array('max_length' => 50), 'trim')));
-                $this->form->set_on_success(array(__CLASS__, 'save_form'));
+                $this->form->set_on_success(array(__CLASS__, '_save_form'));
                 $this->form->open();
                 foreach ($row as $key => $val) {
                         if ($key=='id') {
@@ -56,7 +56,7 @@ class Preference extends CI_Controller {
                 $CI =& get_instance();
                 $CI->SC_preferences->update($id, $inputs);
                 // redirect(current_url());
-                $returns = '<p>'.t('Preferences has been updated').'</p>';
+                $returns = '<p>'.t('Preferences has been successfully updated').'</p>';
                 $returns .= '<p>'.  anchor(current_url(), t('Back'), 'title="'.t('Back').'"').'</p>';
                 return $returns;
         }
