@@ -803,6 +803,7 @@ class Crud {
 	 * @return NULL
 	 */
 	public function set_data($data) {
+                // nullify all private variables
 		$this->config = NULL;
 		$this->data = NULL;
 		$this->insert = NULL;
@@ -816,11 +817,14 @@ class Crud {
 		$this->pagination = NULL;
 		$this->flashdata = NULL;
 		
+                // load oborci Crud config
 		$this->CI->load->config('oborci_crud', TRUE);
 		$this->config = $this->CI->config->item('oborci_crud');
 		
+                // validate options
 		$data = $this->_get_crud_options($data);
 		
+                // breakdown data into smaller data segments
 		$this->data = $data;
 		$this->insert = $this->data['insert'];
 		$this->select = $this->data['select'];
