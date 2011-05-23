@@ -470,7 +470,7 @@ class Crud {
 		$returns = '
 			<script type="text/javascript">
 				$(document).ready(function() {
-					$("#'.$id_main.'").click(function() {
+					$("#form_'.$id_main.'").click(function() {
 						var checked_status = this.checked;
 						$("#crud_grid input").each(function() {
 							this.checked = checked_status;
@@ -541,9 +541,7 @@ class Crud {
 		// add limit for pagination
 		$this->CI->db->limit($this->pagination['per_page'], $this->_get_pagination_offset());
 		$query = $this->CI->db->get($this->datasource['table']);
-
-		//echo $this->pagination['per_page']." - ".$this->_get_pagination_offset()." - ".$this->CI->db->last_query()."<br>";
-		
+                
 		return array($query, $total_rows);
 	}
 	
@@ -595,14 +593,17 @@ class Crud {
 				$returns .= $this->_button_insert();
 			}
 			
+                        // init form
+                        $this->CI->form->init();
+                        
 			// open form
-			$returns .= $this->CI->form->open(array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_form'));
+			$returns .= $this->CI->form->open(array('uri' => $this->properties['uri'], 'name' => $this->properties['name']));
 
 			// set table heading
 			$this->CI->table->set_heading($heading);
 			
 			// get query results and total number of rows
-			list($query, $total_rows) = $this->_grid_query();
+			list($query, $this->pagination['total_rows']) = $this->_grid_query();
 			$j =0;
 			foreach ($query->result_array() as $row) {
 				$j++;
@@ -615,7 +616,9 @@ class Crud {
 					// apply functions
 					if (isset($data_select[$key]['apply_function'])) {
 						foreach ($data_select[$key]['apply_function'] as $i => $function) {
-							$row[$key] = call_user_func($function, $row[$key]);
+                                                        if (function_exists($function)) {
+                                                                $row[$key] = call_user_func($function, $row[$key]);
+                                                        }
 						}
 					}
 					// if has link option then parse the link and set an anchor
@@ -639,19 +642,12 @@ class Crud {
 			$returns .= $this->CI->table->generate($new_list);
 			
 			// pagination
-			$config = NULL;
-			$config['base_url'] = base_url().$this->properties['uri'];
-			$config['total_rows'] = $total_rows;
-			$config['per_page'] = $this->pagination['per_page'];
-			$this->CI->pagination->initialize($config);
-			$returns .= "<div id='crud_pagination'>";
-			$returns .= $this->CI->pagination->create_links();
-			$returns .= "</div>";
+                        $returns .= $this->_get_pagination();
 
 			// Update delete dropdown and Go button
 			if ($this->properties['update'] || $this->properties['delete']) {
 				$returns .= $this->_dropdown();
-				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit_form', 'value' => t('Go')));
+				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit', 'value' => t('Go')));
 			}
 			
 			// close form
@@ -673,11 +669,37 @@ class Crud {
 		if ($this->properties['uri'] == $this->CI->uri->uri_string()) {
 			$page = 0;
 		}
-		//echo $page." -- ".$this->properties['uri']." == ".$this->CI->uri->uri_string()." <br>";
-		$returns = $page * ($this->pagination['per_page'] - 1);
+		$returns = $page;
 		return $returns;
 	}
 	
+        /**
+         * Get pagination
+         * @return string HTML of pagination
+         */
+        private function _get_pagination() {
+                $returns = NULL;
+                $config['base_url'] = base_url().$this->properties['uri'];
+                $config['total_rows'] = $this->pagination['total_rows'];
+                $config['per_page'] = $this->pagination['per_page'];
+                
+                // if the last segment is number then do a little trick
+                // CI pagination lib is not detecting uri_segment properly
+                $last = (integer) substr($config['base_url'], -1, 1);
+                if ($last > 0) {
+                        $uri_segment = $this->CI->uri->total_segments() - 1;
+                } else {
+                        $uri_segment = $this->CI->uri->total_segments();
+                }
+                $config['uri_segment'] = $uri_segment;
+                
+                $this->CI->pagination->initialize($config);
+                $returns .= "<div id='crud_pagination'>";
+                $returns .= $this->CI->pagination->create_links();
+                $returns .= "</div>";
+                return $returns;
+        }
+        
 	/**
 	 * Get valid inputs from POST inputs
 	 * @param string $action Action insert, select, update or delete
