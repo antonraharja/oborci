@@ -45,6 +45,8 @@ class Form {
                 $data['name'] = $name;
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
                 if (! $this->render) { 
+                        $data['id'] = 'form_'.$data['id'];
+                        $data['id'] = str_replace('form_form_', 'form_', $data['id']);
                         $this->data[] = array('open' => $data);
                 }
                 $data = $this->_sanitize_param($data);
@@ -79,6 +81,8 @@ class Form {
 			$data['checked'] =  'checked';
 		}
                 if (! $this->render) { 
+                        $data['id'] = 'form_'.$data['id'];
+                        $data['id'] = str_replace('form_form_', 'form_', $data['id']);
                         $this->data[] = array('checkbox' => $data);
                 }
                 $data = $this->_sanitize_param($data);
@@ -98,6 +102,8 @@ class Form {
 			$data['checked'] =  'checked';
 		}
                 if (! $this->render) { 
+                        $data['id'] = 'form_'.$data['id'];
+                        $data['id'] = str_replace('form_form_', 'form_', $data['id']);
                         $this->data[] = array('radio' => $data);
                 }
                 $data = $this->_sanitize_param($data);
@@ -122,15 +128,17 @@ class Form {
 		foreach ($data['extra'] as $key => $val) {
 			$extra .= $key.'='.$val.' ';			
 		}		
+                if (! $this->render) { 
+                        $data['extra']['id'] = 'form_'.$data['extra']['id'];
+                        $data['extra']['id'] = str_replace('form_form_', 'form_', $data['extra']['id']);
+                        $this->data[] = array('dropdown' => $data);
+                }
 		if ($data['label']) {
 			$attr = array('id' => $data['extra']['id'].'_label');
 			$returns .= form_label($data['label'], $data['name'], $attr);
 		}
 		$returns .= form_dropdown($name, $options, $selected, $extra);
 		$returns .= "</div>";
-                if (! $this->render) { 
-                        $this->data[] = array('dropdown' => $data);
-                }
                 $this->returns[] = $returns;
                 return $returns;
 	}
@@ -180,10 +188,6 @@ class Form {
 	public function input($data=NULL, $messages=NULL) {
 		$returns = '<div id="form_input">';
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
-		if ($data['label']) {
-			$attr = array('id' => $data['id'].'_label');
-			$returns .= form_label($data['label'], $data['name'], $attr);
-		}
 		if ($data['readonly']) {
 			$data['readonly'] = 'readonly';
 		}
@@ -191,8 +195,14 @@ class Form {
 			$data['disabled'] = 'disabled';
 		}
                 if (! $this->render) { 
+                        $data['id'] = 'form_'.$data['id'];
+                        $data['id'] = str_replace('form_form_', 'form_', $data['id']);
                         $this->data[] = array('input' => $data);
                 }
+		if ($data['label']) {
+			$attr = array('id' => $data['id'].'_label');
+			$returns .= form_label($data['label'], $data['name'], $attr);
+		}
                 $data = $this->_sanitize_param($data);
 		$returns .= form_input($data);
                 if (is_array($messages)) {
@@ -214,13 +224,15 @@ class Form {
 	public function password($data=NULL, $messages=NULL) {
 		$returns = '<div id="form_password">';
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
+                if (! $this->render) { 
+                        $data['id'] = 'form_'.$data['id'];
+                        $data['id'] = str_replace('form_form_', 'form_', $data['id']);
+                        $this->data[] = array('password' => $data);
+                }
 		if ($data['label']) {
 			$attr = array('id' => $data['id'].'_label');
 			$returns .= form_label($data['label'], $data['name'], $attr);
 		}
-                if (! $this->render) { 
-                        $this->data[] = array('password' => $data);
-                }
                 $data = $this->_sanitize_param($data);
 		$returns .= form_password($data);
                 if (is_array($messages)) {
@@ -240,10 +252,12 @@ class Form {
 	 */
 	public function submit($data=NULL) {
 		if (! isset($data['name'])) {
-			$data['name'] = 'form_submit';
+			$data['name'] = 'submit';
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
                 if (! $this->render) { 
+                        $data['id'] = 'form_'.$data['id'];
+                        $data['id'] = str_replace('form_form_', 'form_', $data['id']);
                         $this->data[] = array('submit' => $data);
                 }
                 $data = $this->_sanitize_param($data);
@@ -259,10 +273,12 @@ class Form {
 	 */
 	public function reset($data=NULL) {
 		if (! isset($data['name'])) {
-			$data['name'] = 'form_reset';
+			$data['name'] = 'reset';
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
                 if (! $this->render) { 
+                        $data['id'] = 'form_'.$data['id'];
+                        $data['id'] = str_replace('form_form_', 'form_', $data['id']);
                         $this->data[] = array('reset' => $data);
                 }
                 $data = $this->_sanitize_param($data);
@@ -278,10 +294,12 @@ class Form {
 	 */
 	public function button($data=NULL) {
 		if (! isset($data['name'])) {
-			$data['name'] = 'form_button';
+			$data['name'] = 'button';
 		}
 		$data['id'] = isset($data['id']) ? $data['id'] : $data['name'];
                 if (! $this->render) { 
+                        $data['id'] = 'form_'.$data['id'];
+                        $data['id'] = str_replace('form_form_', 'form_', $data['id']);
                         $this->data[] = array('button' => $data);
                 }
                 $data = $this->_sanitize_param($data);
