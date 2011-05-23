@@ -739,14 +739,6 @@ class Crud {
 					foreach ($row_val as $option_key => $option_val) {
 						if ($option_key == 'rules') {
 							foreach ($option_val as $rules_key => $rules_val) {
-                                                                /*
-								if (in_array($rules_val, $array_rules)) {
-									$returns[$block_key][$row_key][$rules_val] = TRUE;
-								} else if (($rules_key=='max_length') || ($rules_key=='min_length')) {
-									$returns[$block_key][$row_key][$rules_key] = $rules_val;
-								} else {
-									$returns[$block_key][$row_key]['apply_function'][] = $rules_val;
-								} */
                                                                 if (is_array($rules_val)) {
                                                                         foreach ($rules_val as $sub_rules_key => $sub_rules_val) {
                                                                                 $returns[$block_key][$row_key][$sub_rules_key] = $sub_rules_val;
@@ -838,36 +830,44 @@ class Crud {
 		$this->properties = $this->data['properties'];
 		
 		// insert fields
-		foreach ($this->insert as $row) {
-			$fields['insert'][] = $row['name'];
-		}
-		$this->fields['insert'] = $fields['insert'];
+                if (is_array($this->insert)) {
+                        foreach ($this->insert as $row) {
+                                $fields['insert'][] = $row['name'];
+                        }
+                        $this->fields['insert'] = $fields['insert'];
+                }
 		
 		// select fields
-		foreach ($this->select as $row) {
-			$row_name = $row['name'];
-			if (isset($row['table'])) {
-				$row_name = $row['table'].'.'.$row_name;
-			}
-			$fields['select'][] = $row_name;
-			// set key field
-			if (isset($row['key'])) {
-				$this->key_field = $row['name'];
-			}
-		}
-		$this->fields['select'] = $fields['select'];
+                if (is_array($this->select)) {
+                        foreach ($this->select as $row) {
+                                $row_name = $row['name'];
+                                if (isset($row['table'])) {
+                                        $row_name = $row['table'].'.'.$row_name;
+                                }
+                                $fields['select'][] = $row_name;
+                                // set key field
+                                if (isset($row['key'])) {
+                                        $this->key_field = $row['name'];
+                                }
+                        }
+                        $this->fields['select'] = $fields['select'];
+                }
 		
 		// update fields
-		foreach ($this->update as $row) {
-			$fields['update'][] = $row['name'];
-		}
-		$this->fields['update'] = $fields['update'];
+                if (is_array($this->update)) {
+                        foreach ($this->update as $row) {
+                                $fields['update'][] = $row['name'];
+                        }
+                        $this->fields['update'] = $fields['update'];
+                }
 
 		// delete fields
-		foreach ($this->delete as $row) {
-			$fields['delete'][] = $row['name'];
-		}
-		$this->fields['delete'] = $fields['delete'];
+                if (is_array($this->delete)) {
+                        foreach ($this->delete as $row) {
+                                $fields['delete'][] = $row['name'];
+                        }
+                        $this->fields['delete'] = $fields['delete'];
+                }
 
 		// table template options
 		if (isset($this->properties['table_template'])) {
