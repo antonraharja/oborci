@@ -457,8 +457,8 @@ class Crud {
                 $this->CI->form->set_uri($this->properties['uri']);
                 $this->CI->form->open();
                 $this->CI->form->hidden(array('name' => 'crud_action', 'value' => 'search'));
-                $this->CI->form->dropdown(array('name' => 'field', 'options' => array('Role name','Username')));
-                $this->CI->form->input(array('name' => 'content'));
+                $this->CI->form->dropdown(array('name' => 'form_search_field', 'options' => $this->fields['search'], 'selected' => $this->CI->input->post('form_search_field')));
+                $this->CI->form->input(array('name' => 'form_search_content', 'value' => $this->CI->input->post('form_search_content')));
                 $this->CI->form->submit(array('value' => 'Search'));
                 $this->CI->form->close();
                 $form = $this->CI->form->render();
@@ -545,6 +545,15 @@ class Crud {
 				$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param']);
 			}
 		}
+                
+                // search box related
+                $crud_action = $this->CI->input->post('crud_action');
+                if ($crud_action == 'search') {
+                        $field = $this->CI->input->post('form_search_field');
+                        $content = $this->CI->input->post('form_search_content');
+                        $this->CI->db->like($field, $content);
+                }
+                
 		$query = $this->CI->db->get($this->datasource['table']);
 		$total_rows = $query->num_rows();
 
@@ -565,7 +574,16 @@ class Crud {
 		}
 		// add limit for pagination
 		$this->CI->db->limit($this->pagination['per_page'], $this->_get_pagination_offset());
-		$query = $this->CI->db->get($this->datasource['table']);
+
+                // search box related
+                $crud_action = $this->CI->input->post('crud_action');
+                if ($crud_action == 'search') {
+                        $field = $this->CI->input->post('form_search_field');
+                        $content = $this->CI->input->post('form_search_content');
+                        $this->CI->db->like($field, $content);
+                }
+                
+                $query = $this->CI->db->get($this->datasource['table']);
                 
 		return array($query, $total_rows);
 	}
@@ -929,10 +947,7 @@ class Crud {
                 
                 // search fields
                 if (is_array($this->search)) {
-                        foreach ($this->search as $row) {
-                                $fields['search'][] = $row['name'];
-                        }
-                        $this->fields['search'] = $fields['search'];
+                        $this->fields['search'] = $this->search;
                 }
 
 		// table template options

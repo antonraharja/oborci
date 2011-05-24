@@ -43,7 +43,7 @@ class Roles extends CI_Controller {
 			'delete' => array(
 				array('name' => 'name', 'label' => t('Role name'),),
 			),
-                        'search' => array('name'),
+                        'search' => array('name' => t('Role name')),
 			'datasource' => array(
 				'table' => 'sc_roles',
 			),
