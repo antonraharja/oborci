@@ -47,6 +47,7 @@ class Form {
                 if (! $this->render) { 
                         $data['id'] = 'form_'.$data['id'];
                         $data['id'] = str_replace('form_form_', 'form_', $data['id']);
+                        $data['uri'] = $uri;
                         $this->data[] = array('open' => $data);
                 }
                 $data = $this->_sanitize_param($data);
