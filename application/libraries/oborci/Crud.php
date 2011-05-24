@@ -646,8 +646,8 @@ class Crud {
 
 			// Update delete dropdown and Go button
 			if ($this->properties['update'] || $this->properties['delete']) {
-				$returns .= $this->_dropdown();
 				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit', 'value' => t('Go')));
+				$returns .= $this->_dropdown();
 			}
 			
 			// close form

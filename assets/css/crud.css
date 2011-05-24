@@ -31,11 +31,12 @@
 	width: 30px;
 	height: 26px;
 	float: right;
+        margin-right: 1px;
 }
 
 #crud_select {
 	float: right;
-	padding-left: 5px;
+	padding-right: 5px;
 }
 
 #crud_pagination {
