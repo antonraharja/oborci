@@ -451,8 +451,20 @@ class Crud {
          * Generate a search box
          * @return string Search box
          */
-        private function _form_search() {
-                $returns = NULL;
+        private function _form_search_box() {
+                $this->CI->form->init();
+                $this->CI->form->set_name('search');
+                $this->CI->form->set_uri($this->properties['uri']);
+                $this->CI->form->open();
+                $this->CI->form->hidden(array('name' => 'crud_action', 'value' => 'search'));
+                $this->CI->form->dropdown(array('name' => 'field', 'options' => array('Role name','Username')));
+                $this->CI->form->input(array('name' => 'content'));
+                $this->CI->form->submit(array('value' => 'Search'));
+                $this->CI->form->close();
+                $form = $this->CI->form->render();
+                $returns = '<div id="form_search_box">';
+                $returns .= $form;
+                $returns .= '</div>';
                 return $returns;
         }
         
@@ -608,7 +620,7 @@ class Crud {
 			
                         // get a search box
                         if (is_array($this->search)) {
-                                $returns .= $this->_form_search();
+                                $returns .= $this->_form_search_box();
                         }
                         
                         // init form
