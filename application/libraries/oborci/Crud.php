@@ -447,6 +447,15 @@ class Crud {
 		return $returns;
 	}
 	
+        /**
+         * Generate a search box
+         * @return string Search box
+         */
+        private function _form_search() {
+                $returns = NULL;
+                return $returns;
+        }
+        
 	/**
 	 * Create checkbox on form
 	 * @param string $key_value Value of key field
@@ -597,6 +606,11 @@ class Crud {
 				$returns .= $this->_button_insert();
 			}
 			
+                        // get a search box
+                        if (is_array($this->search)) {
+                                $returns .= $this->_form_search();
+                        }
+                        
                         // init form
                         $this->CI->form->init();
                         
@@ -836,6 +850,7 @@ class Crud {
 		$this->select = NULL;
 		$this->update = NULL;
 		$this->delete = NULL;
+                $this->search = NULL;
 		$this->datasource = NULL;
 		$this->properties = NULL;
 		$this->key_field = NULL;
@@ -856,6 +871,7 @@ class Crud {
 		$this->select = $this->data['select'];
 		$this->update = $this->data['update'];
 		$this->delete = $this->data['delete'];
+                $this->search = $this->data['search'];
 		$this->datasource = $this->data['datasource'];
 		$this->properties = $this->data['properties'];
 		
@@ -897,6 +913,14 @@ class Crud {
                                 $fields['delete'][] = $row['name'];
                         }
                         $this->fields['delete'] = $fields['delete'];
+                }
+                
+                // search fields
+                if (is_array($this->search)) {
+                        foreach ($this->search as $row) {
+                                $fields['search'][] = $row['name'];
+                        }
+                        $this->fields['search'] = $fields['search'];
                 }
 
 		// table template options

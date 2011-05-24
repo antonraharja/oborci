@@ -43,6 +43,7 @@ class Roles extends CI_Controller {
 			'delete' => array(
 				array('name' => 'name', 'label' => t('Role name'),),
 			),
+                        'search' => array('name'),
 			'datasource' => array(
 				'table' => 'sc_roles',
 			),
@@ -78,6 +79,7 @@ class Roles extends CI_Controller {
 				array('name' => 'username', 'label' => 'Username', 'link' => 'preference/show/{id}',
 					'rules' => array('trim',  'htmlspecialchars'),),
 			),
+                        'search' => array('id', 'username'),
 			'datasource' => array(
 				'table' => 'sc_users',
 				'where' => array('role_id' => $role_id),

@@ -68,6 +68,7 @@ class Users extends CI_Controller {
 			'delete' => array(
 				array ('name' => 'username', 'label' => t('Username'),),
 			),
+                        'search' => array('id', 'username'),
 			'datasource' => array(
 				'table' => 'sc_users',
 				'join_table' => 'sc_roles',
