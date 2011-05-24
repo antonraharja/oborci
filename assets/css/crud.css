@@ -92,3 +92,19 @@
 td {
 	border: 1px solid #f0f0f0;		
 }
+
+tr {
+	background-color: #fcfcfc;
+}
+
+tr:hover {
+	background-color: #cfcfcf;
+}
+
+tr.alt {
+	background-color: #f0f0f0;
+}
+
+tr.alt:hover {
+	background-color: #cfcfcf;
+}
