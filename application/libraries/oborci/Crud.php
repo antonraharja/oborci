@@ -504,7 +504,11 @@ class Crud {
 		return $returns;
 	}
 
-	private function _grid_query() {
+	/**
+         * Helper function to get grid query and its total row
+         * @return array Array query and its total row
+         */
+        private function _grid_query() {
 		// TODO if only I know the better way...
 		
 		// build table contents and push it to $list
