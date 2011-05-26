@@ -10,6 +10,9 @@
         padding: 5px 5px 5px 5px;
 }
 
+#crud_table {
+        border: 1px solid #f0f0f0;
+}
 #crud_button_insert {	
 	float: none;
 }
@@ -48,58 +51,55 @@
 	width: auto;
 }
 
-#crud_th_index, #crud_th_action {
-	width: 5px;
-	border: 1px solid #f0f0f0;
+#crud_th_index {
+	width: 50px;
         color: #ffffcc;
-        background-color: #003366;
+        background-color: #8dbdd8;
 }
 
-#crud_td_index, #crud_td_action {
-	width: 5px;
+#crud_td_index {
         text-align: center;
-	border: 1px solid #f0f0f0;
+}
+
+#crud_th_action {
+	width: 22px;
+        color: #ffffcc;
+        background-color: #8dbdd8;
+}
+
+#crud_td_action {
+        text-align: center;
 }
 
 #crud_th_name {
 	width: auto;
-	border: 1px solid #f0f0f0;
         color: #ffffcc;
-        background-color: #003366;
+        background-color: #8dbdd8;
 }
 
 #crud_td_name {
-	width: auto;
-	border: 1px solid #f0f0f0;
 	white-space: nowrap;
 }
 
 #crud_th_username {
-	width: 100%;
-	border: 1px solid #f0f0f0;
+	width: auto;
         color: #ffffcc;
-        background-color: #003366;
+        background-color: #8dbdd8;
 }
 
 #crud_td_username {
-	width: 100%;
-	border: 1px solid #f0f0f0;
 }
 
 #crud_th_id {
 	width: auto;
-	border: 1px solid #f0f0f0;
         color: #ffffcc;
-        background-color: #003366;
+        background-color: #8dbdd8;
 }
 
 #crud_td_id {
-	width: auto;
-	border: 1px solid #f0f0f0;
 }
 
 td {
-	border: 1px solid #f0f0f0;		
 }
 
 tr {
@@ -116,4 +116,29 @@ tr.alt {
 
 tr.alt:hover {
 	background-color: #cfcfcf;
+}
+
+table.crud_table {
+}
+table.crud_table thead tr th, table.crud_table tfoot tr th {
+}
+table.crud_table thead tr .header {
+	background-image: url(../images/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.crud_table tbody td {
+}
+table.crud_table tbody tr.odd td {
+	background-color: #f0f0f6;
+}
+table.crud_table thead tr .headerSortUp {
+	background-image: url(../images/asc.gif);
+}
+table.crud_table thead tr .headerSortDown {
+	background-image: url(../images/desc.gif);
+}
+table.crud_table thead tr .headerSortDown, table.crud_table thead tr .headerSortUp {
+        background-color: #8dbdd8;
 }

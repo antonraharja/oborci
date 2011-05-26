@@ -195,7 +195,7 @@ input {
 	width: "200px";
 	padding: 4px;
 	margin-bottom: 5px;
-	display: block;
+	/* display: block; */
 }
 
 /* --------------------------------------------------------------------------

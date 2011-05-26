@@ -487,7 +487,7 @@ class Crud {
 	 * @param string $id_child Checkbox child element ID
 	 * @return string $returns Javascript
 	 */
-	private function _checkbox_checkall_js($id_main) {
+	private function _load_js($id_main, $action_index) {
 		$returns = '
 			<script type="text/javascript">
 				$(document).ready(function() {
@@ -497,6 +497,18 @@ class Crud {
 							this.checked = checked_status;
 						});
 					});
+                                        $("#crud_table")
+                                                .tablesorter({ 
+                                                        // pass the headers argument and assing a object 
+                                                        headers: { 
+                                                                // assign the secound column (we start counting zero) 
+                                                                '.$action_index.': { 
+                                                                        // disable it by setting the property sorter to false 
+                                                                        sorter: false 
+                                                                }, 
+                                                        }
+                                                })
+                                                .tablesorterPager({container: $("#pagination")}); 
 				});
 			</script>';
 		return $returns;
@@ -555,35 +567,38 @@ class Crud {
                 }
                 
 		$query = $this->CI->db->get($this->datasource['table']);
-		$total_rows = $query->num_rows();
-
-		$this->CI->db->flush_cache();
-		
-		// build table contents and push it to $list
-		$this->CI->db->select($this->fields['select']);
-		if (isset($this->datasource['where'])) {
-			$this->CI->db->where($this->datasource['where']);
-		}
-		// handle relation with join options
-		if (isset($this->datasource['join_table'])) {
-			if (isset($this->datasource['join_type'])) { 
-				$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param'], $this->datasource['join_type']);
-			} else {
-				$this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param']);
-			}
-		}
-		// add limit for pagination
-		$this->CI->db->limit($this->pagination['per_page'], $this->_get_pagination_offset());
-
-                // search box related
-                $crud_action = $this->CI->input->post('crud_action');
-                if ($crud_action == 'search') {
-                        $field = $this->CI->input->post('form_search_field');
-                        $content = $this->CI->input->post('form_search_content');
-                        $this->CI->db->like($field, $content);
-                }
                 
-                $query = $this->CI->db->get($this->datasource['table']);
+		$total_rows = $query->num_rows();
+                
+                if ($this->pagination['status']) {
+                        $this->CI->db->flush_cache();
+
+                        // build table contents and push it to $list
+                        $this->CI->db->select($this->fields['select']);
+                        if (isset($this->datasource['where'])) {
+                                $this->CI->db->where($this->datasource['where']);
+                        }
+                        // handle relation with join options
+                        if (isset($this->datasource['join_table'])) {
+                                if (isset($this->datasource['join_type'])) { 
+                                        $this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param'], $this->datasource['join_type']);
+                                } else {
+                                        $this->CI->db->join($this->datasource['join_table'], $this->datasource['join_param']);
+                                }
+                        }
+                        // add limit for pagination
+                        $this->CI->db->limit($this->pagination['per_page'], $this->_get_pagination_offset());
+
+                        // search box related
+                        $crud_action = $this->CI->input->post('crud_action');
+                        if ($crud_action == 'search') {
+                                $field = $this->CI->input->post('form_search_field');
+                                $content = $this->CI->input->post('form_search_content');
+                                $this->CI->db->like($field, $content);
+                        }
+
+                        $query = $this->CI->db->get($this->datasource['table']);
+                }
                 
 		return array($query, $total_rows);
 	}
@@ -618,29 +633,31 @@ class Crud {
 		if ($this->properties['update'] || $this->properties['delete']) {
 			$column_size += 1;
 			$checkbox_id_main =  $this->key_field.'_main';
-			$js_checkbox = $this->_checkbox_checkall_js($checkbox_id_main);
 			$data = array( 'name' => $checkbox_id_main);
 			$heading[] = array('data' => $this->CI->form->checkbox($data), 'id' => 'crud_th_action');
 		}
 
+                // load javascript for grid table sorter
+                $action_index = $column_size - 1;
+                $returns = $this->_load_js($checkbox_id_main, $action_index);
+                
 		// grid starts
-		$returns = "<div id='crud_grid'>";
-		$returns .= $js_checkbox;
+		$returns .= "<div id='crud_grid'>";
 		$returns .= $this->properties['crud_title'];
 		$returns .= $this->properties['crud_form_title'];
 		
 		if (count($this->fields['select']) > 0) {
-			
-			// insert button
-			if ($this->properties['insert']) {
-				$returns .= $this->_button_insert();
-			}
 			
                         // get a search box
                         if (is_array($this->search)) {
                                 $returns .= $this->_form_search_box();
                         }
                         
+			// insert button
+			if ($this->properties['insert']) {
+				$returns .= $this->_button_insert();
+			}
+			
                         // init form
                         $this->CI->form->init();
                         
@@ -688,9 +705,29 @@ class Crud {
 			// generate table
 			$new_list = $this->CI->table->make_columns($list, $column_size);
 			$returns .= $this->CI->table->generate($new_list);
+                        
+                        $returns .= '
+                                <div id="pagination" class="pagination">
+                                        <form>
+                                                <img src="'.base_url().'assets/images/first.png" class="first"/>
+                                                <img src="'.base_url().'assets/images/prev.png" class="prev"/>
+                                                <input type="text" class="pagedisplay"/>
+                                                <img src="'.base_url().'assets/images/next.png" class="next"/>
+                                                <img src="'.base_url().'assets/images/last.png" class="last"/>
+                                                <select class="pagesize">
+                                                        <option selected="selected" value="10">10</option>
+                                                        <option value="20">20</option>
+                                                        <option value="30">30</option>
+                                                        <option value="40">40</option>
+                                                        <option value="40">50</option>
+                                                </select>
+                                        </form>
+                                </div>';
 			
 			// pagination
-                        $returns .= $this->_get_pagination();
+                        if ($this->pagination['status']) {
+                                $returns .= $this->_get_pagination();
+                        }
 
 			// Update delete dropdown and Go button
 			if ($this->properties['update'] || $this->properties['delete']) {
@@ -703,7 +740,7 @@ class Crud {
 		}
 		
 		// grid ends
-		$returns .= "</div>";
+                $returns .= "</div>";
 		
 		return $returns;
 	}
@@ -958,7 +995,8 @@ class Crud {
 		}
 
 		// pagination options
-		$this->pagination['per_page'] = isset($this->properties['pagination_per_page']) ? $this->properties['pagination_per_page'] : '10';
+                $this->pagination['status'] = (boolean) $this->properties['pagination'];
+		$this->pagination['per_page'] = (integer) (isset($this->properties['pagination_per_page']) ? $this->properties['pagination_per_page'] : '10');
 	}
 
 	/**
