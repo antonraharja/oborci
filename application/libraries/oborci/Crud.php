@@ -488,7 +488,10 @@ class Crud {
 	 * @return string $returns Javascript
 	 */
 	private function _load_js($id_main, $action_index) {
-		$returns = '
+                if (! $this->pagination['status']) {
+                        $tablesorter_pager = '.tablesorterPager({container: $("#pagination")})'; 
+                }
+                $returns = '
 			<script type="text/javascript">
 				$(document).ready(function() {
 					$("#form_'.$id_main.'").click(function() {
@@ -508,7 +511,7 @@ class Crud {
                                                                 }, 
                                                         }
                                                 })
-                                                .tablesorterPager({container: $("#pagination")}); 
+                                                '.$tablesorter_pager.';
 				});
 			</script>';
 		return $returns;
@@ -705,28 +708,28 @@ class Crud {
 			// generate table
 			$new_list = $this->CI->table->make_columns($list, $column_size);
 			$returns .= $this->CI->table->generate($new_list);
-                        
-                        $returns .= '
-                                <div id="pagination" class="pagination">
-                                        <form>
-                                                <img src="'.base_url().'assets/images/first.png" class="first"/>
-                                                <img src="'.base_url().'assets/images/prev.png" class="prev"/>
-                                                <input type="text" class="pagedisplay"/>
-                                                <img src="'.base_url().'assets/images/next.png" class="next"/>
-                                                <img src="'.base_url().'assets/images/last.png" class="last"/>
-                                                <select class="pagesize">
-                                                        <option selected="selected" value="10">10</option>
-                                                        <option value="20">20</option>
-                                                        <option value="30">30</option>
-                                                        <option value="40">40</option>
-                                                        <option value="40">50</option>
-                                                </select>
-                                        </form>
-                                </div>';
 			
 			// pagination
                         if ($this->pagination['status']) {
                                 $returns .= $this->_get_pagination();
+                        } else {
+                                $returns .= '
+                                        <div id="pagination" class="pagination">
+                                                <form>
+                                                        <img src="'.base_url().'assets/images/first.png" class="first"/>
+                                                        <img src="'.base_url().'assets/images/prev.png" class="prev"/>
+                                                        <input type="text" class="pagedisplay"/>
+                                                        <img src="'.base_url().'assets/images/next.png" class="next"/>
+                                                        <img src="'.base_url().'assets/images/last.png" class="last"/>
+                                                        <select class="pagesize">
+                                                                <option selected="selected" value="10">10</option>
+                                                                <option value="20">20</option>
+                                                                <option value="30">30</option>
+                                                                <option value="40">40</option>
+                                                                <option value="40">50</option>
+                                                        </select>
+                                                </form>
+                                        </div>';
                         }
 
 			// Update delete dropdown and Go button

@@ -90,7 +90,7 @@ class Roles extends CI_Controller {
 				'uri' => 'roles/members/'.$role_id,
 				'index_column' => TRUE,
 				'index_column_start' => 1,
-                                'pagination' => TRUE,
+                                'pagination' => FALSE,
 				'pagination_per_page' => 5,
 				'crud_title' => NULL,
 				'crud_form_title' => '<h2>'.t('List of Members').'</h2>',
