@@ -38,8 +38,10 @@ class Form {
                         $uri = $data['uri'];
                         if (empty($uri)) {
                                 $uri = current_url();
-                                $form_action = array('form_action' => 'auto');
                         }
+                }
+                if (isset($this->on_success)) {
+                        $data['form_action'] = array('form_action' => 'auto');
                 }
                 $name = isset($this->name) ? $this->name : $data['name'];
                 $data['name'] = $name;
@@ -51,7 +53,7 @@ class Form {
                         $this->data[] = array('open' => $data);
                 }
                 $data = $this->_sanitize_param($data);
-		$returns = form_open($uri, $data, $form_action);
+		$returns = form_open($uri, $data, $data['form_action']);
                 $this->returns[] = $returns;
                 return $returns;
 	}
