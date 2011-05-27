@@ -162,7 +162,8 @@ class Auth {
 			if ($this->CI->uri->rsegment(2) && ($this->CI->uri->rsegment(2) != 'index')) {
 				$uri .= '/' . $this->CI->uri->rsegment(2);
 			}
-			$row = $this->CI->SC_screens->get_by_uri($uri);
+			$query = $this->CI->SC_screens->get_by(array('uri' => $uri));
+                        $row = $query->row();
 			if (isset($row->id)) {
 				$screen_id = $row->id;
 				$id = $this->CI->SC_roles->get_roles_screens_id($this->role_id, $screen_id);
