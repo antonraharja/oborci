@@ -635,13 +635,14 @@ class Crud {
 		// last column, action column
 		if ($this->properties['update'] || $this->properties['delete']) {
 			$column_size += 1;
+			$action_index = $column_size - 1;
 			$checkbox_id_main =  $this->key_field.'_main';
 			$data = array( 'name' => $checkbox_id_main);
 			$heading[] = array('data' => $this->CI->form->checkbox($data), 'id' => 'crud_th_action');
 		}
 
                 // load javascript for grid table sorter
-                $action_index = $column_size - 1;
+                $action_index = isset($action_index) ? $action_index : 100;
                 $returns = $this->_load_js($checkbox_id_main, $action_index);
                 
 		// grid starts

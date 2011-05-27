@@ -66,35 +66,6 @@ class Menus extends CI_Controller {
 		return $this->crud->render();
 	}
 
-	private function _get_menus_members($menu_id=NULL) {
-		$data = array(
-			'select' => array(
-				array('name' => 'id', 'label' => 'ID', 
-					'rules' => array('key', 'hidden', 'trim'),),
-				array('name' => 'username', 'label' => 'Username', 'link' => 'preference/show/{id}',
-					'rules' => array('trim',  'htmlspecialchars'),),
-			),
-			'datasource' => array(
-				'table' => 'sc_users',
-				'where' => array('menu_id' => $menu_id),
-			),
-			'properties' => array(
-				'name' => 'menus_members',
-				'uri' => 'menus/members/'.$menu_id,
-				'index_column' => TRUE,
-				'index_column_start' => 1,
-				'pagination_per_page' => 10,
-				'crud_title' => '<h1>'.t('Members List').'</h1>',
-				'crud_form_title' => '<h2>'.t('List of Members').'</h2>',
-				'insert_form_title' => '<h2>'.t('Insert Data').'</h2>',
-				'update_form_title' => '<h2>'.t('Update Data').'</h2>',
-				'delete_form_title' => '<h2>'.t('Delete Data').'</h2>',
-			),
-		);
-		$this->crud->set_data($data);
-		return $this->crud->render();
-	}
-	
 	/**
 	 * Index Page for this controller.
 	 * 
@@ -110,17 +81,6 @@ class Menus extends CI_Controller {
 		}
 	}
 	
-	public function members($param=NULL) {
-		if ($this->auth->get_access()) {
-			$data['menu']['box'] = $this->template->menu_box();
-			$data['login'] = $this->template->get_login();
-			$data['crud'] = $this->_get_menus_members($param);
-			$this->load->view('menus_members_view', $data);
-		} else {
-			redirect('process/unauthorized');
-		}
-	}
-
 }
 
 /* End of file menus.php */
