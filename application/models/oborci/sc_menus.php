@@ -10,18 +10,7 @@ exit('No direct script access allowed');
  */
 class SC_menus extends MY_Model {
 
-        public $id = NULL;
-        public $module_id = NULL;
-        public $parent = NULL;
-        public $index = NULL;
-        public $uri = NULL;
-        public $text = NULL;
-        public $title = NULL;
-        public $id_css = NULL;
-
 	protected $db_table = 'sc_menus';
-        protected $db_fields = array('id', 'module_id', 'parent', 'index', 'uri', 'text', 'title', 'id_css');
-        protected $db_key_field = 'id';
 
         function __construct() {
 		parent::__construct();

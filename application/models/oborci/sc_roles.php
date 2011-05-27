@@ -10,14 +10,9 @@ exit('No direct script access allowed');
  */
 class SC_roles extends MY_Model {
 
-        public $id = NULL;
-        public $name = NULL;
-        
 	protected $db_table = 'sc_roles';
-        protected $db_fields = array('id', 'name');
-        protected $db_key_field = 'id';
-        
-	private $db_table_roles_screens = 'sc_roles_screens';
+
+        private $db_table_roles_screens = 'sc_roles_screens';
 	private $db_table_roles_menus = 'sc_roles_menus';
 
 	function __construct() {

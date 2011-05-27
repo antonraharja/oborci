@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Speedcoding Model
+ * Oborci Model
  *
  * @author Anton Raharja
  */
@@ -15,107 +15,80 @@ class MY_Model extends CI_Model {
 	}
 
         /**
-         * Get array from object
-         * @return array Data
+         * Helper to get field names and set key_field
          */
-        private function _sc_get_data() {
-                $data = NULL;
-                foreach ($this->db_fields as $db_field) {
-                        if (isset($this->$db_field)) {
-                                $data[$db_field] = $this->$db_field;
-                        }
-                }
-                return $data;
-        }
-        
-        /**
-         * Nullify data object
-         */
-        private function _sc_null_data() {
-                foreach ($this->db_fields as $db_field) {
-                        $this->$db_field = NULL;
-                }
-        }
-        
-        /**
-         * Populate data object to variable
-         * @param object $query DB get object
-         */
-        private function _sc_populate_data($query) {
-                $rows = $query->result_array();
-                if (is_array($rows)) {
-                        foreach ($this->db_fields as $db_field) {
-                                if (isset($this->$db_field)) {
-                                        $this->$db_field = isset($rows[$db_field]) ? $rows[$db_field] : NULL;
+        public function _sc_set_fields() {
+                if (! is_array($this->db_fields)) {
+                        $fields = $this->db->field_data($this->db_table);
+                        foreach ($fields as $field)
+                        {
+                                $field_name = $field->name;
+                                $this->db_fields[] = $field_name;
+                                if ($field->primary_key) {
+                                        $this->db_key_field = $field->name;
                                 }
                         }
                 }
-        }
+        }        
         
         /**
-	 * Insert a new model to database
-	 * @param array $data Array of model data to be inserted to database
-	 * @return integer|boolean model ID or FALSE when failed
+	 * Insert a new data to database
+	 * @param array $data Array of data to be inserted to database
+	 * @return integer|boolean Last inserted ID or FALSE when failed
 	 */
-	public function insert($data=NULL) {
+	public function insert($data) {
+                $this->_sc_set_fields();
                 $returns = FALSE;
-                if (! isset($data)) {
-                        $data = $this->_sc_get_data();
-                }
 		if ($this->db->insert($this->db_table, $data)) {
 			$insert_id = $this->db->insert_id();
 			if ($insert_id) {
 				$returns = $insert_id;
 			}
 		}
-                $this->_sc_null_data();
                 return $returns;
 	}
 
 	/**
-	 * Get all model or specific model when $id is given
-	 * @param integer $id model ID
-	 * @return array Query containing model items
+	 * Get all data or specific data when ID is given
+	 * @param integer ID
+	 * @return array Query containing data items
 	 */
 	public function get($id=NULL) {
+                $this->_sc_set_fields();
                 $query = NULL;
 		if (isset($id)) {
 			$query = $this->db->get_where($this->db_table, array($this->db_key_field => $id));
 		} else {
 			$query = $this->db->get_where($this->db_table);
 		}
-                $this->_sc_null_data();
-                $this->_sc_populate_data($query);
 		return $query;
 	}
 
 	/**
-	 * Update model
-	 * @param array $data Array of model data to be updated
-	 * @param integer $id model ID
+	 * Update data
+	 * @param array $data Array of data to be updated
+	 * @param integer $id ID
 	 * @return boolean TRUE if update success
 	 */
-	public function update($id, $data=NULL) {
+	public function update($id, $data) {
+                $this->_sc_set_fields();
                 $returns = FALSE;
-                if (! isset($data)) {
-                        $data = $this->_sc_get_data();
-                }
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data, array($this->db_key_field => $id));
 		}
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
 		}
-                $this->_sc_null_data();
                 return $returns;
 	}
 
 	/**
-	 * Delete model
-	 * @param integer $id model ID
+	 * Delete data
+	 * @param integer $id ID
 	 * @return boolean TRUE if deletion success
 	 */
 	public function delete($id) {
+                $this->_sc_set_fields();
                 $returns = FALSE;
 		$this->db->delete($this->db_table, array($this->db_key_field => $id));
 		if ($this->db->affected_rows()) {

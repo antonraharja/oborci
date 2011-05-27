@@ -10,14 +10,7 @@ exit('No direct script access allowed');
  */
 class SC_modules extends MY_Model {
 
-        public $id = NULL;
-        public $path = NULL;
-        public $name = NULL;
-        public $status = NULL;
-        
 	protected $db_table = 'sc_modules';
-        protected $db_fields = array('id', 'path', 'name', 'status');
-        protected $db_key_field = 'id';
 
 	function __construct() {
 		parent::__construct();

@@ -10,18 +10,9 @@ exit('No direct script access allowed');
  */
 class SC_users extends MY_Model {
 
-	public $id = NULL;
-        public $role_id = NULL;
-        public $preference_id = NULL;
-        public $username = NULL;
-        public $password = NULL;
-        public $salt = NULL;
-        
         protected $db_table = 'sc_users';
-        protected $db_fields = array('id', 'role_id', 'preference_id', 'username', 'password', 'salt');
-        protected $db_key_field = 'id';
 
-	function __construct() {
+        function __construct() {
 		parent::__construct();
 	}
 
