@@ -38,6 +38,21 @@ class MY_Model extends CI_Model {
         }
         
         /**
+         * Populate data object to variable
+         * @param object $query DB get object
+         */
+        private function _sc_populate_data($query) {
+                $rows = $query->result_array();
+                if (is_array($rows)) {
+                        foreach ($this->db_fields as $db_field) {
+                                if (isset($this->$db_field)) {
+                                        $this->$db_field = isset($rows[$db_field]) ? $rows[$db_field] : NULL;
+                                }
+                        }
+                }
+        }
+        
+        /**
 	 * Insert a new model to database
 	 * @param array $data Array of model data to be inserted to database
 	 * @return integer|boolean model ID or FALSE when failed
@@ -69,6 +84,8 @@ class MY_Model extends CI_Model {
 		} else {
 			$query = $this->db->get_where($this->db_table);
 		}
+                $this->_sc_null_data();
+                $this->_sc_populate_data($query);
 		return $query;
 	}
 
@@ -81,7 +98,7 @@ class MY_Model extends CI_Model {
 	public function update($id, $data=NULL) {
                 $returns = FALSE;
                 if (! isset($data)) {
-                        $data = $this->_sc_get_data_array();
+                        $data = $this->_sc_get_data();
                 }
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data, array($this->db_key_field => $id));
