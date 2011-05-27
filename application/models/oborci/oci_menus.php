@@ -8,9 +8,9 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class SC_menus extends MY_Model {
+class oci_menus extends MY_Model {
 
-	protected $db_table = 'sc_menus';
+	protected $db_table = 'oci_menus';
 
         function __construct() {
 		parent::__construct();
@@ -18,5 +18,5 @@ class SC_menus extends MY_Model {
 
 }
 
-/* End of file sc_menus.php */
-/* Location: ./application/models/sc_menus.php */
+/* End of file oci_menus.php */
+/* Location: ./application/models/oci_menus.php */

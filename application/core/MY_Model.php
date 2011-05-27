@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Oborci Model
+ * Oborci Model extends CI_Model
  *
  * @author Anton Raharja
  */
@@ -17,7 +17,7 @@ class MY_Model extends CI_Model {
         /**
          * Helper to get field names and set key_field
          */
-        public function _sc_set_fields() {
+        public function _oci_set_fields() {
                 if (! is_array($this->db_fields)) {
                         $fields = $this->db->field_data($this->db_table);
                         foreach ($fields as $field)
@@ -37,7 +37,7 @@ class MY_Model extends CI_Model {
 	 * @return integer|boolean Last inserted ID or FALSE when failed
 	 */
 	public function insert($data) {
-                $this->_sc_set_fields();
+                $this->_oci_set_fields();
                 $returns = FALSE;
 		if ($this->db->insert($this->db_table, $data)) {
 			$insert_id = $this->db->insert_id();
@@ -54,7 +54,7 @@ class MY_Model extends CI_Model {
 	 * @return array Query containing data items
 	 */
 	public function get($id) {
-                $this->_sc_set_fields();
+                $this->_oci_set_fields();
 		$query = $this->db->get_where($this->db_table, array($this->db_key_field => $id));
 		return $query;
 	}
@@ -64,7 +64,7 @@ class MY_Model extends CI_Model {
 	 * @return array Query containing data items
 	 */
 	public function get_all() {
-                $this->_sc_set_fields();
+                $this->_oci_set_fields();
         	$query = $this->db->get_where($this->db_table);
 		return $query;
 	}
@@ -75,7 +75,7 @@ class MY_Model extends CI_Model {
          * @return array Query containing data items
          */
         public function get_by($field_value) {
-                $this->_sc_set_fields();
+                $this->_oci_set_fields();
                 $query = $this->db->get_where($this->db_table, $field_value);
                 return $query;
         }
@@ -87,7 +87,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if update success
 	 */
 	public function update($id, $data) {
-                $this->_sc_set_fields();
+                $this->_oci_set_fields();
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data, array($this->db_key_field => $id));
@@ -104,7 +104,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if update success
 	 */
 	public function update_all($data) {
-                $this->_sc_set_fields();
+                $this->_oci_set_fields();
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data);
@@ -122,7 +122,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if update success
 	 */
 	public function update_by($field_value, $data) {
-                $this->_sc_set_fields();
+                $this->_oci_set_fields();
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data, $field_value);
@@ -139,7 +139,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if deletion success
 	 */
 	public function delete($id) {
-                $this->_sc_set_fields();
+                $this->_oci_set_fields();
                 $returns = FALSE;
 		$this->db->delete($this->db_table, array($this->db_key_field => $id));
 		if ($this->db->affected_rows()) {
@@ -153,7 +153,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if deletion success
 	 */
 	public function delete_all() {
-                $this->_sc_set_fields();
+                $this->_oci_set_fields();
                 $returns = FALSE;
 		$this->db->delete($this->db_table);
 		if ($this->db->affected_rows()) {
@@ -168,7 +168,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if deletion success
 	 */
 	public function delete_by($field_value) {
-                $this->_sc_set_fields();
+                $this->_oci_set_fields();
                 $returns = FALSE;
 		$this->db->delete($this->db_table, $field_value);
 		if ($this->db->affected_rows()) {
@@ -179,5 +179,5 @@ class MY_Model extends CI_Model {
 
 }
 
-/* End of file sc_model.php */
-/* Location: ./application/models/sc_model.php */
+/* End of file MY_Model.php */
+/* Location: ./application/core/MY_Model.php */

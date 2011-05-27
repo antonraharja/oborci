@@ -6,9 +6,9 @@ exit('No direct script access allowed');
 /**
  * Screens controller
  *
- * @property auth $auth
+ * @property oci_auth $oci_auth
  * @property crud $crud
- * @property template $template
+ * @property oci_template $oci_template
  *
  * @author Anton Raharja
  *
@@ -17,8 +17,9 @@ class Screens extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->library(array('oborci/Auth', 'oborci/Crud', 'oborci/Template'));
-		$this->auth->validate();
+                $this->load->model(array('oborci/oci_auth', 'oborci/oci_template'));
+                $this->load->library(array('oborci/Crud'));
+		$this->oci_auth->validate();
 	}
 
 	/**
@@ -45,7 +46,7 @@ class Screens extends CI_Controller {
                                 array ('name' => 'uri', 'label' => t('URI'), 'type' => 'input', 'rules' => array('required')),
 			),
 			'datasource' => array(
-				'table' => 'sc_screens',
+				'table' => 'oci_screens',
 			),
 			'properties' => array(
 				'name' => 'screens',
@@ -71,9 +72,9 @@ class Screens extends CI_Controller {
 	 * 
 	 */
 	public function index($param=NULL) {
-		if ($this->auth->get_access()) {
-			$data['menu']['box'] = $this->template->menu_box();
-			$data['login'] = $this->template->get_login();
+		if ($this->oci_auth->get_access()) {
+			$data['menu']['box'] = $this->oci_template->menu_box();
+			$data['login'] = $this->oci_template->get_login();
 			$data['crud'] = $this->_get_crud_for_index();
 			$this->load->view('screens_view', $data);
 		} else {

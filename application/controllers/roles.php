@@ -6,9 +6,9 @@ exit('No direct script access allowed');
 /**
  * Roles controller
  *
- * @property auth $auth
+ * @property oci_auth $oci_auth
  * @property crud $crud
- * @property template $template
+ * @property oci_template $oci_template
  *
  * @author Anton Raharja
  *
@@ -17,8 +17,9 @@ class Roles extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->library(array('oborci/Auth', 'oborci/Crud', 'oborci/Template'));
-		$this->auth->validate();
+                $this->load->model(array('oborci/oci_auth', 'oborci/oci_template'));
+                $this->load->library(array('oborci/Crud'));
+		$this->oci_auth->validate();
 	}
 
 	/**
@@ -45,7 +46,7 @@ class Roles extends CI_Controller {
 			),
                         'search' => array('name' => t('Role name')),
 			'datasource' => array(
-				'table' => 'sc_roles',
+				'table' => 'oci_roles',
 			),
 			'properties' => array(
 				'name' => 'roles',
@@ -82,7 +83,7 @@ class Roles extends CI_Controller {
 			),
                         'search' => array('id', 'username'),
 			'datasource' => array(
-				'table' => 'sc_users',
+				'table' => 'oci_users',
 				'where' => array('role_id' => $role_id),
 			),
 			'properties' => array(
@@ -108,9 +109,9 @@ class Roles extends CI_Controller {
 	 * @param array $param Parameters
 	 */
 	public function index($param=NULL) {
-		if ($this->auth->get_access()) {
-			$data['menu']['box'] = $this->template->menu_box();
-			$data['login'] = $this->template->get_login();
+		if ($this->oci_auth->get_access()) {
+			$data['menu']['box'] = $this->oci_template->menu_box();
+			$data['login'] = $this->oci_template->get_login();
 			$data['crud'] = $this->_get_crud_for_index();
 			$this->load->view('roles_view', $data);
 		} else {
@@ -123,9 +124,9 @@ class Roles extends CI_Controller {
          * @param array $param Parameters 
          */
         public function members($param=NULL) {
-		if ($this->auth->get_access()) {
-			$data['menu']['box'] = $this->template->menu_box();
-			$data['login'] = $this->template->get_login();
+		if ($this->oci_auth->get_access()) {
+			$data['menu']['box'] = $this->oci_template->menu_box();
+			$data['login'] = $this->oci_template->get_login();
 			$data['crud'] = $this->_get_crud_for_members($param);
 			$this->load->view('roles_members_view', $data);
 		} else {

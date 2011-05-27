@@ -103,7 +103,7 @@ $config['enable_hooks'] = FALSE;
  | This item allows you to set the filename/classname prefix when extending
  | native libraries.  For more information please see the user guide:
  |
- | http://codeigniter.com/user_guide/general/sc_classes.html
+ | http://codeigniter.com/user_guide/general/core_classes.html
  | http://codeigniter.com/user_guide/general/creating_libraries.html
  |
  */
@@ -245,12 +245,12 @@ $config['encryption_key'] = '23t5y57i78kjyv3v4rt6u';
  | 'sess_time_to_update'		= how many seconds between CI refreshing Session Information
  |
  */
-$config['sess_cookie_name']		= 'sc_session';
+$config['sess_cookie_name']		= 'oci_session';
 $config['sess_expiration']		= 7200;
 $config['sess_expire_on_close']	= TRUE;
 $config['sess_encrypt_cookie']	= TRUE;
 $config['sess_use_database']	= TRUE;
-$config['sess_table_name']		= 'sc_sessions';
+$config['sess_table_name']		= 'oci_sessions';
 $config['sess_match_ip']		= FALSE;
 $config['sess_match_useragent']	= TRUE;
 $config['sess_time_to_update']	= 300;

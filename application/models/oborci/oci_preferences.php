@@ -8,9 +8,9 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class SC_preferences extends MY_Model {
+class oci_preferences extends MY_Model {
 
-	protected $db_table = 'sc_preferences';
+	protected $db_table = 'oci_preferences';
 
 	function __construct() {
 		parent::__construct();
@@ -18,6 +18,6 @@ class SC_preferences extends MY_Model {
 
 }
 
-/* End of file sc_preferences.php */
-/* Location: ./application/models/sc_preferences.php */
+/* End of file oci_preferences.php */
+/* Location: ./application/models/oci_preferences.php */
 

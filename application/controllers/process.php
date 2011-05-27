@@ -6,8 +6,8 @@ exit('No direct script access allowed');
 /**
  * Process controller
  *
- * @property auth $auth
- * @property template $template
+ * @property oci_auth $oci_auth
+ * @property oci_template $oci_template
  *
  * @author Anton Raharja
  *
@@ -16,7 +16,8 @@ class Process extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->library(array('uri', 'oborci/Auth', 'oborci/Template'));
+                $this->load->model(array('oborci/oci_auth', 'oborci/oci_template'));
+                $this->load->library(array('uri'));
 	}
 
 	/**
@@ -27,8 +28,8 @@ class Process extends CI_Controller {
 		if ($this->session->userdata('login_state')) {
 			redirect('home');
 		} else {
-			$data['menu']['box'] = $this->template->menu_box();
-			$data['login']['form'] = $this->template->login_form();
+			$data['menu']['box'] = $this->oci_template->menu_box();
+			$data['login']['form'] = $this->oci_template->login_form();
 			$this->load->view('process/unauthorized', $data);
 		}
 	}
@@ -41,8 +42,8 @@ class Process extends CI_Controller {
 		$ok = FALSE;
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
-		if ($this->auth->authenticate($username, $password)) {
-			if ($this->auth->login()) {
+		if ($this->oci_auth->authenticate($username, $password)) {
+			if ($this->oci_auth->login()) {
 				$ok = TRUE;
 			}
 		}
@@ -58,8 +59,8 @@ class Process extends CI_Controller {
 				$data = array('state' => FALSE, 'message' => t('Invalid login, please try again'));
 				echo json_encode($data);
 			} else {
-				$data['menu']['box'] = $this->template->menu_box();
-				$data['login']['form'] = $this->template->login_form();
+				$data['menu']['box'] = $this->oci_template->menu_box();
+				$data['login']['form'] = $this->oci_template->login_form();
 				$this->load->view('process/login_view', $data);
 			}
 		}
@@ -69,8 +70,8 @@ class Process extends CI_Controller {
 	 * Process logout
 	 */
 	public function logout() {
-		$this->auth->logout();
-		$data['menu']['box'] = $this->template->menu_box();
+		$this->oci_auth->logout();
+		$data['menu']['box'] = $this->oci_template->menu_box();
 		$this->load->view('process/logout_view', $data);
 	}
 
@@ -78,8 +79,8 @@ class Process extends CI_Controller {
 	 * Process unauthorized
 	 */
 	public function unauthorized() {
-		$data['menu']['box'] = $this->template->menu_box();
-		$data['login']['form'] = $this->template->login_form();
+		$data['menu']['box'] = $this->oci_template->menu_box();
+		$data['login']['form'] = $this->oci_template->login_form();
 		$this->load->view('process/unauthorized', $data);
 	}
 

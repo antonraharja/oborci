@@ -6,8 +6,8 @@ exit('No direct script access allowed');
 /**
  * Users controller
  *
- * @property auth $auth
- * @property template $template
+ * @property oci_auth $oci_auth
+ * @property oci_template $oci_template
  *
  * @author Anton Raharja
  *
@@ -16,8 +16,9 @@ class Users extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->library(array('oborci/Auth', 'oborci/Crud', 'oborci/Template'));
-		$this->auth->validate();
+                $this->load->model(array('oborci/oci_auth', 'oborci/oci_template'));
+                $this->load->library(array('oborci/Crud'));
+		$this->oci_auth->validate();
 	}
 
 	/**
@@ -26,7 +27,7 @@ class Users extends CI_Controller {
 	 */
 	private function _get_role_names() {
 		$returns = NULL;
-		$query = $this->db->get('sc_roles');
+		$query = $this->db->get('oci_roles');
 		foreach ($query->result() as $row) {
 			$returns[$row->id] = $row->name;
 		}	
@@ -48,13 +49,13 @@ class Users extends CI_Controller {
 					'rules' => array('confirm', 'required', array('max_length' => 30), array('min_length' => 6), 'trim'),),
 			),
 			'select' => array(
-				array('name' => 'id', 'table' => 'sc_users', 'label' => 'ID', 
+				array('name' => 'id', 'table' => 'oci_users', 'label' => 'ID', 
 					'rules' => array('key', 'hidden', 'trim'),),
-				array('name' => 'role_id', 'table' => 'sc_users', 'label' => 'Role ID', 
+				array('name' => 'role_id', 'table' => 'oci_users', 'label' => 'Role ID', 
 					'rules' => array('hidden', 'trim'),),
-				array('name' => 'name',	'table' => 'sc_roles', 'label' => 'Role Name', 'link' => 'roles/members/{role_id}',
+				array('name' => 'name',	'table' => 'oci_roles', 'label' => 'Role Name', 'link' => 'roles/members/{role_id}',
 					'rules' => array('trim', 'htmlspecialchars'),),
-				array('name' => 'username', 'table' => 'sc_users', 'label' => 'Username', 'link' => 'preference/show/{id}',
+				array('name' => 'username', 'table' => 'oci_users', 'label' => 'Username', 'link' => 'preference/show/{id}',
 					'rules' => array('trim',  'htmlspecialchars'),),
 			),
 			'update' => array(
@@ -68,12 +69,12 @@ class Users extends CI_Controller {
 			'delete' => array(
 				array ('name' => 'username', 'label' => t('Username'),),
 			),
-                        'search' => array('sc_users.id' => 'ID', 'sc_users.username' => t('Username')),
+                        'search' => array('oci_users.id' => 'ID', 'oci_users.username' => t('Username')),
 			'datasource' => array(
-				'table' => 'sc_users',
-				'join_table' => 'sc_roles',
+				'table' => 'oci_users',
+				'join_table' => 'oci_roles',
 				'join_type' => 'left',
-				'join_param' => 'sc_users.role_id = sc_roles.id',
+				'join_param' => 'oci_users.role_id = oci_roles.id',
 			),
 			'properties' => array(
 				'name' => 'users',
@@ -102,9 +103,9 @@ class Users extends CI_Controller {
 	 *
 	 */
 	public function index($param=NULL) {
-		if ($this->auth->get_access()) {
-			$data['menu']['box'] = $this->template->menu_box();
-			$data['login'] = $this->template->get_login();
+		if ($this->oci_auth->get_access()) {
+			$data['menu']['box'] = $this->oci_template->menu_box();
+			$data['login'] = $this->oci_template->get_login();
 			$data['crud'] = $this->_get_crud();
                         // print_r($data); die();
 			$this->load->view('users_view', $data);

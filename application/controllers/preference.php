@@ -6,11 +6,11 @@ exit('No direct script access allowed');
 /**
  * Roles controller
  *
- * @property SC_users $SC_users
- * @property SC_preferences $SC_preferences
- * @property auth $auth
+ * @property oci_users $oci_users
+ * @property oci_preferences $oci_preferences
+ * @property oci_auth $oci_auth
  * @property form $form
- * @property template $template
+ * @property oci_template $oci_template
  *
  * @author Anton Raharja
  *
@@ -19,9 +19,9 @@ class Preference extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/SC_preferences', 'oborci/SC_users'));
-                $this->load->library(array('oborci/Auth', 'oborci/Form', 'oborci/Template'));
-                if (! $this->auth->validate()) {
+                $this->load->model(array('oborci/oci_preferences', 'oborci/oci_users', 'oborci/oci_auth', 'oborci/oci_template'));
+                $this->load->library(array('oborci/Form'));
+                if (! $this->oci_auth->validate()) {
                         redirect('process/unauthorized');
                 }
 	}
@@ -54,7 +54,7 @@ class Preference extends CI_Controller {
                 $id = $inputs['key_id'];
                 unset($inputs['key_id']);
                 $CI =& get_instance();
-                $CI->SC_preferences->update($id, $inputs);
+                $CI->oci_preferences->update($id, $inputs);
                 // redirect(current_url());
                 $returns = '<p>'.t('Preferences has been successfully updated').'</p>';
                 $returns .= '<p>'.  anchor(current_url(), t('Back'), 'title="'.t('Back').'"').'</p>';
@@ -73,23 +73,23 @@ class Preference extends CI_Controller {
          * @param integer $param User ID
          */
         public function show($param=NULL) {
-                $data['menu']['box'] = $this->template->menu_box();
-                $data['login'] = $this->template->get_login();
+                $data['menu']['box'] = $this->oci_template->menu_box();
+                $data['login'] = $this->oci_template->get_login();
 
                 $ok = FALSE;
                 $user_id = $param;
                 if (isset($user_id)) {
-                        $query = $this->SC_users->get($user_id);
+                        $query = $this->oci_users->get($user_id);
                         $data_user = $query->row();
                         $preference_id = (integer) $data_user->preference_id;
                         if ($preference_id > 0) {
                                 $ok = TRUE;
                         } else {
                                 $data_pref = array('first_name' => $data_user->username);
-                                $new_preference_id = $this->SC_preferences->insert($data_pref);
+                                $new_preference_id = $this->oci_preferences->insert($data_pref);
                                 if ($new_preference_id > 0) {
                                         $data_pref = array('preference_id' => $new_preference_id);
-                                        if ($this->SC_users->update($user_id, $data_pref)) {
+                                        if ($this->oci_users->update($user_id, $data_pref)) {
                                                 $preference_id = $new_preference_id;
                                                 $ok = TRUE;
                                         } else {
@@ -102,7 +102,7 @@ class Preference extends CI_Controller {
                 }
 
                 if ($ok) {
-                        $query = $this->SC_preferences->get($preference_id);
+                        $query = $this->oci_preferences->get($preference_id);
                         $row = $query->row_array();
                         $data['crud'] = $this->_show_form($row);
                         $data['pref']['username'] = $data_user->username;

@@ -8,12 +8,12 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class SC_roles extends MY_Model {
+class oci_roles extends MY_Model {
 
-	protected $db_table = 'sc_roles';
+	protected $db_table = 'oci_roles';
 
-        private $db_table_roles_screens = 'sc_roles_screens';
-	private $db_table_roles_menus = 'sc_roles_menus';
+        private $db_table_roles_screens = 'oci_roles_screens';
+	private $db_table_roles_menus = 'oci_roles_menus';
 
 	function __construct() {
 		parent::__construct();
@@ -161,5 +161,5 @@ class SC_roles extends MY_Model {
         
 }
 
-/* End of file sc_roles.php */
-/* Location: ./application/models/sc_roles.php */
+/* End of file oci_roles.php */
+/* Location: ./application/models/oci_roles.php */

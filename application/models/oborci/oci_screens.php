@@ -8,9 +8,9 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class SC_screens extends MY_Model {
+class oci_screens extends MY_Model {
 
-        protected $db_table = 'sc_screens';
+        protected $db_table = 'oci_screens';
 
 	function __construct() {
 		parent::__construct();
@@ -18,5 +18,5 @@ class SC_screens extends MY_Model {
 
 }
 
-/* End of file sc_screens.php */
-/* Location: ./application/models/sc_screens.php */
+/* End of file oci_screens.php */
+/* Location: ./application/models/oci_screens.php */

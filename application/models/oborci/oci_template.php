@@ -4,32 +4,30 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Template library
+ * Template model
  *
- * @property SC_menus $SC_menus
- * @property SC_preferences $SC_preferences
- * @property SC_roles $SC_roles
- * @property SC_users $SC_users
- * @property auth $auth
+ * @property oci_menus $oci_menus
+ * @property oci_preferences $oci_preferences
+ * @property oci_roles $oci_roles
+ * @property oci_users $oci_users
+ * @property oci_auth $oci_auth
  * @property form $form
  *
  * @author Anton Raharja
  */
-class Template {
+class oci_template extends CI_Model {
         
-        private $CI = NULL;
-
 	function __construct() {
-                $this->CI =& get_instance();
-		$this->CI->load->model(
+		$this->load->model(
 			array(
-				'oborci/SC_menus', 
-				'oborci/SC_preferences', 
-				'oborci/SC_roles', 
-				'oborci/SC_users'
+                                'oborci/oci_auth', 
+				'oborci/oci_menus', 
+				'oborci/oci_preferences', 
+				'oborci/oci_roles', 
+				'oborci/oci_users'
 			)
 		);
-		$this->CI->load->library(array('table', 'oborci/Auth', 'oborci/Form'));
+		$this->load->library(array('table', 'oborci/Form'));
 	}
 
 	/**
@@ -38,12 +36,12 @@ class Template {
 	 */
 	public function get_login() {
                 $data = NULL;
-		$query = $this->CI->SC_preferences->get($this->CI->auth->preference_id);
+		$query = $this->oci_preferences->get($this->oci_auth->preference_id);
                 $pref = $query->row_array();
 		if (isset($pref['id'])) {
                         $data = $pref;
 		}
-		$query = $this->CI->SC_roles->get($this->CI->auth->role_id);
+		$query = $this->oci_roles->get($this->oci_auth->role_id);
                 $role = $query->row();
 		if (isset($role->id)) {
 			$data['role'] = $role->name;
@@ -86,8 +84,8 @@ class Template {
 				),
 			),
 		);
-		$this->CI->form->set_data($data);
-		$data = $this->CI->form->render();
+		$this->form->set_data($data);
+		$data = $this->form->render();
 		return $data;
 	}
 
@@ -97,10 +95,10 @@ class Template {
 	 */
 	public function menu_array() {
 		$data = array();
-		if ($this->CI->auth->get_access()) {
-			$returns = $this->CI->SC_roles->get_menu_id($this->CI->auth->role_id);
+		if ($this->oci_auth->get_access()) {
+			$returns = $this->oci_roles->get_menu_id($this->oci_auth->role_id);
 			foreach ($returns as $row) {
-				$query = $this->CI->SC_menus->get($row->menu_id);
+				$query = $this->oci_menus->get($row->menu_id);
                                 $menu = $query->row();
 				if (isset($menu->id)) {
 					$data[] = array(
@@ -146,5 +144,5 @@ class Template {
 
 }
 
-/* End of file sc_template.php */
-/* Location: ./application/models/sc_template.php */
+/* End of file oci_template.php */
+/* Location: ./application/models/oci_template.php */

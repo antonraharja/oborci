@@ -8,9 +8,9 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class SC_users extends MY_Model {
+class oci_users extends MY_Model {
 
-        protected $db_table = 'sc_users';
+        protected $db_table = 'oci_users';
 
         function __construct() {
 		parent::__construct();
@@ -18,5 +18,5 @@ class SC_users extends MY_Model {
 
 }
 
-/* End of file sc_users.php */
-/* Location: ./application/models/sc_users.php */
+/* End of file oci_users.php */
+/* Location: ./application/models/oci_users.php */
