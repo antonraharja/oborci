@@ -51,7 +51,7 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get specific data when ID is given
 	 * @param integer $id ID
-	 * @return array Query containing data items
+	 * @return object Query containing data items
 	 */
 	public function get($id) {
                 $this->_oci_set_fields();
@@ -61,7 +61,7 @@ class MY_Model extends CI_Model {
 
 	/**
 	 * Get all data
-	 * @return array Query containing data items
+	 * @return object Query containing data items
 	 */
 	public function get_all() {
                 $this->_oci_set_fields();
@@ -72,7 +72,7 @@ class MY_Model extends CI_Model {
         /**
          * Get data by partial fields and its value
          * @param array $field_value Array of fields and its value
-         * @return array Query containing data items
+         * @return object Query containing data items
          */
         public function get_by($field_value) {
                 $this->_oci_set_fields();
@@ -80,6 +80,56 @@ class MY_Model extends CI_Model {
                 return $query;
         }
 
+        /**
+         * Get from relation table with has_one relation (we have one om the other table)
+         * @param string $from_model Foreign model name
+         * @param array $field_value Search criteria
+         * @return object Query containing data items  
+         */
+        public function get_one($from_model, $field_value) {
+                $query = NULL;
+                $local_key = $this->db_has_one[$from_model];
+                if (isset($local_key)) {
+                        $query = $this->get_by($field_value);
+                        $row = $query->row_array();
+                        $local_key_val = $row[$local_key];
+                        if (isset($local_key_val)) {
+                                $CI =& get_instance();
+                                $CI->load->model($from_model);
+                                $model_name = basename($from_model);
+                                if (isset($model_name)) {
+                                        $query = $CI->$model_name->get($local_key_val);
+                                }
+                        }
+                }
+                return $query;
+        }
+        
+        /**
+         * Get from relation table with has_many relation (the other table have many of us)
+         * @param string $from_model Foreign model name
+         * @param array $field_value Search criteria
+         * @return object Query containing data items
+         */
+        public function get_many($from_model, $field_value) {
+                $query = NULL;
+                $foreign_key = $this->db_has_many[$from_model];
+                if (isset($foreign_key)) {
+                        $query = $this->get_by($field_value);
+                        $row = $query->row_array();
+                        $key_field_val = $row[$this->db_key_field];
+                        if (isset($key_field_val)) {
+                                $CI =& get_instance();
+                                $CI->load->model($from_model);
+                                $model_name = basename($from_model);
+                                if (isset($model_name)) {
+                                        $query = $CI->$model_name->get_by(array($foreign_key => $key_field_val));
+                                }
+                        }
+                }
+                return $query;
+        }
+        
         /**
 	 * Update data
 	 * @param integer $id ID
