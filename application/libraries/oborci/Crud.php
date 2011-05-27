@@ -714,9 +714,10 @@ class Crud {
 					// apply functions
 					if (isset($data_select[$key]['apply_function'])) {
 						foreach ($data_select[$key]['apply_function'] as $i => $function) {
-                                                        if (function_exists($function)) {
+                                                        // disable to allow methods
+                                                        //if (function_exists($function)) {
                                                                 $row[$key] = call_user_func($function, $row[$key]);
-                                                        }
+                                                        //}
 						}
 					}
 					// if has link option then parse the link and set an anchor
