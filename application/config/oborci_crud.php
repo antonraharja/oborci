@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $config['table_template'] = array (
-	'table_open' 		=> '<table border="0" cellpadding="4" cellspacing="1" width="100%">',
+	'table_open' 		=> '<table border="0" cellpadding="4" cellspacing="1" width="100%" id="crud_table" class="crud_table">',
 	'heading_row_start'  	=> '<tr>',
 	'heading_row_end'     	=> '</tr>',
 	'heading_cell_start'  	=> '<th>',

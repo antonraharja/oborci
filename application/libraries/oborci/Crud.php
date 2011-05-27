@@ -647,9 +647,9 @@ class Crud {
                 $returns = $this->_load_js($checkbox_id_main, $action_index);
                 
 		// grid starts
-		$returns .= "<div id='crud_grid' class='crud_grid'>";
 		$returns .= "<div id='crud_title' class='crud_title'>".$this->properties['crud_title']."</div>";
 		$returns .= "<div id='crud_form_title' class='crud_title'>".$this->properties['crud_form_title']."</div>";
+		$returns .= "<div id='crud_grid' class='crud_grid'>";
 		
 		if (count($this->fields['select']) > 0) {
 			
@@ -669,9 +669,6 @@ class Crud {
 			// open form
 			$returns .= $this->CI->form->open(array('uri' => $this->properties['uri'], 'name' => $this->properties['name']));
 
-                        // set table template
-                        $this->CI->table->set_template(array('table_open' => '<table border="0" cellpadding="4" cellspacing="1" width="100%" id="crud_table" class="crud_table">'));
-                        
 			// set table heading
 			$this->CI->table->set_heading($heading);
 			
@@ -714,18 +711,27 @@ class Crud {
 			$new_list = $this->CI->table->make_columns($list, $column_size);
 			$returns .= $this->CI->table->generate($new_list);
 			
-			// pagination
+			// Update delete dropdown and Go button
+			if ($this->properties['update'] || $this->properties['delete']) {
+				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit', 'class' => 'crud_button', 'value' => t('Go')));
+				$returns .= $this->_dropdown();
+			}
+			
+			// close form
+			$returns .= $this->CI->form->close();
+
+                        // pagination
                         if ($this->pagination['status']) {
                                 $returns .= $this->_get_pagination();
                         } else {
                                 $returns .= '
-                                        <div id="pagination" class="pagination">
+                                        <div id="pagination" class="crud_pagination">
                                                 <form>
-                                                        <img src="'.base_url().'assets/images/first.png" class="first"/>
-                                                        <img src="'.base_url().'assets/images/prev.png" class="prev"/>
+                                                        <img src="'.base_url().'assets/images/oborci/first.png" class="first"/>
+                                                        <img src="'.base_url().'assets/images/oborci/prev.png" class="prev"/>
                                                         <input type="text" class="pagedisplay" readonly />
-                                                        <img src="'.base_url().'assets/images/next.png" class="next"/>
-                                                        <img src="'.base_url().'assets/images/last.png" class="last"/>
+                                                        <img src="'.base_url().'assets/images/oborci/next.png" class="next"/>
+                                                        <img src="'.base_url().'assets/images/oborci/last.png" class="last"/>
                                                         <select class="pagesize">
                                                                 <option selected="selected" value="10">10</option>
                                                                 <option value="20">20</option>
@@ -736,16 +742,7 @@ class Crud {
                                                 </form>
                                         </div>';
                         }
-
-			// Update delete dropdown and Go button
-			if ($this->properties['update'] || $this->properties['delete']) {
-				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit', 'class' => 'crud_button', 'value' => t('Go')));
-				$returns .= $this->_dropdown();
-			}
-			
-			// close form
-			$returns .= $this->CI->form->close();
-		}
+                }
 		
 		// grid ends
                 $returns .= "</div>";
