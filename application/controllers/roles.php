@@ -34,7 +34,7 @@ class Roles extends CI_Controller {
 			),
 			'select' => array(
 				array('name' => 'id', 'label' => 'ID', 'rules' => array('key', 'hidden', 'trim'),),
-				array('name' => 'name',	'label' => t('Role name'), 'link' => 'roles/members/{id}', 
+				array('name' => 'name',	'label' => t('Role name'), 'link' => 'acl/screens/{id}', 
 					'rules' => array('trim', 'htmlspecialchars'),),
 			),
 			'update' => array(
