@@ -1,7 +1,7 @@
 <?php include APPPATH . '/views/header_view.php' ?>
 
 <script
-	type="text/javascript"
+	type="text/javascript" 
 	src="<?php echo base_url(); ?>assets/js/login.js"></script>
 
 <div id='menu_box'><?= $menu['box'] ?></div>

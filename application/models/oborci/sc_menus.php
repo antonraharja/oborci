@@ -8,7 +8,7 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class SC_menus extends CI_Model {
+class SC_menus extends MY_Model {
 
         public $id = NULL;
         public $module_id = NULL;
@@ -19,105 +19,12 @@ class SC_menus extends CI_Model {
         public $title = NULL;
         public $id_css = NULL;
 
-	private $table = 'sc_menus';
-        private $fields = array('id', 'module_id', 'parent', 'index', 'uri', 'text', 'title', 'id_css');
-        private $key_field = 'id';
+	protected $db_table = 'sc_menus';
+        protected $db_fields = array('id', 'module_id', 'parent', 'index', 'uri', 'text', 'title', 'id_css');
+        protected $db_key_field = 'id';
 
         function __construct() {
 		parent::__construct();
-	}
-
-        /**
-         * Get array from object
-         * @return array Data
-         */
-        private function _sc_get_data() {
-                $data = NULL;
-                foreach ($this->fields as $field) {
-                        if (isset($this->$field)) {
-                                $data[$field] = $this->$field;
-                        }
-                }
-                return $data;
-        }
-        
-        /**
-         * Nullify data object
-         */
-        private function _sc_null_data() {
-                foreach ($this->fields as $field) {
-                        $this->$field = NULL;
-                }
-        }
-        
-        /**
-	 * Insert a new menu to database
-	 * @param array $data Array of menu data to be inserted to database
-	 * @return integer|boolean Menu ID or FALSE when failed
-	 */
-	public function insert($data=NULL) {
-                $returns = FALSE;
-                if (! isset($data)) {
-                        $data = $this->_sc_get_data();
-                }
-		if ($this->db->insert($this->table, $data)) {
-			$insert_id = $this->db->insert_id();
-			if ($insert_id) {
-				$returns = $insert_id;
-			}
-		}
-                $this->_sc_null_data();
-                return $returns;
-	}
-
-	/**
-	 * Get all menus or specific menu when $id is given
-	 * @param integer $id Menu ID
-	 * @return array Query containing menu items
-	 */
-	public function get($id=NULL) {
-                $query = NULL;
-		if (isset($id)) {
-			$query = $this->db->get_where($this->table, array($this->key_field => $id));
-		} else {
-			$query = $this->db->get_where($this->table);
-		}
-		return $query;
-	}
-
-	/**
-	 * Update menu
-	 * @param array $data Array of menu data to be updated
-	 * @param integer $id Menu ID
-	 * @return boolean TRUE if update success
-	 */
-	public function update($id, $data=NULL) {
-                $returns = FALSE;
-                if (! isset($data)) {
-                        $data = $this->_sc_get_data_array();
-                }
-		if (count($data) > 0) {
-			$this->db->update($this->table, $data, array($this->key_field => $id));
-		}
-		if ($this->db->affected_rows()) {
-			$returns = TRUE;
-		}
-                $this->_sc_null_data();
-                return $returns;
-	}
-
-	/**
-	 * Delete menu
-	 * @param integer $id Menu ID
-	 * @return boolean TRUE if deletion success
-	 */
-	public function delete($id) {
-                $returns = FALSE;
-		$this->db->delete($this->table, array($this->key_field => $id));
-		if ($this->db->affected_rows()) {
-			$returns = TRUE;
-		}
-                return $returns;
 	}
 
 }
