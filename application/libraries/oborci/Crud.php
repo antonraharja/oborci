@@ -111,8 +111,8 @@ class Crud {
 		// process answers or inputs
 		foreach ($inputs as $key => $val) {
 			// apply functions
-			if (isset($data_select[$key]['apply_function'])) {
-				foreach ($data_select[$key]['apply_function'] as $i => $function) {
+			if (isset($data[$key]['apply_function'])) {
+				foreach ($data[$key]['apply_function'] as $i => $function) {
 					$inputs[$key] = call_user_func($function, $val);
 				}
 			}
@@ -266,8 +266,8 @@ class Crud {
 			foreach ($block_val as $key => $val) {
 				if ($key != $this->key_field) {
 					// apply functions
-					if (isset($data_select[$key]['apply_function'])) {
-						foreach ($data_select[$key]['apply_function'] as $i => $function) {
+					if (isset($data[$key]['apply_function'])) {
+						foreach ($data[$key]['apply_function'] as $i => $function) {
 							$inputs[$block_key][$key] = call_user_func($function, $val);
 						}
 					}
