@@ -129,7 +129,8 @@ class Auth {
                 $this->username = $username;
                 $this->password = $password;
 		if ($this->username && $this->password) {
-                        $row = $this->CI->SC_users->get_by_username($this->username);
+                        $query = $this->CI->SC_users->get_by(array('username' => $this->username));
+                        $row = $query->row();
 			if (isset($row->id)) {
                                 $test_password = $row->password;
                                 $test_user_id = $row->id;

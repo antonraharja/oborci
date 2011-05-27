@@ -16,16 +16,6 @@ class SC_users extends MY_Model {
 		parent::__construct();
 	}
 
-	/**
-	 * Get user by username
-	 * @param string $username Username
-	 * @return object Object of user
-	 */
-	public function get_by_username($username) {
-		$query = $this->db->get_where($this->db_table, array('username' => $username));
-                return $query->row();
-	}
-        
 }
 
 /* End of file sc_users.php */
