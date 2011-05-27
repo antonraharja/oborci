@@ -116,6 +116,20 @@ class Crud {
 					$inputs[$key] = call_user_func($function, $val);
 				}
 			}
+			// compare the field max_length with strlen
+			if ($data[$key]['max_length'] > 0) {
+                                $input_val = $this->CI->input->post($key);
+                                if (strlen($input_val) > $data[$key]['max_length']) {
+                                        $error[$key] = t('input length should be lower than maximum allowed').' ('.$data[$key]['max_length'].')';
+                                }
+			}
+			// compare the field min_length with strlen
+			if ($data[$key]['min_length'] >= 0) {
+                                $input_val = $this->CI->input->post($key);
+                                if (strlen($input_val) < $data[$key]['min_length']) {
+                                        $error[$key] = t('input length should be more than minimum allowed').' ('.$data[$key]['min_length'].')';
+                                }
+			}
 			// check if the field is unique
 			if ($data[$key]['unique']) {
 				$query = $this->CI->db->get_where($this->datasource['table'], array( $key => $val ));
@@ -271,6 +285,20 @@ class Crud {
 							$inputs[$block_key][$key] = call_user_func($function, $val);
 						}
 					}
+                                        // compare the field max_length with strlen
+                                        if ($data[$key]['max_length'] > 0) {
+                                                $input_val = $this->CI->input->post($key);
+                                                if (strlen($input_val) > $data[$key]['max_length']) {
+                                                        $error[$block_key][$key] = t('input length should be lower than maximum allowed').' ('.$data[$key]['max_length'].')';
+                                                }
+                                        }
+                                        // compare the field min_length with strlen
+                                        if ($data[$key]['min_length'] >= 0) {
+                                                $input_val = $this->CI->input->post($key);
+                                                if (strlen($input_val) < $data[$key]['min_length']) {
+                                                        $error[$block_key][$key] = t('input length should be more than minimum allowed').' ('.$data[$key]['min_length'].')';
+                                                }
+                                        }
 					// check if the field is unique
 					if ($data[$key]['unique']) {
 						$query = $this->CI->db->get_where($this->datasource['table'], array( $key => $val ));
