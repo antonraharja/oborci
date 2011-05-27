@@ -8,9 +8,9 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class oci_roles extends MY_Model {
+class oci_roles_screens extends MY_Model {
 
-	protected $db_table = 'oci_roles';
+	protected $db_table = 'oci_roles_screens';
 
 	function __construct() {
 		parent::__construct();
@@ -18,5 +18,5 @@ class oci_roles extends MY_Model {
 
 }
 
-/* End of file oci_roles.php */
-/* Location: ./application/models/oci_roles.php */
+/* End of file oci_roles_screens.php */
+/* Location: ./application/models/oci_roles_screens.php */

@@ -9,6 +9,7 @@ exit('No direct script access allowed');
  * @property oci_menus $oci_menus
  * @property oci_preferences $oci_preferences
  * @property oci_roles $oci_roles
+ * @property oci_roles_menus $oci_roles_menus
  * @property oci_users $oci_users
  * @property oci_auth $oci_auth
  * @property form $form
@@ -24,6 +25,7 @@ class oci_template extends CI_Model {
 				'oborci/oci_menus', 
 				'oborci/oci_preferences', 
 				'oborci/oci_roles', 
+                                'oborci/oci_roles_menus', 
 				'oborci/oci_users'
 			)
 		);
@@ -96,8 +98,8 @@ class oci_template extends CI_Model {
 	public function menu_array() {
 		$data = array();
 		if ($this->oci_auth->get_access()) {
-			$returns = $this->oci_roles->get_menu_id($this->oci_auth->role_id);
-			foreach ($returns as $row) {
+                        $query = $this->oci_roles_menus->get_by(array('role_id' => $this->oci_auth->role_id));
+			foreach ($query->result() as $row) {
 				$query = $this->oci_menus->get($row->menu_id);
                                 $menu = $query->row();
 				if (isset($menu->id)) {

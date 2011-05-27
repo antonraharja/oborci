@@ -8,6 +8,7 @@ exit('No direct script access allowed');
  *
  * @property oci_screens $oci_screens
  * @property oci_roles $oci_roles
+ * @property oci_roles_screens $oci_roles_screens
  * @property oci_users $oci_users
  *  *
  * @author Anton Raharja
@@ -27,6 +28,7 @@ class oci_auth extends CI_Model {
 		$this->load->model(
 			array(
 				'oborci/oci_roles', 
+                                'oborci/oci_roles_screens', 
 				'oborci/oci_screens', 
 				'oborci/oci_users'
 			)
@@ -163,7 +165,8 @@ class oci_auth extends CI_Model {
                         $row = $query->row();
 			if (isset($row->id)) {
 				$screen_id = $row->id;
-				$id = $this->oci_roles->get_roles_screens_id($this->role_id, $screen_id);
+                                $query = $this->oci_roles_screens->get_by(array('role_id' => $this->role_id, 'screen_id' => $screen_id));
+                                $id = $query->row();
 				if ($id) {
 					$this->set_access(TRUE);
                                         return TRUE;
