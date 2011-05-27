@@ -20,6 +20,7 @@
 
 .crud_th {
 	width: auto;
+        white-space: nowrap;
         color: #ffffcc;
         background-color: #8dbdd8;
 }
