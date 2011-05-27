@@ -4,13 +4,11 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Menus controller
- *
- * @property oci_auth $oci_auth
- * @property crud $crud
- * @property oci_template $oci_template
+ * Test controller
+ * 
  * @property oci_users $oci_users
- *
+ * @property oci_roles $oci_roles
+ * 
  * @author Anton Raharja
  *
  */
@@ -31,6 +29,11 @@ class Test extends CI_Controller {
                 $query = $this->oci_users->get_one('oborci/oci_preferences', array('username' => 'admin'));
                 print_r($query->result_array());
                 
+                // get role from oci_roles with our username is admin
+                // each user has one role
+                $query = $this->oci_users->get_one('oborci/oci_roles', array('username' => 'admin'));
+                print_r($query->result_array());
+                
                 // get users from oci_users with our name is Beta Testers
                 // each role has many users
                 $query = $this->oci_roles->get_many('oborci/oci_users', array('name' => 'Beta Testers'));
@@ -39,5 +42,5 @@ class Test extends CI_Controller {
 	
 }
 
-/* End of file menus.php */
-/* Location: ./application/controllers/menus.php */
+/* End of file test.php */
+/* Location: ./application/controllers/test.php */
