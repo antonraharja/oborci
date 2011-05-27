@@ -11,8 +11,18 @@
  * @return string Translated string
  */
 function translate($str) {
-	// TODO Translation codes
-	return $str;
+        $returns = NULL;
+	if (function_exists('_')) {
+                // in case php gettext is installed
+		$returns = _($str);
+	} else {
+                // your translation codes here
+                $lang['Test'] = 'Test';
+                $lang['Coba'] = 'Test';
+                $lang['Uji'] = 'Test';
+		$returns = isset($lang[$str]) ? $lang[$str] : $str;
+	}
+	return $returns;
 }
 
 /**
@@ -21,12 +31,7 @@ function translate($str) {
  * @return string Translated string
  */
 function t($str) {
-	// in case php gettext is installed
-	if (function_exists('_')) {
-		return _($str);
-	} else {
-		return translate($str);
-	}
+        return translate($str);
 }
 
 ?>
