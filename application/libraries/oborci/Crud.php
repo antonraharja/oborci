@@ -37,7 +37,7 @@ class Crud {
 		$data = array(
 			array('open' => array('uri' => $this->properties['uri'], 'name' => $this->properties['name'].'_button_insert'),),
 			array('hidden' => array('name' => 'crud_action', 'value' => 'insert'),),
-			array('submit' => array('name' => 'crud_submit_insert', 'value' => t('Add')),),
+			array('submit' => array('name' => 'crud_submit_insert', 'class' => 'crud_button', 'value' => t('Add')),),
 		);
                 $this->CI->form->init();
 		$this->CI->form->set_data($data);
@@ -72,7 +72,7 @@ class Crud {
 				$data[] = array($row['type'] => $row);
 			}
 		}
-		$data[] = array('submit' => array('name' => 'crud_submit_insert', 'value' => t('Add')));
+		$data[] = array('submit' => array('name' => 'crud_submit_insert', 'class' => 'crud_button', 'value' => t('Add')));
                 
                 $returns = $this->_get_form('insert', $data);
 		return $returns;
@@ -225,7 +225,7 @@ class Crud {
 			$i++;
 		}
 		$data[] = array('hidden' => array('name' => 'field_num', 'value' => $i));
-		$data[] = array('submit' => array('name' => 'crud_submit_update', 'value' => t('Submit')));
+		$data[] = array('submit' => array('name' => 'crud_submit_update', 'class' => 'crud_button', 'value' => t('Submit')));
 
                 $returns = $this->_get_form('update', $data);
 		return $returns;
@@ -384,7 +384,7 @@ class Crud {
 			$i++;
 		}
 		$data[] = array('hidden' => array('name' => 'field_num', 'value' => $i));
-		$data[] = array('submit' => array('name' => 'crud_submit_delete', 'value' => t('Submit')));
+		$data[] = array('submit' => array('name' => 'crud_submit_delete', 'class' => 'crud_button', 'value' => t('Submit')));
                 
                 $returns = $this->_get_form('delete', $data);
 		return $returns;
@@ -459,7 +459,7 @@ class Crud {
                 $this->CI->form->hidden(array('name' => 'crud_action', 'value' => 'search'));
                 $this->CI->form->dropdown(array('name' => 'form_search_field', 'options' => $this->fields['search'], 'selected' => $this->CI->input->post('form_search_field')));
                 $this->CI->form->input(array('name' => 'form_search_content', 'value' => $this->CI->input->post('form_search_content')));
-                $this->CI->form->submit(array('value' => 'Search'));
+                $this->CI->form->submit(array('value' => 'Search', 'class' => 'crud_button'));
                 $this->CI->form->close();
                 $form = $this->CI->form->render();
                 $returns = '<div id="form_search_box">';
@@ -477,6 +477,7 @@ class Crud {
 		$data['name'] = $this->key_field.'[]';
 		$data['id'] = $this->key_field;
 		$data['value'] = $key_value;
+                $data['class'] = 'crud_checkbox';
 		$returns .= $this->CI->form->checkbox($data);
 		return $returns;
 	}
@@ -534,7 +535,7 @@ class Crud {
 			'name' => 'crud_action', 
 			'options' => $options
 		);
-		$returns = "<div id='crud_select'>";
+		$returns = "<div id='crud_select' class='crud_select'>";
 		$returns .= $this->CI->form->dropdown($dropdown);
 		$returns .= "</div>";
 		return $returns;
@@ -619,7 +620,7 @@ class Crud {
 		if ($this->properties['index_column']) {
 			$column_size = 1;
 			$index_column_count = $this->properties['index_column_start'] + $this->_get_pagination_offset();
-			$heading[] = array('data' => t('No'), 'id' => 'crud_th_index');
+			$heading[] = array('data' => t('No'), 'id' => 'crud_th_index', 'class' => 'crud_th');
 		}
 		
 		// data columns
@@ -627,7 +628,7 @@ class Crud {
 			foreach ($this->select as $row) {
 				if (! $row['hidden']) {
 					$column_size++;
-					$heading[] = array('data' => $row['label'], 'id' => 'crud_th_'.$row['name']);
+					$heading[] = array('data' => $row['label'], 'id' => 'crud_th_'.$row['name'], 'class' => 'crud_th');
 				}
 			}
 		}
@@ -638,7 +639,7 @@ class Crud {
 			$action_index = $column_size - 1;
 			$checkbox_id_main =  $this->key_field.'_main';
 			$data = array( 'name' => $checkbox_id_main);
-			$heading[] = array('data' => $this->CI->form->checkbox($data), 'id' => 'crud_th_action');
+			$heading[] = array('data' => $this->CI->form->checkbox($data), 'id' => 'crud_th_action', 'class' => 'crud_th');
 		}
 
                 // load javascript for grid table sorter
@@ -646,9 +647,9 @@ class Crud {
                 $returns = $this->_load_js($checkbox_id_main, $action_index);
                 
 		// grid starts
-		$returns .= "<div id='crud_grid'>";
-		$returns .= $this->properties['crud_title'];
-		$returns .= $this->properties['crud_form_title'];
+		$returns .= "<div id='crud_grid' class='crud_grid'>";
+		$returns .= "<div id='crud_title' class='crud_title'>".$this->properties['crud_title']."</div>";
+		$returns .= "<div id='crud_form_title' class='crud_title'>".$this->properties['crud_form_title']."</div>";
 		
 		if (count($this->fields['select']) > 0) {
 			
@@ -668,6 +669,9 @@ class Crud {
 			// open form
 			$returns .= $this->CI->form->open(array('uri' => $this->properties['uri'], 'name' => $this->properties['name']));
 
+                        // set table template
+                        $this->CI->table->set_template(array('table_open' => '<table border="0" cellpadding="4" cellspacing="1" width="100%" id="crud_table" class="crud_table">'));
+                        
 			// set table heading
 			$this->CI->table->set_heading($heading);
 			
@@ -677,7 +681,7 @@ class Crud {
 			foreach ($query->result_array() as $row) {
 				$j++;
 				if ($this->properties['index_column']) {
-					$list[] = array('data' => $index_column_count++, 'id' => 'crud_td_index'); // index column
+					$list[] = array('data' => $index_column_count++, 'id' => 'crud_td_index', 'class' => 'crud_td'); // index column
 				}
 				
 				$data_select = $this->_get_data_by_name('select');
@@ -697,12 +701,12 @@ class Crud {
 					}
 					// if not set hidden then show it
 					if (! $data_select[$key]['hidden']) {
-						$list[] = array('data' => $row[$key], 'id' => 'crud_td_'.$key); // data columns
+						$list[] = array('data' => $row[$key], 'id' => 'crud_td_'.$key, 'class' => 'crud_td'); // data columns
 					}
 				}
 				
 				if ($this->properties['update'] || $this->properties['delete']) {
-					$list[] = array('data' => $this->_checkbox($row[$this->key_field]), 'id' => 'crud_td_action'); // action column
+					$list[] = array('data' => $this->_checkbox($row[$this->key_field]), 'id' => 'crud_td_action', 'class' => 'crud_td'); // action column
 				}
 			}
 			
@@ -719,7 +723,7 @@ class Crud {
                                                 <form>
                                                         <img src="'.base_url().'assets/images/first.png" class="first"/>
                                                         <img src="'.base_url().'assets/images/prev.png" class="prev"/>
-                                                        <input type="text" class="pagedisplay"/>
+                                                        <input type="text" class="pagedisplay" readonly />
                                                         <img src="'.base_url().'assets/images/next.png" class="next"/>
                                                         <img src="'.base_url().'assets/images/last.png" class="last"/>
                                                         <select class="pagesize">
@@ -735,7 +739,7 @@ class Crud {
 
 			// Update delete dropdown and Go button
 			if ($this->properties['update'] || $this->properties['delete']) {
-				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit', 'value' => t('Go')));
+				$returns .= $this->CI->form->submit(array( 'name' => 'crud_submit', 'class' => 'crud_button', 'value' => t('Go')));
 				$returns .= $this->_dropdown();
 			}
 			

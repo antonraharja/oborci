@@ -4,15 +4,47 @@
     Author     : Anton Raharja
 */
 
-#crud_grid {
-	width: 760px;
+.crud_grid {
         background-color: #fcfcfc;
         padding: 5px 5px 5px 5px;
 }
 
-#crud_table {
+.crud_table {
         border: 1px solid #f0f0f0;
 }
+
+.crud_title {
+        
+}
+
+.crud_th {
+	width: auto;
+        color: #ffffcc;
+        background-color: #8dbdd8;
+}
+
+.crud_td {
+        
+}
+
+.crud_button {
+        background-color: #FF6600;
+        color: #ffffcc;
+        font-weight: bold;
+	width: 50px;
+	height: 26px;
+	display: block;
+        padding-bottom: 10px;
+}
+
+.crud_select {
+        
+}
+
+.crud_checkbox {
+        
+}
+
 #crud_button_insert {	
 	float: none;
 }
@@ -27,10 +59,6 @@
 }
 
 #crud_submit_insert, #crud_submit_update, #crud_submit_delete {
-	width: 50px;
-	height: 26px;
-	display: block;
-        padding-bottom: 10px;
 }
 
 #form_crud_submit {
@@ -53,8 +81,6 @@
 
 #crud_th_index {
 	width: 50px;
-        color: #ffffcc;
-        background-color: #8dbdd8;
 }
 
 #crud_td_index {
@@ -63,40 +89,10 @@
 
 #crud_th_action {
 	width: 22px;
-        color: #ffffcc;
-        background-color: #8dbdd8;
 }
 
 #crud_td_action {
         text-align: center;
-}
-
-#crud_th_name {
-	width: auto;
-        color: #ffffcc;
-        background-color: #8dbdd8;
-}
-
-#crud_td_name {
-	white-space: nowrap;
-}
-
-#crud_th_username {
-	width: auto;
-        color: #ffffcc;
-        background-color: #8dbdd8;
-}
-
-#crud_td_username {
-}
-
-#crud_th_id {
-	width: auto;
-        color: #ffffcc;
-        background-color: #8dbdd8;
-}
-
-#crud_td_id {
 }
 
 td {
@@ -120,25 +116,43 @@ tr.alt:hover {
 
 table.crud_table {
 }
+
 table.crud_table thead tr th, table.crud_table tfoot tr th {
 }
+
 table.crud_table thead tr .header {
 	background-image: url(../images/bg.gif);
 	background-repeat: no-repeat;
 	background-position: center right;
 	cursor: pointer;
 }
+
 table.crud_table tbody td {
 }
+
 table.crud_table tbody tr.odd td {
 	background-color: #f0f0f6;
 }
+
 table.crud_table thead tr .headerSortUp {
 	background-image: url(../images/asc.gif);
 }
+
 table.crud_table thead tr .headerSortDown {
 	background-image: url(../images/desc.gif);
 }
+
 table.crud_table thead tr .headerSortDown, table.crud_table thead tr .headerSortUp {
         background-color: #8dbdd8;
 }
+
+/* specific to this application */
+
+#crud_grid {
+        width: 760px;
+}
+
+#crud_td_name {
+	white-space: nowrap;
+}
+
