@@ -4,9 +4,11 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Oborci Model extends CI_Model
+ * Oborci model extends CI_Model
  *
  * @author Anton Raharja
+ * @version 0.9
+ * @see http://github.com/antonraharja/oborci
  */
 class MY_Model extends CI_Model {
 
