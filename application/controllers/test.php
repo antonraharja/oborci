@@ -26,17 +26,17 @@ class Test extends CI_Controller {
 	public function index($param=NULL) {
                 // get preference from oci_preferences with our username is admin
                 // each user has one preference
-                $query = $this->oci_users->get_one('oborci/oci_preferences', array('username' => 'admin'));
+                $query = $this->oci_users->get_one('preferences', array('username' => 'admin'));
                 print_r($query->result_array());
                 
                 // get role from oci_roles with our username is admin
                 // each user has one role
-                $query = $this->oci_users->get_one('oborci/oci_roles', array('username' => 'admin'));
+                $query = $this->oci_users->get_one('roles', array('username' => 'admin'));
                 print_r($query->result_array());
                 
                 // get users from oci_users with our name is Beta Testers
                 // each role has many users
-                $query = $this->oci_roles->get_many('oborci/oci_users', array('name' => 'Beta Testers'));
+                $query = $this->oci_roles->get_many('users', array('name' => 'Beta Testers'));
                 print_r($query->result_array());
 	}
 	

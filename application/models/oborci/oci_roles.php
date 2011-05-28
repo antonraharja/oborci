@@ -11,7 +11,9 @@ exit('No direct script access allowed');
 class oci_roles extends MY_Model {
 
 	protected $db_table = 'oci_roles';
-        protected $db_has_many = array('oborci/oci_users' => 'role_id');
+        protected $db_has_many = array(
+            'users' => array('oborci/oci_users' => 'role_id')
+        );
 
 	function __construct() {
 		parent::__construct();

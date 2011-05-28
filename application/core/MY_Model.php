@@ -17,7 +17,7 @@ class MY_Model extends CI_Model {
         /**
          * Helper to get field names and set key_field
          */
-        public function _oci_set_fields() {
+        private function _oci_set_fields() {
                 if (! is_array($this->db_fields)) {
                         $fields = $this->db->field_data($this->db_table);
                         foreach ($fields as $field)
@@ -82,23 +82,26 @@ class MY_Model extends CI_Model {
 
         /**
          * Get from relation table with has_one relation (we have one om the other table)
-         * @param string $from_model Foreign model name
+         * @param string $model_alias An alias to a foreign model name
          * @param array $field_value Search criteria
          * @return object Query containing data items  
          */
-        public function get_one($from_model, $field_value) {
+        public function get_one($model_alias, $field_value) {
                 $query = NULL;
-                $local_key = $this->db_has_one[$from_model];
-                if (isset($local_key)) {
-                        $query = $this->get_by($field_value);
-                        $row = $query->row_array();
-                        $local_key_val = $row[$local_key];
-                        if (isset($local_key_val)) {
-                                $CI =& get_instance();
-                                $CI->load->model($from_model);
-                                $model_name = basename($from_model);
-                                if (isset($model_name)) {
-                                        $query = $CI->$model_name->get($local_key_val);
+                $relation = $this->db_has_one[$model_alias];
+                foreach ($relation as $from_model => $local_key) {
+                        if (isset($from_model) && isset($local_key)) {
+                                $query = $this->get_by($field_value);
+                                $row = $query->row_array();
+                                $local_key_val = $row[$local_key];
+                                if (isset($local_key_val)) {
+                                        $CI =& get_instance();
+                                        $CI->load->model($from_model);
+                                        $model_name = basename($from_model);
+                                        if (isset($model_name)) {
+                                                $query = $CI->$model_name->get($local_key_val);
+                                                break;
+                                        }
                                 }
                         }
                 }
@@ -107,23 +110,26 @@ class MY_Model extends CI_Model {
         
         /**
          * Get from relation table with has_many relation (the other table have many of us)
-         * @param string $from_model Foreign model name
+         * @param string $model_alias An alias to a foreign model name
          * @param array $field_value Search criteria
          * @return object Query containing data items
          */
-        public function get_many($from_model, $field_value) {
+        public function get_many($model_alias, $field_value) {
                 $query = NULL;
-                $foreign_key = $this->db_has_many[$from_model];
-                if (isset($foreign_key)) {
-                        $query = $this->get_by($field_value);
-                        $row = $query->row_array();
-                        $key_field_val = $row[$this->db_key_field];
-                        if (isset($key_field_val)) {
-                                $CI =& get_instance();
-                                $CI->load->model($from_model);
-                                $model_name = basename($from_model);
-                                if (isset($model_name)) {
-                                        $query = $CI->$model_name->get_by(array($foreign_key => $key_field_val));
+                $relation = $this->db_has_many[$model_alias];
+                foreach ($relation as $from_model => $foreign_key) {
+                        if (isset($from_model) && isset($foreign_key)) {
+                                $query = $this->get_by($field_value);
+                                $row = $query->row_array();
+                                $key_field_val = $row[$this->db_key_field];
+                                if (isset($key_field_val)) {
+                                        $CI =& get_instance();
+                                        $CI->load->model($from_model);
+                                        $model_name = basename($from_model);
+                                        if (isset($model_name)) {
+                                                $query = $CI->$model_name->get_by(array($foreign_key => $key_field_val));
+                                                break;
+                                        }
                                 }
                         }
                 }
