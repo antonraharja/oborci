@@ -44,6 +44,8 @@ class Test extends CI_Controller {
                 // each role has many users
                 $query = $this->test_model->get_many('users', array('name' => 'Beta Testers'));
                 print_r($query->result_array());
+                
+                $this->test_model->test1();
 	}
 	
 }

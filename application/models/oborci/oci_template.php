@@ -16,7 +16,7 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class oci_template extends CI_Model {
+class oci_template extends MY_Model {
         
 	function __construct() {
 		$this->load->model(

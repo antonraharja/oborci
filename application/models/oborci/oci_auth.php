@@ -13,7 +13,7 @@ exit('No direct script access allowed');
  *  *
  * @author Anton Raharja
  */
-class oci_auth extends CI_Model {
+class oci_auth extends MY_Model {
 
 	public $username = NULL;
 	public $password = NULL;

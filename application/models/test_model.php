@@ -8,12 +8,21 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class Test_Model extends Oborci_Model {
+class Test_Model extends MY_Model {
 
 	protected $db_table = 'oci_roles';
         protected $db_has_many = array(
             'users' => array('oborci/oci_users' => 'role_id')
         );
+        
+        function __construct() {
+                parent::__construct();
+                $this->load->library('oborci/Form');
+        }
+        
+        public function test1() {
+                print_r($this->session->userdata('user_id'));
+        }
 
 }
 

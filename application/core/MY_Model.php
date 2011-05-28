@@ -16,18 +16,24 @@ class MY_Model extends CI_Model {
 
         /**
          * Helper to get field names and set key_field
+         * @return boolean TRUE if model init succeeded
          */
-        private function _oci_set_fields() {
-                if (! is_array($this->db_fields)) {
-                        $fields = $this->db->field_data($this->db_table);
-                        foreach ($fields as $field)
-                        {
-                                $field_name = $field->name;
-                                $this->db_fields[] = $field_name;
-                                if ($field->primary_key) {
-                                        $this->db_key_field = $field->name;
+        private function _oci_model_init() {
+                if (isset($this->db_table)) {
+                        if (! is_array($this->db_fields)) {
+                                $fields = $this->db->field_data($this->db_table);
+                                foreach ($fields as $field)
+                                {
+                                        $field_name = $field->name;
+                                        $this->db_fields[] = $field_name;
+                                        if ($field->primary_key) {
+                                                $this->db_key_field = $field->name;
+                                        }
                                 }
                         }
+                        return TRUE;
+                } else {
+                        return FALSE;
                 }
         }        
         
@@ -37,7 +43,7 @@ class MY_Model extends CI_Model {
 	 * @return integer|boolean Last inserted ID or FALSE when failed
 	 */
 	public function insert($data) {
-                $this->_oci_set_fields();
+                if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
 		if ($this->db->insert($this->db_table, $data)) {
 			$insert_id = $this->db->insert_id();
@@ -54,7 +60,7 @@ class MY_Model extends CI_Model {
 	 * @return object Query containing data items
 	 */
 	public function get($id) {
-                $this->_oci_set_fields();
+                if (! $this->_oci_model_init()) { return NULL; };
 		$query = $this->db->get_where($this->db_table, array($this->db_key_field => $id));
 		return $query;
 	}
@@ -64,7 +70,7 @@ class MY_Model extends CI_Model {
 	 * @return object Query containing data items
 	 */
 	public function get_all() {
-                $this->_oci_set_fields();
+                if (! $this->_oci_model_init()) { return NULL; };
         	$query = $this->db->get_where($this->db_table);
 		return $query;
 	}
@@ -75,7 +81,7 @@ class MY_Model extends CI_Model {
          * @return object Query containing data items
          */
         public function get_by($field_value) {
-                $this->_oci_set_fields();
+                if (! $this->_oci_model_init()) { return NULL; };
                 $query = $this->db->get_where($this->db_table, $field_value);
                 return $query;
         }
@@ -87,6 +93,7 @@ class MY_Model extends CI_Model {
          * @return object Query containing data items  
          */
         public function get_one($model_alias, $field_value) {
+                if (! $this->_oci_model_init()) { return NULL; };
                 $query = NULL;
                 $relation = $this->db_has_one[$model_alias];
                 foreach ($relation as $from_model => $local_key) {
@@ -115,6 +122,7 @@ class MY_Model extends CI_Model {
          * @return object Query containing data items
          */
         public function get_many($model_alias, $field_value) {
+                if (! $this->_oci_model_init()) { return NULL; };
                 $query = NULL;
                 $relation = $this->db_has_many[$model_alias];
                 foreach ($relation as $from_model => $foreign_key) {
@@ -143,7 +151,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if update success
 	 */
 	public function update($id, $data) {
-                $this->_oci_set_fields();
+                if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data, array($this->db_key_field => $id));
@@ -160,7 +168,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if update success
 	 */
 	public function update_all($data) {
-                $this->_oci_set_fields();
+                if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data);
@@ -178,7 +186,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if update success
 	 */
 	public function update_by($field_value, $data) {
-                $this->_oci_set_fields();
+                if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data, $field_value);
@@ -195,7 +203,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if deletion success
 	 */
 	public function delete($id) {
-                $this->_oci_set_fields();
+                if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
 		$this->db->delete($this->db_table, array($this->db_key_field => $id));
 		if ($this->db->affected_rows()) {
@@ -209,7 +217,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if deletion success
 	 */
 	public function delete_all() {
-                $this->_oci_set_fields();
+                if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
 		$this->db->delete($this->db_table);
 		if ($this->db->affected_rows()) {
@@ -224,7 +232,7 @@ class MY_Model extends CI_Model {
 	 * @return boolean TRUE if deletion success
 	 */
 	public function delete_by($field_value) {
-                $this->_oci_set_fields();
+                if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
 		$this->db->delete($this->db_table, $field_value);
 		if ($this->db->affected_rows()) {
