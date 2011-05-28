@@ -1,3 +1,17 @@
 /index.php
 /application/logs
 
+
+/application/cache
+/application/logs
+/application/third_party
+/application/hooks
+/application/errors
+/application/config/smileys.php
+/application/config/user_agents.php
+/application/config/constants.php
+/application/config/doctypes.php
+/application/config/foreign_chars.php
+/application/config/hooks.php
+/application/config/mimes.php
+/application/config/profiler.php

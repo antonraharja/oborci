@@ -3,8 +3,16 @@ README
 
 Obor CI, CI Torch.
 
-author: Anton Raharja
+author	: Anton Raharja
+license	: MIT license as described in file docs/LICENSE.txt
+update	: 28 May 2011
+version	: 0.9
 
-license: MIT license as described in file docs/LICENSE.txt
+
+FILE STRUCTURE
+--------------
+- application/config/*
+- Form
+- Crud
 
 
