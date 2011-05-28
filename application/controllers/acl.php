@@ -8,7 +8,7 @@ exit('No direct script access allowed');
  *
  * @property oci_auth $oci_auth
  * @property crud $crud
- * @property oci_template $oci_template
+ * @property oci_themes $oci_themes
  * @property oci_roles $oci_roles
  *
  * @author Anton Raharja
@@ -18,7 +18,7 @@ class Acl extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_auth', 'oborci/oci_template', 'oborci/oci_screens'));
+                $this->load->model(array('oborci/oci_auth', 'oborci/oci_themes', 'oborci/oci_screens'));
                 $this->load->library(array('oborci/Crud'));
 		$this->oci_auth->validate();
 	}
@@ -78,8 +78,8 @@ class Acl extends CI_Controller {
 	 */
 	public function screens($param=NULL) {
 		if ($this->oci_auth->get_access()) {
-			$data['menu']['box'] = $this->oci_template->menu_box();
-			$data['login'] = $this->oci_template->get_login();
+			$data['menu']['box'] = $this->oci_themes->menu_box();
+			$data['login'] = $this->oci_themes->get_login();
 			$data['crud'] = $this->_get_crud_for_screens($param);
 			$this->load->view('acl_screens_view', $data);
 		} else {
@@ -93,8 +93,8 @@ class Acl extends CI_Controller {
 	 */
 	public function menus($param=NULL) {
 		if ($this->oci_auth->get_access()) {
-			$data['menu']['box'] = $this->oci_template->menu_box();
-			$data['login'] = $this->oci_template->get_login();
+			$data['menu']['box'] = $this->oci_themes->menu_box();
+			$data['login'] = $this->oci_themes->get_login();
 			$data['crud'] = $this->_get_crud_for_menus();
 			$this->load->view('acl_menus_view', $data);
 		} else {

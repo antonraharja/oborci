@@ -16,7 +16,7 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class oci_template extends MY_Model {
+class oci_themes extends MY_Model {
         
 	function __construct() {
 		$this->load->model(
@@ -146,5 +146,5 @@ class oci_template extends MY_Model {
 
 }
 
-/* End of file oci_template.php */
-/* Location: ./application/models/oci_template.php */
+/* End of file oci_themes.php */
+/* Location: ./application/models/oci_themes.php */

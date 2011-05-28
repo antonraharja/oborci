@@ -10,7 +10,7 @@ exit('No direct script access allowed');
  * @property oci_preferences $oci_preferences
  * @property oci_auth $oci_auth
  * @property form $form
- * @property oci_template $oci_template
+ * @property oci_themes $oci_themes
  *
  * @author Anton Raharja
  *
@@ -19,7 +19,7 @@ class Preference extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_preferences', 'oborci/oci_users', 'oborci/oci_auth', 'oborci/oci_template'));
+                $this->load->model(array('oborci/oci_preferences', 'oborci/oci_users', 'oborci/oci_auth', 'oborci/oci_themes'));
                 $this->load->library(array('oborci/Form'));
                 if (! $this->oci_auth->validate()) {
                         redirect('process/unauthorized');
@@ -73,8 +73,8 @@ class Preference extends CI_Controller {
          * @param integer $param User ID
          */
         public function show($param=NULL) {
-                $data['menu']['box'] = $this->oci_template->menu_box();
-                $data['login'] = $this->oci_template->get_login();
+                $data['menu']['box'] = $this->oci_themes->menu_box();
+                $data['login'] = $this->oci_themes->get_login();
 
                 $ok = FALSE;
                 $user_id = $param;
