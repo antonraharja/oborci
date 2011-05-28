@@ -18,3 +18,9 @@
 /application/third_party
 /application/config/routes.php
 /application/config/config.php
+/docs/notes/notes.txt
+/docs/notes/autocomplete.php
+/docs/notes/db_design1.png
+/docs/notes/eclipse_autocomplete_controller.php
+/docs/notes/fake_functions.php
+/docs/notes/netbeans_autocomplete.php
