@@ -16,3 +16,5 @@
 /application/config/mimes.php
 /application/config/profiler.php
 /application/third_party
+/application/config/routes.php
+/application/config/config.php

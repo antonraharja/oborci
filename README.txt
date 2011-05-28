@@ -9,10 +9,3 @@ update	: 28 May 2011
 version	: 0.9
 
 
-FILE STRUCTURE
---------------
-- application/config/*
-- Form
-- Crud
-
-
