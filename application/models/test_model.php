@@ -4,22 +4,18 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Roles management model
+ * test management model
  *
  * @author Anton Raharja
  */
-class oci_roles extends Oborci_Model {
+class Test_Model extends Oborci_Model {
 
 	protected $db_table = 'oci_roles';
         protected $db_has_many = array(
             'users' => array('oborci/oci_users' => 'role_id')
         );
 
-	function __construct() {
-		parent::__construct();
-	}
-
 }
 
-/* End of file oci_roles.php */
-/* Location: ./application/models/oci_roles.php */
+/* End of file test_model.php */
+/* Location: ./application/models/test_model.php */
