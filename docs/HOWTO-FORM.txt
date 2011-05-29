@@ -7,6 +7,7 @@ Form generation library, helps to create a form.
 FILES
 -----
 
+- application/helpers/oborci/translate_helper.php
 - application/libraries/oborci/Form.php
 - assets/css/oborci/form.css
 
@@ -119,7 +120,8 @@ public function set_name($data)
 
 /**
  * Set action URI of the form.
- * Form will set URI to current_url() and activate auto validation and callback on event on_success
+ * Form will set URI to current_url() and activate auto validation and 
+ * callback on event on_success
  * when URI is not provided through this method or directly injected on open().
  * @param string $data Form action URI
  */
@@ -134,9 +136,10 @@ public function set_uri($data)
 public function set_data($data)
 
 /**
- * Callback a method or a function when validation process is done and succeeded.
- * This event generated when action URI is not set by set_uri() or directly injected to open()
- * @param array $data Method or function, example: array('$this', 'foo') for method $this->foo
+ * Callback a method or function when validation process is done and succeeded.
+ * This event generated when action URI is not set by set_uri() or directly 
+ * injected to open()
+ * @param array $data Method or function
  */
 public function set_on_success($data)
 
