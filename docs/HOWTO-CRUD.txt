@@ -1,4 +1,4 @@
-FORM GENERATION
+CRUD GENERATION
 ---------------
 
 CRUD grid generation library, helps to create a table grid a CRUD feature.

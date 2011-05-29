@@ -1,0 +1,21 @@
+ENRICHED MODEL
+--------------
+
+Enriched CI_Model with database related functions for CRUD and table relation.
+
+
+FILES
+-----
+
+- application/core/MY_Model.php
+
+
+USAGE EXAMPLES
+--------------
+
+
+
+
+--
+Anton Raharja
+110529
