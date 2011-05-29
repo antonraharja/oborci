@@ -8,6 +8,7 @@ FILES
 -----
 
 - application/core/MY_Model.php
+- application/libraries/Oborci_Model.php
 
 
 METHODS
@@ -106,6 +107,9 @@ USAGE EXAMPLES
 oci_roles Model:
 
 // instead extending CI_Model, we need to extend MY_Model
+// you can also extends Oborci_Model but with 2 conditions:
+// 1. you need to autoload library oborci/Oborci_Model
+// 2. you need to get instance to use CI methods ($this->CI =& get_instances())
 class oci_roles extends MY_Model {
 
         // database table name
