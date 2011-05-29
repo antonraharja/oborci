@@ -14,12 +14,6 @@ METHODS
 -------
 
 /**
- * Helper to get field names and set key_field
- * @return boolean TRUE if model init succeeded
- */
-private function _oci_model_init()
-
-/**
  * Insert a new data to database
  * @param array $data Array of data to be inserted to database
  * @return integer|boolean Last inserted ID or FALSE when failed
