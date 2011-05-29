@@ -8,7 +8,7 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class oci_users extends MY_Model {
+class oci_users extends Oborci_Model {
 
         protected $db_table = 'oci_users';
         protected $db_has_one = array(
