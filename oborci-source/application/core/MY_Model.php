@@ -59,7 +59,7 @@ class MY_Model extends CI_Model {
 	/**
 	 * Get specific data when ID is given
 	 * @param integer $id ID
-	 * @return object Query containing data items
+	 * @return object CI active record query containing data items
 	 */
 	public function get($id) {
                 if (! $this->_oci_model_init()) { return NULL; };
@@ -69,7 +69,7 @@ class MY_Model extends CI_Model {
 
 	/**
 	 * Get all data
-	 * @return object Query containing data items
+	 * @return object CI active record query containing data items
 	 */
 	public function get_all() {
                 if (! $this->_oci_model_init()) { return NULL; };
@@ -80,7 +80,7 @@ class MY_Model extends CI_Model {
         /**
          * Get data by partial fields and its value
          * @param array $field_value Array of fields and its value
-         * @return object Query containing data items
+         * @return object CI active record query containing data items
          */
         public function get_by($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
@@ -89,10 +89,10 @@ class MY_Model extends CI_Model {
         }
 
         /**
-         * Get from relation table with has_one relation (we have one om the other table)
+         * Get from relation table with has_one relation (we have one on other table)
          * @param string $model_alias An alias to a foreign model name
          * @param array $field_value Search criteria
-         * @return object Query containing data items  
+         * @return object CI active record query containing data items  
          */
         public function get_one($model_alias, $field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
@@ -118,10 +118,10 @@ class MY_Model extends CI_Model {
         }
         
         /**
-         * Get from relation table with has_many relation (the other table have many of us)
+         * Get from relation table with has_many relation (other table have many of us)
          * @param string $model_alias An alias to a foreign model name
          * @param array $field_value Search criteria
-         * @return object Query containing data items
+         * @return object CI active record query containing data items
          */
         public function get_many($model_alias, $field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };

@@ -10,9 +10,167 @@ FILES
 - application/core/MY_Model.php
 
 
+METHODS
+-------
+
+/**
+ * Helper to get field names and set key_field
+ * @return boolean TRUE if model init succeeded
+ */
+private function _oci_model_init()
+
+/**
+ * Insert a new data to database
+ * @param array $data Array of data to be inserted to database
+ * @return integer|boolean Last inserted ID or FALSE when failed
+ */
+public function insert($data)
+
+/**
+ * Get specific data when ID is given
+ * @param integer $id ID
+ * @return object CI active record query containing data items
+ */
+public function get($id)
+
+/**
+ * Get all data
+ * @return object CI active record query containing data items
+ */
+public function get_all()
+
+/**
+ * Get data by partial fields and its value
+ * @param array $field_value Array of fields and its value
+ * @return object CI active record query containing data items
+ */
+public function get_by($field_value)
+
+/**
+ * Get from relation table with has_one relation (we have one on other table)
+ * @param string $model_alias An alias to a foreign model name
+ * @param array $field_value Search criteria
+ * @return object CI active record query containing data items  
+ */
+public function get_one($model_alias, $field_value)
+
+/**
+ * Get from relation table with has_many relation (other table have many of us)
+ * @param string $model_alias An alias to a foreign model name
+ * @param array $field_value Search criteria
+ * @return object CI active record query containing data items
+ */
+public function get_many($model_alias, $field_value)
+
+/**
+ * Update data
+ * @param integer $id ID
+ * @param array $data Array of data to be updated
+ * @return boolean TRUE if update success
+ */
+public function update($id, $data)
+
+/**
+ * Update all data
+ * @param array $data Array of data to be updated
+ * @return boolean TRUE if update success
+ */
+public function update_all($data)
+
+/**
+ * Update data by partial fields and its value
+ * @param array $field_value Array of fields and its value
+ * @param array $data Array of data to be updated
+ * @return boolean TRUE if update success
+ */
+public function update_by($field_value, $data)
+
+/**
+ * Delete data
+ * @param integer $id ID
+ * @return boolean TRUE if deletion success
+ */
+public function delete($id)
+
+/**
+ * Delete all data
+ * @return boolean TRUE if deletion success
+ */
+public function delete_all()
+
+/**
+ * Delete data by partial fields and its value
+ * @param integer $field_value Array of fields and its value
+ * @return boolean TRUE if deletion success
+ */
+public function delete_by($field_value)
+
+
 USAGE EXAMPLES
 --------------
 
+oci_roles Model:
+
+// instead extending CI_Model, we need to extend MY_Model
+class oci_roles extends MY_Model {
+
+        // database table name
+	protected $db_table = 'oci_roles';
+
+        // relation with other model
+        // it means that our primary key is 'role_id' on oci_users
+        // also means: one role have many users
+        protected $db_has_many = array(
+            'users' => array('oborci/oci_users' => 'role_id')
+        );
+
+	function __construct() {
+		parent::__construct();
+	}
+
+}
+
+oci_users Model:
+
+// instead extending CI_Model, we need to extend MY_Model
+class oci_users extends MY_Model {
+
+        // database table name
+        protected $db_table = 'oci_users';
+
+        // relation with other model
+        // it means that our 'role_id' is a foreign key on oci_roles
+        // also 'preference_id' is a foreign key on oci_preferences
+        // also means: a user have one role and one preference
+        protected $db_has_one = array(
+            'roles' => array('oborci/oci_roles' => 'role_id'),
+            'preferences' => array('oborci/oci_preferences' => 'preference_id'),
+        );
+
+        function __construct() {
+		parent::__construct();
+	}
+
+}
+
+a controller utilizing oci_users and oci_roles model:
+
+public function index($param=NULL) {
+        // get preference from oci_preferences with our username is admin
+        // each user has one preference
+        $query = $this->oci_users->get_one('preferences', array('username' => 'admin'));
+        print_r($query->result_array());
+
+        // get role from oci_roles with our username is admin
+        // each user has one role
+        $query = $this->oci_users->get_one('roles', array('username' => 'admin'));
+        print_r($query->result_array());
+
+        // get users from oci_users with our name is Beta Testers
+        // each role has many users
+        $query = $this->oci_roles->get_many('users', array('name' => 'Beta Testers'));
+        print_r($query->result_array());
+}
 
 
 

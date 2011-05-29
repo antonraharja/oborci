@@ -26,7 +26,7 @@ CURRENT FEATURES
 - Form generation library
 - CRUD and table grid generation library
 - Role Based Authentication and Control
-- Extended CI_Model with CRUD methods and table relation
+- Enriched CI_Model with CRUD methods and table relation
 
 
 HOWTO
