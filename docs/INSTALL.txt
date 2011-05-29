@@ -1,0 +1,49 @@
+OBORCI INSTALLATION
+-------------------
+
+In this document you will find a step by step installation for Oborci project.
+
+
+REQUIREMENTS
+------------
+
+1. CodeIgniter 2.0.2 (tested only on this version) (will refer it as CI)
+2. Knowing the path of CI system folder (will refer it as SYSTEM)
+3. Knowing the path of your application document root (will refer it as DOCROOT)
+4. Knowing the path of oborci-source (will refer it as SOURCE)
+
+
+STEP BY STEP INSTALLATION
+-------------------------
+
+1. Setup your CI on your DOCROOT
+        - Place SYSTEM outside DOCROOT if possible
+2. Copy the content of SOURCE to DOCROOT
+        - Copy only the content of SOURCE
+        - The copy process will replace several files
+3. Edit DOCROOT/index.php and set $system_path to SYSTEM
+4. Edit DOCROOT/application/config/config.php
+        - Please take note on $config['base_url'] and $config['index_page']
+        - Set base_url if you have to
+        - Set index_page to index.php if you don't use clean URL mod_rewrite
+        - Set other options too if you have to
+5. Create a database (or use existing database), for example: myapps
+6. Insert SQL statements from DOCROOT/docs/db/db.sql to database
+        - In this example you will need to insert it to database myapps
+7. Edit DOCROOT/application/config/database.php
+        - Change the database connection configuration
+8. Edit DOCROOT/application/config/autoload.php
+        - Add your autoloaded libraries, helpers or anything you need
+        - Oborci requires database, session and oborci/Oborci_Model autoloaded
+        - Also requires url and oborci/translate helpers autoloaded
+9. When all OK, you can browse url point to your DOCROOT
+
+Please note that only files under directory oborci, or have oborci word in their
+name are Oborci related files. Others included in this package are examples.
+
+You can change, modify, replace or even remove those example files.
+
+
+
+Anton Raharja
+110530
