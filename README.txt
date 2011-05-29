@@ -32,5 +32,5 @@ CURRENT FEATURES
 HOWTO
 -----
 
-Please read howto files in docs/
+Please read howto files and step by step installation in docs/
 
