@@ -9,6 +9,7 @@ FILES
 
 - application/core/MY_Model.php
 - application/libraries/Oborci_Model.php
+- application/helpers/translate_helper.php
 
 
 METHODS
@@ -169,6 +170,9 @@ public function index($param=NULL) {
         $query = $this->oci_roles->get_many('users', array('name' => 'Beta Testers'));
         print_r($query->result_array());
 }
+
+Notes:
+- translate_helper should be autoloaded, or do not use it ( t($string) )
 
 
 

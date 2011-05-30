@@ -8,11 +8,11 @@ FILES
 -----
 
 - application/config/oborci_crud.php
-- application/helpers/oborci/translate_helper.php
 - application/libraries/oborci/Crud.php
 - application/libraries/oborci/Form.php
 - assets/css/oborci/crud.css
 - assets/css/oborci/form.css
+- application/helpers/oborci/translate_helper.php
 
 
 METHODS
@@ -167,6 +167,9 @@ public function index($param=NULL) {
         $data['crud'] = $this->_get_crud();
         $this->load->view('users_view', $data);
 }
+
+Notes:
+- translate_helper should be autoloaded, or do not use it ( t($string) )
 
 
 

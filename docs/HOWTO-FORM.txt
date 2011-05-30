@@ -7,9 +7,9 @@ Form generation library, helps to create a form.
 FILES
 -----
 
-- application/helpers/oborci/translate_helper.php
 - application/libraries/oborci/Form.php
 - assets/css/oborci/form.css
+- application/helpers/oborci/translate_helper.php
 
 
 METHODS
@@ -208,6 +208,9 @@ public  function _save_form($inputs) {
 
         return $ret;
 }
+
+Notes:
+- translate_helper should be autoloaded, or do not use it ( t($string) )
 
 
 

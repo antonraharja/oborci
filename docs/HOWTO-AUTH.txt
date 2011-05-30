@@ -1,0 +1,117 @@
+AUTHENTICATION
+--------------
+
+Authentication library.
+
+
+FILES
+-----
+
+- application/models/oci_auth.php
+        - This file includes:
+                - application/models/oci_roles.php
+                - application/models/oci_roles_screens.php
+                - application/models/oci_screens.php
+                - application/models/oci_users.php
+- application/helpers/translate_helper.php
+
+
+PUBLIC VARIABLES
+----------------
+
+Accessible variables from object:
+- $username
+- $password
+- $user_id
+- $role_id
+- $preference_id
+
+Once authenticated object will populate above variables
+
+
+METHODS
+-------
+
+/**
+ * Get login state
+ * @return boolean TRUE if user is authenticated
+ */
+public function get_login_state()
+
+/**
+ * Get access state
+ * @return boolean TRUE if user authenticated and has access to current URI
+ */
+public function get_access()
+
+/**
+ * Process login
+ * @return boolean TRUE when login process succeeded
+ */
+public function login()
+
+/**
+ * Process logout
+ * @return NULL
+ */
+public function logout()
+
+/**
+ * Authentication, validate username and password, and also set user ID, role ID 
+ * and preference ID in this object
+ * @param string $username Username from a login form
+ * @param string $password Password from a login form
+ * @return boolean TRUE if username and password authenticated
+ */
+public function authenticate($username=NULL, $password=NULL)
+
+/**
+ * Validate if user has access to current URI
+ * @return boolean TRUE if user validated. Validation result is also accessible 
+ * through get_access() method
+ */
+public function validate()
+
+
+USAGE EXAMPLES
+--------------
+
+Users Controller:
+
+class Users extends CI_Controller {
+
+	function __construct() {
+		parent::__construct();
+                // load the model
+                $this->load->model(array('oborci/oci_auth'));
+                // do validation
+		$this->oci_auth->validate();
+	}
+
+	/**
+	 * Index Page for this controller.
+	 *
+	 */
+	public function index() {
+                // access validation result
+		if ($this->oci_auth->get_access()) {
+                        $data['message'] = t('You have logged in');
+                        // access public variable $username from auth object
+                        $data['username'] = $this->oci_auth->username;
+			$this->load->view('users_view', $data);
+		} else {
+                        // get_access() returns FALSE, redirect it
+			redirect('process/unauthorized');
+		}
+	}
+	
+}
+
+Notes:
+- translate_helper should be autoloaded, or do not use it ( t($string) )
+
+
+
+--
+Anton Raharja
+110530

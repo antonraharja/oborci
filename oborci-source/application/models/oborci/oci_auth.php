@@ -58,7 +58,7 @@ class oci_auth extends CI_Model {
 
 	/**
 	 * Get access state
-	 * @return boolean TRUE if user has access to current URI
+	 * @return boolean TRUE if user authenticated and has access to current URI
 	 */
 	public function get_access() {
 		return $this->access;
