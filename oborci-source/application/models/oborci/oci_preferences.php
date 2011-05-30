@@ -12,10 +12,6 @@ class oci_preferences extends Oborci_Model {
 
 	protected $db_table = 'oci_preferences';
 
-	function __construct() {
-		parent::__construct();
-	}
-
 }
 
 /* End of file oci_preferences.php */

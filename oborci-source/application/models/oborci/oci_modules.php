@@ -12,10 +12,6 @@ class oci_modules extends Oborci_Model {
 
 	protected $db_table = 'oci_modules';
 
-	function __construct() {
-		parent::__construct();
-	}
-
 }
 
 /* End of file oci_modules.php */

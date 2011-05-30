@@ -11,15 +11,35 @@ exit('No direct script access allowed');
 class oci_roles extends Oborci_Model {
 
 	protected $db_table = 'oci_roles';
-        protected $db_has_many = array(
-            'users' => array('oborci/oci_users' => 'role_id'),
-            'menus' => array('oborci/oci_roles_menus' => 'role_id'),
-            'screens' => array('oborci/oci_roles_screens' => 'role_id'),
+        
+        protected $db_fields = array(
+            // map => field
+            'id' => 'id',
+            'name' => 'name',
         );
-
-	function __construct() {
-		parent::__construct();
-	}
+        
+        protected $db_primary_key = 'id';
+        
+        protected $db_relations = array(
+            // with oci_users we have has_many relation on (their) key 'role'
+            // has_many: each of us have many of them
+            'oci_users' => array(
+                'relation' => 'has_many',
+                'key' => 'role',
+            ),
+            'oci_screens' => array(
+                'relation' => 'has_many_through',
+                'key' => 'role_id',
+                'join_table' => 'oci_roles_screens',
+                'join_key' => 'screen_id',
+            ),
+            'oci_menus' => array(
+                'relation' => 'has_many_through',
+                'key' => 'role_id',
+                'join_table' => 'oci_roles_menus',
+                'join_key' => 'menu_id',
+            ),
+        );
 
 }
 

@@ -12,10 +12,6 @@ class oci_roles_menus extends Oborci_Model {
 
 	protected $db_table = 'oci_roles_menus';
 
-	function __construct() {
-		parent::__construct();
-	}
-
 }
 
 /* End of file oci_roles_menus.php */

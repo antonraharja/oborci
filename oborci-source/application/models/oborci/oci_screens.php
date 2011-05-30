@@ -12,10 +12,6 @@ class oci_screens extends Oborci_Model {
 
         protected $db_table = 'oci_screens';
 
-	function __construct() {
-		parent::__construct();
-	}
-
 }
 
 /* End of file oci_screens.php */

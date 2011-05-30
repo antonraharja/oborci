@@ -37,15 +37,6 @@ class Test_Model extends Oborci_Model {
             ),
         );
 
-        function __construct() {
-		parent::__construct();
-                $CI =& get_instance();
-                $CI->load->model(array(
-                    'oborci/oci_roles',
-                    'oborci/oci_preferences',
-                    ));
-	}
-        
 }
 
 /* End of file test_model.php */

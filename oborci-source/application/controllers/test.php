@@ -20,6 +20,8 @@ class Test extends CI_Controller {
                 $this->load->model(array(
                     'test_model', 
                     'test2_model',
+                    'oborci/oci_roles',
+                    'oborci/oci_preferences',
                     ));
 	}
 

@@ -41,16 +41,6 @@ class Test2_Model extends Oborci_Model {
             ),
         );
 
-        function __construct() {
-		parent::__construct();
-                $CI =& get_instance();
-                $CI->load->model(array(
-                    'test_model',
-                    'oborci/oci_screens',
-                    'oborci/oci_menus',
-                    ));
-	}
-        
 }
 
 /* End of file test2_model.php */
