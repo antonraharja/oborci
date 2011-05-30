@@ -65,7 +65,7 @@ class Preference extends CI_Controller {
 	 * Index Page for this controller.
 	 */
 	public function index() {
-                redirect('home');
+                redirect('welcome');
         }
 	
 	/**

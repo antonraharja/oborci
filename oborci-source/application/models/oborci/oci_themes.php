@@ -117,7 +117,7 @@ class oci_themes extends CI_Model {
 			$data[] = array(
 				'parent' => 0,
 				'index' => 0,
-				'uri' => 'home',
+				'uri' => 'welcome',
 				'text' => t('Home'),
 				'title' => t('Home'),
 				'id_css' => 'menu_home'

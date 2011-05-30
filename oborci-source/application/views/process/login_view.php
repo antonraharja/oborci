@@ -1,15 +1,15 @@
 <?php include APPPATH . '/views/header_view.php' ?>
 
-<script
+<!-- <script
 	type="text/javascript" 
-	src="<?php echo base_url(); ?>assets/js/login.js"></script>
+	src="<?php echo base_url(); ?>assets/js/login.js"></script> -->
 
 <div id='menu_box'><?= $menu['box'] ?></div>
 
 <p><?php echo t('Login'); ?></p>
 
-<div id="login_box"><?= $login['form'] ?></div>
+<div id="login_box_msg"><?= $login['message'] ?></div>
 
-<div id="login_box_msg"></div>
+<div id="login_box"><?= $login['form'] ?></div>
 
 <?php include APPPATH . '/views/footer_view.php' ?>

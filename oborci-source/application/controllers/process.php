@@ -26,7 +26,7 @@ class Process extends CI_Controller {
 	 */
 	public function index() {
 		if ($this->session->userdata('login_state')) {
-			redirect('home');
+			redirect('welcome');
 		} else {
 			$data['menu']['box'] = $this->oci_themes->menu_box();
 			$data['login']['form'] = $this->oci_themes->login_form();
@@ -35,35 +35,23 @@ class Process extends CI_Controller {
 	}
 
 	/**
-	 * Process login, insert parameter with a string 'ajax' for JSON result
-	 * @param string $ajax
+	 * Process login
 	 */
-	public function login($ajax=NULL) {
+	public function login() {
 		$ok = FALSE;
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
-		if ($this->oci_auth->authenticate($username, $password)) {
-			if ($this->oci_auth->login()) {
-				$ok = TRUE;
-			}
-		}
-		if ($ok) {
-			if (strtolower($ajax) == 'ajax') {
-				$data = array('state' => TRUE, 'message' => t('Welcome') . ' ' . $username);
-				echo json_encode($data);
-			} else {
-				redirect('home');
-			}
-		} else {
-			if (strtolower($ajax) == 'ajax') {
-				$data = array('state' => FALSE, 'message' => t('Invalid login, please try again'));
-				echo json_encode($data);
-			} else {
-				$data['menu']['box'] = $this->oci_themes->menu_box();
-				$data['login']['form'] = $this->oci_themes->login_form();
-				$this->load->view('process/login_view', $data);
-			}
-		}
+                if (! (empty($username) && empty($password))) {
+                        if ($this->oci_auth->authenticate($username, $password)) {
+                                if ($this->oci_auth->login()) {
+                                        redirect('welcome');
+                                }
+                        }
+                        $data['login']['message'] = t('Invalid login');
+                }
+		$data['menu']['box'] = $this->oci_themes->menu_box();
+		$data['login']['form'] = $this->oci_themes->login_form();
+		$this->load->view('process/login_view', $data);
 	}
 
 	/**

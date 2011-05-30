@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 28, 2011 at 04:29 PM
+-- Generation Time: May 30, 2011 at 10:31 AM
 -- Server version: 5.5.8
 -- PHP Version: 5.3.5
 
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `oci_menus` (
 --
 
 INSERT INTO `oci_menus` (`id`, `module_id`, `parent`, `index`, `uri`, `text`, `title`, `id_css`) VALUES
-(1, 1, 0, 0, 'home', 'Home', 'Home', 'menu_home'),
+(1, 1, 0, 0, 'welcome', 'Home', 'Home', 'menu_home'),
 (2, 1, 0, 1, 'roles', 'Roles', 'Role Manager', 'menu_roles'),
 (3, 1, 0, 2, 'users', 'Users', 'User Manager', 'menu_user'),
 (10, 1, 0, 4, 'menus', 'Menus', 'Menu Management', 'menu_menus'),
@@ -217,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `oci_screens` (
 --
 
 INSERT INTO `oci_screens` (`id`, `module_id`, `name`, `uri`) VALUES
-(1, 1, 'Home', 'home'),
+(1, 1, 'Home', 'welcome'),
 (2, 1, 'Role Management', 'roles'),
 (3, 1, 'User Managemenet', 'users'),
 (4, 1, 'Role Member List', 'roles/members'),

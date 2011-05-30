@@ -41,38 +41,6 @@ class oci_auth extends CI_Model {
 	}
 
 	/**
-	 * Get login state
-	 * @return boolean TRUE if user is authenticated
-	 */
-	public function get_login_state() {
-		return $this->login_state;
-	}
-
-	/**
-	 * Set login state
-	 * @param boolean $login_state Login state
-	 */
-	private function set_login_state($login_state) {
-		$this->login_state = $login_state;
-	}
-
-	/**
-	 * Get access state
-	 * @return boolean TRUE if user authenticated and has access to current URI
-	 */
-	public function get_access() {
-		return $this->access;
-	}
-
-	/**
-	 * Set access state
-	 * @param NULL
-	 */
-	private function set_access($valid) {
-		$this->access = $valid;
-	}
-
-	/**
 	 * Helper function to get user ID, preference ID and role ID information
 	 */
 	private function _populate_ids() {
@@ -83,6 +51,38 @@ class oci_auth extends CI_Model {
                         $this->preference_id = $row->preference_id;
                         $this->role_id = $row->role_id;
                 }
+	}
+
+	/**
+	 * Set login state
+	 * @param boolean $param Login state
+	 */
+	private function set_login_state($param) {
+		$this->login_state = $param;
+	}
+
+	/**
+	 * Set access state
+	 * @param boolean $param Access state
+	 */
+	private function set_access($param) {
+		$this->access = $param;
+	}
+
+	/**
+	 * Get login state
+	 * @return boolean TRUE if user is authenticated
+	 */
+	public function get_login_state() {
+		return $this->login_state;
+	}
+
+	/**
+	 * Get access state
+	 * @return boolean TRUE if user authenticated and has access to current URI
+	 */
+	public function get_access() {
+		return $this->access;
 	}
 
 	/**
