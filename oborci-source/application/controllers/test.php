@@ -8,6 +8,7 @@ exit('No direct script access allowed');
  * 
  * @property oci_users $oci_users
  * @property oci_roles $oci_roles
+ * @property test_model $test_model
  * 
  * @author Anton Raharja
  *
@@ -16,8 +17,10 @@ class Test extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_users', 'oborci/oci_roles'));
-                $this->load->model('test_model');
+                $this->load->model(array(
+                    'test_model', 
+                    'test2_model',
+                    ));
 	}
 
 	/**
@@ -25,27 +28,18 @@ class Test extends CI_Controller {
 	 * 
 	 */
 	public function index($param=NULL) {
-                // get preference from oci_preferences with our username is admin
-                // each user has one preference
-                $query = $this->oci_users->get_one('preferences', array('username' => 'admin'));
-                //print_r($query->result_array());
-                
-                // get role from oci_roles with our username is admin
-                // each user has one role
-                $query = $this->oci_users->get_one('roles', array('username' => 'admin'));
-                //print_r($query->result_array());
-                
-                // get users from oci_users with our name is Beta Testers
-                // each role has many users
-                $query = $this->oci_roles->get_many('users', array('name' => 'Beta Testers'));
-                //print_r($query->result_array());
-
-                // get users from oci_users with our name is Beta Testers
-                // each role has many users
-                $query = $this->test_model->get_many('users', array('name' => 'Beta Testers'));
+                // get roles from oci_roles with users username is manager
+                // each of user have one role
+                $query = $this->test_model->get_from('oci_roles', array('username' => 'manager'));
                 print_r($query->result_array());
-                
-                $this->test_model->test1();
+
+                // get roles from oci_preferences with users username is manager
+                // each of user have one preferences
+                $query = $this->test_model->get_from('oci_preferences', array('username' => 'manager'));
+                print_r($query->result_array());
+
+                $query = $this->test2_model->get_from('test_model', array('name' => 'Beta Testers'));
+                print_r($query->result_array());
 	}
 	
 }

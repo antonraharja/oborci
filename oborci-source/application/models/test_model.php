@@ -4,26 +4,48 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * test management model
+ * Test model
  *
  * @author Anton Raharja
  */
-class Test_Model extends MY_Model {
+class Test_Model extends Oborci_Model {
 
-	protected $db_table = 'oci_roles';
-        protected $db_has_many = array(
-            'users' => array('oborci/oci_users' => 'role_id')
+	protected $db_table = 'oci_users';
+        
+        protected $db_fields = array(
+            // map => field
+            'id' => 'id',
+            'role' => 'role_id',
+            'preferences' => 'preference_id',
+            'username' => 'username',
+            'password' => 'password',
+            'salt' => 'salt',
         );
         
-        function __construct() {
-                parent::__construct();
-                $this->load->library('oborci/Form');
-        }
+        protected $db_primary_key = 'id';
         
-        public function test1() {
-                print_r($this->session->userdata('user_id'));
-        }
+        protected $db_relations = array(
+            // with oci_roles we have has_one relation on foreign key 'role_id'
+            // has_one: each of us have one of them
+            'oci_roles' => array(
+                'relation' => 'has_one',
+                'foreign_key' => 'role',
+            ),
+            'oci_preferences' => array(
+                'relation' => 'has_one',
+                'foreign_key' => 'preferences'
+            ),
+        );
 
+        function __construct() {
+		parent::__construct();
+                $CI =& get_instance();
+                $CI->load->model(array(
+                    'oborci/oci_roles',
+                    'oborci/oci_preferences',
+                    ));
+	}
+        
 }
 
 /* End of file test_model.php */

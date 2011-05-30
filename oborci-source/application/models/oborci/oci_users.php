@@ -15,7 +15,7 @@ class oci_users extends Oborci_Model {
             'roles' => array('oborci/oci_roles' => 'role_id'),
             'preferences' => array('oborci/oci_preferences' => 'preference_id'),
         );
-
+        
         function __construct() {
 		parent::__construct();
 	}

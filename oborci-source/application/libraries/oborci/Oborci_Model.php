@@ -21,7 +21,7 @@ class Oborci_Model {
 	}
 
         /**
-         * Helper to get field names and set key_field
+         * Helper to get field names and set primary_key
          * @return boolean TRUE if model init succeeded
          */
         private function _oci_model_init() {
@@ -31,9 +31,9 @@ class Oborci_Model {
                                 foreach ($fields as $field)
                                 {
                                         $field_name = $field->name;
-                                        $this->db_fields[] = $field_name;
+                                        $this->db_fields[$field_name] = $field_name;
                                         if ($field->primary_key) {
-                                                $this->db_key_field = $field->name;
+                                                $this->db_primary_key = $field->name;
                                         }
                                 }
                         }
@@ -41,7 +41,21 @@ class Oborci_Model {
                 } else {
                         return FALSE;
                 }
-        }        
+        }      
+        
+        /**
+         * Helper to get fields map
+         * @param array $field_value Unmapped fields
+         * @return array Mapped fields
+         */
+        private function _get_map($field_value) {
+                $returns = NULL;
+                foreach ($field_value as $field => $value) {
+                        $real_field = $this->db_fields[$field];
+                        $returns[$real_field] = $value;
+                }
+                return $returns;
+        }
         
         /**
 	 * Insert a new data to database
@@ -50,6 +64,7 @@ class Oborci_Model {
 	 */
 	public function insert($data) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $data = $this->_get_map($data);
                 $returns = FALSE;
 		if ($this->db->insert($this->db_table, $data)) {
 			$insert_id = $this->db->insert_id();
@@ -67,7 +82,7 @@ class Oborci_Model {
 	 */
 	public function get($id) {
                 if (! $this->_oci_model_init()) { return NULL; };
-		$query = $this->db->get_where($this->db_table, array($this->db_key_field => $id));
+		$query = $this->db->get_where($this->db_table, array($this->db_fields[$this->db_primary_key] => $id));
 		return $query;
 	}
 
@@ -77,7 +92,7 @@ class Oborci_Model {
 	 */
 	public function get_all() {
                 if (! $this->_oci_model_init()) { return NULL; };
-        	$query = $this->db->get_where($this->db_table);
+        	$query = $this->db->get($this->db_table);
 		return $query;
 	}
 
@@ -88,63 +103,64 @@ class Oborci_Model {
          */
         public function get_by($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $field_value = $this->_get_map($field_value);
                 $query = $this->db->get_where($this->db_table, $field_value);
                 return $query;
         }
 
         /**
          * Get from relation table with has_one relation (we have one on other table)
-         * @param string $model_alias An alias to a foreign model name
+         * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items  
          */
-        public function get_one($model_alias, $field_value) {
-                if (! $this->_oci_model_init()) { return NULL; };
+        private function _get_has_one($model, $field_value) {
+                $rules = $this->db_relations[$model];
+                $query = $this->get_by($field_value);
+                $row = $query->row_array();
                 $query = NULL;
-                $relation = $this->db_has_one[$model_alias];
-                foreach ($relation as $from_model => $local_key) {
-                        if (isset($from_model) && isset($local_key)) {
-                                $query = $this->get_by($field_value);
-                                $row = $query->row_array();
-                                $local_key_val = $row[$local_key];
-                                if (isset($local_key_val)) {
-                                        $CI =& get_instance();
-                                        $CI->load->model($from_model);
-                                        $model_name = basename($from_model);
-                                        if (isset($model_name)) {
-                                                $query = $CI->$model_name->get($local_key_val);
-                                                break;
-                                        }
-                                }
-                        }
+                $foreign_key = $this->db_fields[$rules['foreign_key']];
+                $id = $row[$foreign_key];
+                if (! empty($id)) {
+                        $query = $this->CI->$model->get($id);
                 }
                 return $query;
         }
         
         /**
          * Get from relation table with has_many relation (other table have many of us)
-         * @param string $model_alias An alias to a foreign model name
+         * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items
          */
-        public function get_many($model_alias, $field_value) {
+        private function _get_has_many($model, $field_value) {
+                $rules = $this->db_relations[$model];
+                $query = $this->get_by($field_value);
+                $row = $query->row_array();
+                $query = NULL;
+                $primary_key = $this->db_fields[$this->db_primary_key];
+                $id = $row[$primary_key];
+                if (! empty($id)) {
+                        $query = $this->CI->$model->get_by(array($rules['key'] => $id));
+                }
+                return $query;
+        }
+        
+        /**
+         * Get from relation table with various relation type
+         * @param string $model Foreign model
+         * @param array $field_value Search criteria
+         * @return object CI active record query containing data items
+         */
+        public function get_from($model, $field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $query = NULL;
-                $relation = $this->db_has_many[$model_alias];
-                foreach ($relation as $from_model => $foreign_key) {
-                        if (isset($from_model) && isset($foreign_key)) {
-                                $query = $this->get_by($field_value);
-                                $row = $query->row_array();
-                                $key_field_val = $row[$this->db_key_field];
-                                if (isset($key_field_val)) {
-                                        $CI =& get_instance();
-                                        $CI->load->model($from_model);
-                                        $model_name = basename($from_model);
-                                        if (isset($model_name)) {
-                                                $query = $CI->$model_name->get_by(array($foreign_key => $key_field_val));
-                                                break;
-                                        }
-                                }
+                $rules = $this->db_relations[$model];
+                if (is_array($rules)) {
+                        $relation = trim(strtolower($rules['relation']));
+                        switch ($relation) {
+                                case 'has_one': $query = $this->_get_has_one($model, $field_value); break;
+                                case 'has_many': $query = $this->_get_has_many($model, $field_value); break;
                         }
                 }
                 return $query;
@@ -160,7 +176,7 @@ class Oborci_Model {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
 		if (count($data) > 0) {
-			$this->db->update($this->db_table, $data, array($this->db_key_field => $id));
+			$this->db->update($this->db_table, $data, array($this->db_fields[$this->db_primary_key] => $id));
 		}
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
@@ -175,6 +191,7 @@ class Oborci_Model {
 	 */
 	public function update_all($data) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $data = $this->_get_map($data);
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data);
@@ -193,6 +210,8 @@ class Oborci_Model {
 	 */
 	public function update_by($field_value, $data) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $field_value = $this->_get_map($field_value);
+                $data = $this->_get_map($data);
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data, $field_value);
@@ -211,7 +230,7 @@ class Oborci_Model {
 	public function delete($id) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
-		$this->db->delete($this->db_table, array($this->db_key_field => $id));
+		$this->db->delete($this->db_table, array($this->db_fields[$this->db_primary_key] => $id));
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
 		}
@@ -240,6 +259,7 @@ class Oborci_Model {
 	public function delete_by($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
+                $field_value = $this->_get_map($field_value);
 		$this->db->delete($this->db_table, $field_value);
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
