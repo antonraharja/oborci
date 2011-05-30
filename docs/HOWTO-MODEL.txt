@@ -7,7 +7,6 @@ Enriched CI_Model with database related functions for CRUD and table relation.
 FILES
 -----
 
-- application/core/MY_Model.php
 - application/libraries/Oborci_Model.php
 - application/helpers/translate_helper.php
 
@@ -43,20 +42,12 @@ public function get_all()
 public function get_by($field_value)
 
 /**
- * Get from relation table with has_one relation (we have one on other table)
- * @param string $model_alias An alias to a foreign model name
- * @param array $field_value Search criteria
- * @return object CI active record query containing data items  
- */
-public function get_one($model_alias, $field_value)
-
-/**
- * Get from relation table with has_many relation (other table have many of us)
- * @param string $model_alias An alias to a foreign model name
+ * Get from relation table with various relation type
+ * @param string $model Foreign model
  * @param array $field_value Search criteria
  * @return object CI active record query containing data items
  */
-public function get_many($model_alias, $field_value)
+public function get_from($model, $field_value)
 
 /**
  * Update data
@@ -105,70 +96,69 @@ public function delete_by($field_value)
 USAGE EXAMPLES
 --------------
 
-oci_roles Model:
-
-// instead extending CI_Model, we need to extend MY_Model
-// you can also extends Oborci_Model but with 2 conditions:
-// 1. you need to autoload library oborci/Oborci_Model
-// 2. you need to get instance to use CI methods ($this->CI =& get_instances())
-class oci_roles extends MY_Model {
-
-        // database table name
-	protected $db_table = 'oci_roles';
-
-        // relation with other model
-        // it means that our primary key is 'role_id' on oci_users
-        // also means: one role have many users
-        protected $db_has_many = array(
-            'users' => array('oborci/oci_users' => 'role_id')
-        );
-
-	function __construct() {
-		parent::__construct();
-	}
-
-}
-
 oci_users Model:
 
-// instead extending CI_Model, we need to extend MY_Model
-class oci_users extends MY_Model {
+// instead extending CI_Model, we need to extend Oborci_Model
+class oci_users extends Oborci_Model {
 
-        // database table name
-        protected $db_table = 'oci_users';
-
-        // relation with other model
-        // it means that our 'role_id' is a foreign key on oci_roles
-        // also 'preference_id' is a foreign key on oci_preferences
-        // also means: a user have one role and one preference
-        protected $db_has_one = array(
-            'roles' => array('oborci/oci_roles' => 'role_id'),
-            'preferences' => array('oborci/oci_preferences' => 'preference_id'),
+	protected $db_table = 'oci_users';
+        
+        protected $db_fields = array(
+            // map => field
+            'id' => 'id',
+            'role' => 'role_id',
+            'preferences' => 'preference_id',
+            'username' => 'username',
+            'password' => 'password',
+            'salt' => 'salt',
         );
-
-        function __construct() {
-		parent::__construct();
-	}
+        
+        protected $db_primary_key = 'id';
+        
+        protected $db_relations = array(
+            // with oci_roles we have has_one relation on (our) foreign key 'role'
+            // has_one: each of us have one of them
+            'oci_roles' => array(
+                'relation' => 'has_one',
+                'foreign_key' => 'role',
+            ),
+            'oci_preferences' => array(
+                'relation' => 'has_one',
+                'foreign_key' => 'preferences'
+            ),
+        );
 
 }
 
 a controller utilizing oci_users and oci_roles model:
 
-public function index($param=NULL) {
-        // get preference from oci_preferences with our username is admin
-        // each user has one preference
-        $query = $this->oci_users->get_one('preferences', array('username' => 'admin'));
-        print_r($query->result_array());
+class Test extends CI_Controller {
 
-        // get role from oci_roles with our username is admin
-        // each user has one role
-        $query = $this->oci_users->get_one('roles', array('username' => 'admin'));
-        print_r($query->result_array());
+	function __construct() {
+		parent::__construct();
+                $this->load->model(array(
+                    'oborci/oci_users',
+                    'oborci/oci_roles',
+                    'oborci/oci_preferences',
+                    ));
+	}
 
-        // get users from oci_users with our name is Beta Testers
-        // each role has many users
-        $query = $this->oci_roles->get_many('users', array('name' => 'Beta Testers'));
-        print_r($query->result_array());
+	/**
+	 * Index Page for this controller.
+	 * 
+	 */
+	public function index($param=NULL) {
+                // get roles from oci_roles with users username is manager
+                // each of user have one role
+                $query = $this->oci_users->get_from('oci_roles', array('username' => 'manager'));
+                print_r($query->result_array());
+
+                // get roles from oci_preferences with users username is manager
+                // each of user have one preferences
+                $query = $this->oci_users->get_from('oci_preferences', array('username' => 'manager'));
+                print_r($query->result_array());
+        }
+
 }
 
 Notes:
