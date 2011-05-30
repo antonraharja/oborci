@@ -22,11 +22,10 @@ class oci_themes extends CI_Model {
 		$this->load->model(
 			array(
                                 'oborci/oci_auth', 
-				'oborci/oci_menus', 
-				'oborci/oci_preferences', 
 				'oborci/oci_roles', 
-                                'oborci/oci_roles_menus', 
-				'oborci/oci_users'
+				'oborci/oci_users',
+                                'oborci/oci_preferences',
+                                'oborci/oci_menus',
 			)
 		);
 		$this->load->library(array('table', 'oborci/Form'));
@@ -38,7 +37,7 @@ class oci_themes extends CI_Model {
 	 */
 	public function get_login() {
                 $data = NULL;
-		$query = $this->oci_preferences->get($this->oci_auth->preference_id);
+		$query = $this->oci_users->get_from('oci_preferences', array('preferences' => $this->oci_auth->preference_id));
                 $pref = $query->row_array();
 		if (isset($pref['id'])) {
                         $data = $pref;
@@ -98,21 +97,17 @@ class oci_themes extends CI_Model {
 	public function menu_array() {
 		$data = array();
 		if ($this->oci_auth->get_access()) {
-                        $query = $this->oci_roles_menus->get_by(array('role_id' => $this->oci_auth->role_id));
-			foreach ($query->result() as $row) {
-				$query = $this->oci_menus->get($row->menu_id);
-                                $menu = $query->row();
-				if (isset($menu->id)) {
-					$data[] = array(
-						'parent' => $menu->parent,
-						'index' => $menu->index,
-						'uri' => $menu->uri,
-						'text' => t($menu->text),
-						'title' => t($menu->title),
-						'id_css' => $menu->id_css
-					);
-				}
-			}
+                        $query = $this->oci_roles->get_from('oci_menus', array('id' => $this->oci_auth->role_id));
+                        foreach ($query->result() as $menu) {
+                                $data[] = array(
+                                        'parent' => $menu->parent,
+                                        'index' => $menu->index,
+                                        'uri' => $menu->uri,
+                                        'text' => t($menu->text),
+                                        'title' => t($menu->title),
+                                        'id_css' => $menu->id_css
+                                );
+                        }
 		} else {
 			$data[] = array(
 				'parent' => 0,

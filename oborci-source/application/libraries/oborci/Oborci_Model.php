@@ -116,7 +116,6 @@ class Oborci_Model {
                         $their_primary_key = $this->CI->$model->db_fields[$this->CI->$model->db_primary_key];
                         $this->db->where_in($their_primary_key, $keys);
                         $query = $this->db->get($this->CI->$model->db_table);
-                        echo $this->db->last_query();
                 }
                 return $query;
         }

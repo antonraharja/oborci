@@ -6,9 +6,7 @@ exit('No direct script access allowed');
 /**
  * Authentication model
  *
- * @property oci_screens $oci_screens
  * @property oci_roles $oci_roles
- * @property oci_roles_screens $oci_roles_screens
  * @property oci_users $oci_users
  *  *
  * @author Anton Raharja
@@ -28,9 +26,8 @@ class oci_auth extends CI_Model {
 		$this->load->model(
 			array(
 				'oborci/oci_roles', 
-                                'oborci/oci_roles_screens', 
-				'oborci/oci_screens', 
-				'oborci/oci_users'
+				'oborci/oci_users',
+                                'oborci/oci_screens',
 			)
 		);
 		if ($this->session->userdata('login_state')) {
@@ -161,24 +158,16 @@ class oci_auth extends CI_Model {
 			if ($this->uri->rsegment(2) && ($this->uri->rsegment(2) != 'index')) {
 				$uri .= '/' . $this->uri->rsegment(2);
 			}
-			$query = $this->oci_screens->get_by(array('uri' => $uri));
-                        $row = $query->row();
-			if (isset($row->id)) {
-				$screen_id = $row->id;
-                                $query = $this->oci_roles_screens->get_by(array('role_id' => $this->role_id, 'screen_id' => $screen_id));
-                                $id = $query->row();
-				if ($id) {
-					$this->set_access(TRUE);
+                        $query = $this->oci_roles->get_from('oci_screens', array('id' => $this->role_id));
+                        foreach ($query->result() as $row) {
+                                if ($row->uri == $uri) {
+                                        $this->set_access(TRUE);
                                         return TRUE;
-				} else {
-					$this->set_access(FALSE);
-                                        return FALSE;
-				}
-			}
-		} else {
-			$this->set_access(FALSE);
-                        return FALSE;
+                                }
+                        }
 		}
+                $this->set_access(FALSE);
+                return FALSE;
 	}
 	
 }
