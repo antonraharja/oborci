@@ -20,8 +20,11 @@ class Test extends CI_Controller {
                 $this->load->model(array(
                     'test_model', 
                     'test2_model',
+                    'oborci/oci_users',
                     'oborci/oci_roles',
                     'oborci/oci_preferences',
+                    'oborci/oci_screens',
+                    'oborci/oci_menus',
                     ));
 	}
 
@@ -33,14 +36,20 @@ class Test extends CI_Controller {
                 // get roles from oci_roles with users username is manager
                 // each of user have one role
                 $query = $this->test_model->get_from('oci_roles', array('username' => 'manager'));
-                print_r($query->result_array());
+                //print_r($query->result_array());
 
                 // get roles from oci_preferences with users username is manager
                 // each of user have one preferences
                 $query = $this->test_model->get_from('oci_preferences', array('username' => 'manager'));
+                //print_r($query->result_array());
+
+                $query = $this->test2_model->get_from('oci_users', array('name' => 'Beta Testers'));
+                //print_r($query->result_array());
+
+                $query = $this->test2_model->get_from('oci_screens', array('name' => 'Managers'));
                 print_r($query->result_array());
 
-                $query = $this->test2_model->get_from('test_model', array('name' => 'Beta Testers'));
+                $query = $this->test2_model->get_from('oci_menus', array('name' => 'Administrators'));
                 print_r($query->result_array());
 	}
 	

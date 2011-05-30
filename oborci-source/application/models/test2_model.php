@@ -21,23 +21,27 @@ class Test2_Model extends Oborci_Model {
         protected $db_primary_key = 'id';
         
         protected $db_relations = array(
-            // with oci_roles we have has_one relation on foreign key 'role_id'
-            // has_one: each of us have one of them
-            'test_model' => array(
+            // with oci_users we have has_many relation on (their) key 'role'
+            // has_many: each of us have many of them
+            'oci_users' => array(
                 'relation' => 'has_many',
                 'key' => 'role',
             ),
+            // with oci_screens we have has_many_through relation on bridge key 'screen_id'
+            // has_many_through: each of us have many of them through a join table
             'oci_screens' => array(
                 'relation' => 'has_many_through',
-                'key' => 'role_id',
                 'join_table' => 'oci_roles_screens',
-                'join_key' => 'screen_id',
+                'join_key' => 'role_id',
+                'key' => 'screen_id',
             ),
+            // with oci_menus we have has_many_through relation on bridge key 'menu_id'
+            // has_many_through: each of us have many of them through a join table
             'oci_menus' => array(
                 'relation' => 'has_many_through',
-                'key' => 'role_id',
                 'join_table' => 'oci_roles_menus',
-                'join_key' => 'menu_id',
+                'join_key' => 'role_id',
+                'key' => 'menu_id',
             ),
         );
 

@@ -11,6 +11,15 @@ exit('No direct script access allowed');
 class oci_screens extends Oborci_Model {
 
         protected $db_table = 'oci_screens';
+        
+        protected $db_fields = array(
+            'id' => 'id',
+            'module' => 'module_id',
+            'name' => 'name',
+            'uri' => 'uri'
+        );
+        
+        protected $db_primary_key = 'id';
 
 }
 

@@ -96,6 +96,32 @@ class Oborci_Model {
         }
         
         /**
+         * Get from relation table with has_many_through relation
+         * @param string $model Foreign model name
+         * @param array $field_value Search criteria
+         * @return object CI active record query containing data items
+         */
+        private function _get_has_many_through($model, $field_value) {
+                $rules = $this->db_relations[$model];
+                $query = $this->get_by($field_value);
+                $row = $query->row_array();
+                $query = NULL;
+                $primary_key = $this->db_fields[$this->db_primary_key];
+                $id = $row[$primary_key];
+                if (! empty($id)) {
+                        $query = $this->db->get_where($rules['join_table'], array($rules['join_key'] => $id));
+                        foreach ($query->result_array() as $row) {
+                                $keys[] = $row[$rules['key']];
+                        }
+                        $their_primary_key = $this->CI->$model->db_fields[$this->CI->$model->db_primary_key];
+                        $this->db->where_in($their_primary_key, $keys);
+                        $query = $this->db->get($this->CI->$model->db_table);
+                        echo $this->db->last_query();
+                }
+                return $query;
+        }
+        
+        /**
 	 * Insert a new data to database
 	 * @param array $data Array of data to be inserted to database
 	 * @return integer|boolean Last inserted ID or FALSE when failed
@@ -161,6 +187,7 @@ class Oborci_Model {
                         switch ($relation) {
                                 case 'has_one': $query = $this->_get_has_one($model, $field_value); break;
                                 case 'has_many': $query = $this->_get_has_many($model, $field_value); break;
+                                case 'has_many_through': $query = $this->_get_has_many_through($model, $field_value); break;
                         }
                 }
                 return $query;
