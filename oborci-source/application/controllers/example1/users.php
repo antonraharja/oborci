@@ -7,7 +7,7 @@ exit('No direct script access allowed');
  * Users controller
  *
  * @property oci_auth $oci_auth
- * @property oci_themes $oci_themes
+ * @property themes $themes
  *
  * @author Anton Raharja
  *
@@ -16,7 +16,7 @@ class Users extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_auth', 'oborci/oci_themes'));
+                $this->load->model(array('oborci/oci_auth', 'example1/themes'));
                 $this->load->library(array('oborci/Crud'));
 		$this->oci_auth->validate();
 	}
@@ -53,9 +53,9 @@ class Users extends CI_Controller {
 					'rules' => array('key', 'hidden', 'trim'),),
 				array('name' => 'role_id', 'table' => 'oci_users', 'label' => 'Role ID', 
 					'rules' => array('hidden', 'trim'),),
-				array('name' => 'name',	'table' => 'oci_roles', 'label' => 'Role Name', 'link' => 'roles/members/{role_id}',
+				array('name' => 'name',	'table' => 'oci_roles', 'label' => 'Role Name', 'link' => 'example1/roles/members/{role_id}',
 					'rules' => array('trim', 'htmlspecialchars'),),
-				array('name' => 'username', 'table' => 'oci_users', 'label' => 'Username', 'link' => 'preference/show/{id}',
+				array('name' => 'username', 'table' => 'oci_users', 'label' => 'Username', 'link' => 'example1/preference/show/{id}',
 					'rules' => array('trim',  'htmlspecialchars'),),
 			),
 			'update' => array(
@@ -78,7 +78,7 @@ class Users extends CI_Controller {
 			),
 			'properties' => array(
 				'name' => 'users',
-				'uri' => 'users/index',
+				'uri' => 'example1/users/index',
 				'index_column' => TRUE,
 				'index_column_start' => 1,
                                 'pagination' => FALSE,
@@ -104,11 +104,11 @@ class Users extends CI_Controller {
 	 */
 	public function index($param=NULL) {
 		if ($this->oci_auth->get_access()) {
-			$data['menu']['box'] = $this->oci_themes->menu_box();
-			$data['login'] = $this->oci_themes->get_login();
+			$data['menu']['box'] = $this->themes->menu_box();
+			$data['login'] = $this->themes->get_login();
 			$data['crud'] = $this->_get_crud();
                         // print_r($data); die();
-			$this->load->view('users_view', $data);
+			$this->load->view('example1/users_view', $data);
 		} else {
 			redirect('process/unauthorized');
 		}

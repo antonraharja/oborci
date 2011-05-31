@@ -7,7 +7,7 @@ exit('No direct script access allowed');
  * Process controller
  *
  * @property oci_auth $oci_auth
- * @property oci_themes $oci_themes
+ * @property themes $themes
  *
  * @author Anton Raharja
  *
@@ -16,7 +16,7 @@ class Process extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_auth', 'oborci/oci_themes'));
+                $this->load->model(array('oborci/oci_auth', 'example1/themes'));
                 $this->load->library(array('uri'));
 	}
 
@@ -28,9 +28,9 @@ class Process extends CI_Controller {
 		if ($this->session->userdata('login_state')) {
 			redirect('welcome');
 		} else {
-			$data['menu']['box'] = $this->oci_themes->menu_box();
-			$data['login']['form'] = $this->oci_themes->login_form();
-			$this->load->view('process/unauthorized', $data);
+			$data['menu']['box'] = $this->themes->menu_box();
+			$data['login']['form'] = $this->themes->login_form();
+			$this->load->view('example1/process/unauthorized', $data);
 		}
 	}
 
@@ -49,9 +49,9 @@ class Process extends CI_Controller {
                         }
                         $data['login']['message'] = t('Invalid login');
                 }
-		$data['menu']['box'] = $this->oci_themes->menu_box();
-		$data['login']['form'] = $this->oci_themes->login_form();
-		$this->load->view('process/login_view', $data);
+		$data['menu']['box'] = $this->themes->menu_box();
+		$data['login']['form'] = $this->themes->login_form();
+		$this->load->view('example1/process/login_view', $data);
 	}
 
 	/**
@@ -59,17 +59,17 @@ class Process extends CI_Controller {
 	 */
 	public function logout() {
 		$this->oci_auth->logout();
-		$data['menu']['box'] = $this->oci_themes->menu_box();
-		$this->load->view('process/logout_view', $data);
+		$data['menu']['box'] = $this->themes->menu_box();
+		$this->load->view('example1/process/logout_view', $data);
 	}
 
 	/**
 	 * Process unauthorized
 	 */
 	public function unauthorized() {
-		$data['menu']['box'] = $this->oci_themes->menu_box();
-		$data['login']['form'] = $this->oci_themes->login_form();
-		$this->load->view('process/unauthorized', $data);
+		$data['menu']['box'] = $this->themes->menu_box();
+		$data['login']['form'] = $this->themes->login_form();
+		$this->load->view('example1/process/unauthorized', $data);
 	}
 
 }

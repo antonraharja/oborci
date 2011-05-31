@@ -8,7 +8,7 @@ exit('No direct script access allowed');
  *
  * @property oci_auth $oci_auth
  * @property crud $crud
- * @property oci_themes $oci_themes
+ * @property themes $themes
  *
  * @author Anton Raharja
  *
@@ -17,7 +17,7 @@ class Screens extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_auth', 'oborci/oci_themes'));
+                $this->load->model(array('oborci/oci_auth', 'example1/themes'));
                 $this->load->library(array('oborci/Crud'));
 		$this->oci_auth->validate();
 	}
@@ -50,7 +50,7 @@ class Screens extends CI_Controller {
 			),
 			'properties' => array(
 				'name' => 'screens',
-				'uri' => 'screens/index',
+				'uri' => 'example1/screens/index',
 				'index_column' => TRUE,
 				'index_column_start' => 1,
 				'pagination_per_page' => 10,
@@ -73,12 +73,12 @@ class Screens extends CI_Controller {
 	 */
 	public function index($param=NULL) {
 		if ($this->oci_auth->get_access()) {
-			$data['menu']['box'] = $this->oci_themes->menu_box();
-			$data['login'] = $this->oci_themes->get_login();
+			$data['menu']['box'] = $this->themes->menu_box();
+			$data['login'] = $this->themes->get_login();
 			$data['crud'] = $this->_get_crud_for_index();
-			$this->load->view('screens_view', $data);
+			$this->load->view('example1/screens_view', $data);
 		} else {
-			redirect('process/unauthorized');
+			redirect('example1/process/unauthorized');
 		}
 	}
 	

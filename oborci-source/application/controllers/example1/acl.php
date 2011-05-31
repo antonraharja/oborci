@@ -8,7 +8,7 @@ exit('No direct script access allowed');
  *
  * @property oci_auth $oci_auth
  * @property crud $crud
- * @property oci_themes $oci_themes
+ * @property themes $themes
  * @property oci_roles $oci_roles
  *
  * @author Anton Raharja
@@ -18,7 +18,7 @@ class Acl extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_auth', 'oborci/oci_themes', 'oborci/oci_screens'));
+                $this->load->model(array('oborci/oci_auth', 'example1/themes', 'oborci/oci_screens'));
                 $this->load->library(array('oborci/Crud'));
 		$this->oci_auth->validate();
 	}
@@ -55,7 +55,7 @@ class Acl extends CI_Controller {
 			),
 			'properties' => array(
 				'name' => 'screens',
-				'uri' => 'acl/screens/'.$role_id,
+				'uri' => 'example1/acl/screens/'.$role_id,
 				'index_column' => TRUE,
 				'index_column_start' => 1,
 				'pagination_per_page' => 10,
@@ -78,12 +78,12 @@ class Acl extends CI_Controller {
 	 */
 	public function screens($param=NULL) {
 		if ($this->oci_auth->get_access()) {
-			$data['menu']['box'] = $this->oci_themes->menu_box();
-			$data['login'] = $this->oci_themes->get_login();
+			$data['menu']['box'] = $this->themes->menu_box();
+			$data['login'] = $this->themes->get_login();
 			$data['crud'] = $this->_get_crud_for_screens($param);
-			$this->load->view('acl_screens_view', $data);
+			$this->load->view('example1/acl_screens_view', $data);
 		} else {
-			redirect('process/unauthorized');
+			redirect('example1/process/unauthorized');
 		}
 	}
 	
@@ -93,12 +93,12 @@ class Acl extends CI_Controller {
 	 */
 	public function menus($param=NULL) {
 		if ($this->oci_auth->get_access()) {
-			$data['menu']['box'] = $this->oci_themes->menu_box();
-			$data['login'] = $this->oci_themes->get_login();
+			$data['menu']['box'] = $this->themes->menu_box();
+			$data['login'] = $this->themes->get_login();
 			$data['crud'] = $this->_get_crud_for_menus();
-			$this->load->view('acl_menus_view', $data);
+			$this->load->view('example1/acl_menus_view', $data);
 		} else {
-			redirect('process/unauthorized');
+			redirect('example1/process/unauthorized');
 		}
 	}
 }

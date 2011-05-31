@@ -8,7 +8,7 @@ exit('No direct script access allowed');
  *
  * @property oci_auth $oci_auth
  * @property crud $crud
- * @property oci_themes $oci_themes
+ * @property themes $themes
  *
  * @author Anton Raharja
  *
@@ -17,7 +17,7 @@ class Roles extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_auth', 'oborci/oci_themes'));
+                $this->load->model(array('oborci/oci_auth', 'example1/themes'));
                 $this->load->library(array('oborci/Crud'));
 		$this->oci_auth->validate();
 	}
@@ -34,7 +34,7 @@ class Roles extends CI_Controller {
 			),
 			'select' => array(
 				array('name' => 'id', 'label' => 'ID', 'rules' => array('key', 'hidden', 'trim'),),
-				array('name' => 'name',	'label' => t('Role name'), 'link' => 'acl/screens/{id}', 
+				array('name' => 'name',	'label' => t('Role name'), 'link' => 'example1/acl/screens/{id}', 
 					'rules' => array('trim', 'htmlspecialchars'),),
 			),
 			'update' => array(
@@ -50,7 +50,7 @@ class Roles extends CI_Controller {
 			),
 			'properties' => array(
 				'name' => 'roles',
-				'uri' => 'roles/index',
+				'uri' => 'example1/roles/index',
 				'index_column' => TRUE,
 				'index_column_start' => 1,
                                 'pagination' => TRUE,
@@ -78,7 +78,7 @@ class Roles extends CI_Controller {
 			'select' => array(
 				array('name' => 'id', 'label' => 'ID', 
 					'rules' => array('key', 'hidden', 'trim'),),
-				array('name' => 'username', 'label' => 'Username', 'link' => 'preference/show/{id}',
+				array('name' => 'username', 'label' => 'Username', 'link' => 'example1/preference/show/{id}',
 					'rules' => array('trim',  'htmlspecialchars'),),
 			),
                         'search' => array('id', 'username'),
@@ -88,7 +88,7 @@ class Roles extends CI_Controller {
 			),
 			'properties' => array(
 				'name' => 'roles_members',
-				'uri' => 'roles/members/'.$role_id,
+				'uri' => 'example1/roles/members/'.$role_id,
 				'index_column' => TRUE,
 				'index_column_start' => 1,
                                 'pagination' => FALSE,
@@ -110,12 +110,12 @@ class Roles extends CI_Controller {
 	 */
 	public function index($param=NULL) {
 		if ($this->oci_auth->get_access()) {
-			$data['menu']['box'] = $this->oci_themes->menu_box();
-			$data['login'] = $this->oci_themes->get_login();
+			$data['menu']['box'] = $this->themes->menu_box();
+			$data['login'] = $this->themes->get_login();
 			$data['crud'] = $this->_get_crud_for_index();
-			$this->load->view('roles_view', $data);
+			$this->load->view('example1/roles_view', $data);
 		} else {
-			redirect('process/unauthorized');
+			redirect('example1/process/unauthorized');
 		}
 	}
 	
@@ -125,12 +125,12 @@ class Roles extends CI_Controller {
          */
         public function members($param=NULL) {
 		if ($this->oci_auth->get_access()) {
-			$data['menu']['box'] = $this->oci_themes->menu_box();
-			$data['login'] = $this->oci_themes->get_login();
+			$data['menu']['box'] = $this->themes->menu_box();
+			$data['login'] = $this->themes->get_login();
 			$data['crud'] = $this->_get_crud_for_members($param);
-			$this->load->view('roles_members_view', $data);
+			$this->load->view('example1/roles_members_view', $data);
 		} else {
-			redirect('process/unauthorized');
+			redirect('example1/process/unauthorized');
 		}
 	}
 

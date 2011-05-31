@@ -16,7 +16,7 @@ exit('No direct script access allowed');
  *
  * @author Anton Raharja
  */
-class oci_themes extends CI_Model {
+class Themes extends CI_Model {
         
 	function __construct() {
 		$this->load->model(
@@ -59,7 +59,7 @@ class oci_themes extends CI_Model {
 		$data = array(
 			0 => array(
 				'open' => array(
-					'uri' => 'process/login',
+					'uri' => 'example1/process/login',
 					'name' => $id_css_prefix.'_form',
 				),
 			),
@@ -134,7 +134,7 @@ class oci_themes extends CI_Model {
 		}
 		$menus = $this->menu_array();
 		foreach ($menus as $menu) {
-			$data .= '<div id="' . $box_id_css . '">' . anchor($menu['uri'], t($menu['text']), 'title="' . t($menu['title']) . '" id="' . $menu['id_css'] . '"') . '</div>';
+			$data .= '<div id="' . $box_id_css . '">' . anchor('example1/'.$menu['uri'], t($menu['text']), 'title="' . t($menu['title']) . '" id="' . $menu['id_css'] . '"') . '</div>';
 		}
 		return $data;
 	}

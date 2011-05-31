@@ -1,10 +1,8 @@
-<?php include APPPATH . '/views/header_view.php' ?>
+<?php $this->load->view('example1/header_view'); ?>
 
 <!-- <script
 	type="text/javascript" 
 	src="<?php echo base_url(); ?>assets/js/login.js"></script> -->
-
-<div id='menu_box'><?= $menu['box'] ?></div>
 
 <p><?php echo t('Login'); ?></p>
 
@@ -12,4 +10,4 @@
 
 <div id="login_box"><?= $login['form'] ?></div>
 
-<?php include APPPATH . '/views/footer_view.php' ?>
+<?php $this->load->view('example1/footer_view'); ?>

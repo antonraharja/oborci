@@ -32,4 +32,11 @@
 <?php endif; ?>
 </p>
 
+<div id='menu_box'>
+        <?= $menu['box'] ?>
+<?php if ($this->oci_auth->get_access()) : ?>
+        <?php echo anchor('example1/process/logout', t('Logout'), 'title=' . t('Logout')); ?>
+<?php endif; ?>
+</div>
+
 <?php flush(); ?>
