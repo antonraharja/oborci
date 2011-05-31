@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>oborci</title>
+<title>Oborci Example1</title>
 <script
 	type="text/javascript"
 	src="<?php echo base_url(); ?>assets/example1/js/jquery-1.6.min.js"></script>

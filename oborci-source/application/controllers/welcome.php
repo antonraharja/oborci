@@ -16,8 +16,6 @@ class Welcome extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_auth', 'example1/themes'));
-		$this->oci_auth->validate();
 	}
 
 	/**
@@ -25,13 +23,7 @@ class Welcome extends CI_Controller {
 	 *
 	 */
 	public function index() {
-		if ($this->oci_auth->get_access()) {
-			$data['menu']['box'] = $this->themes->menu_box();
-			$data['login'] = $this->themes->get_login();
-			$this->load->view('example1/welcome_view', $data);
-		} else {
-			redirect('example1/process/login');
-		}
+		redirect('example1/welcome');
 	}
 
 }
