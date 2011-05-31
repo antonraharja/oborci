@@ -10,7 +10,6 @@ FILES
 - application/models/oci_auth.php
         - This file includes:
                 - application/models/oci_roles.php
-                - application/models/oci_roles_screens.php
                 - application/models/oci_screens.php
                 - application/models/oci_users.php
 - application/helpers/translate_helper.php
