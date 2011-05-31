@@ -31,3 +31,5 @@
 <?php echo t('Your role'); ?>: <?= $login['role'] ?>
 <?php endif; ?>
 </p>
+
+<?php flush(); ?>
