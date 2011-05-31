@@ -6,9 +6,6 @@ exit('No direct script access allowed');
 /**
  * Home controller
  *
- * @property oci_auth $oci_auth
- * @property themes $themes
- *
  * @author Anton Raharja
  *
  */
@@ -23,7 +20,7 @@ class Welcome extends CI_Controller {
 	 *
 	 */
 	public function index() {
-		redirect('example1/welcome');
+		$this->load->view('welcome_view');
 	}
 
 }
