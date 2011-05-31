@@ -4,26 +4,26 @@
 <title>oborci</title>
 <script
 	type="text/javascript"
-	src="<?php echo base_url(); ?>assets/js/jquery-1.6.min.js"></script>
+	src="<?php echo base_url(); ?>assets/example1/js/jquery-1.6.min.js"></script>
 <script
 	type="text/javascript"
-	src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.min.js"></script>
+	src="<?php echo base_url(); ?>assets/example1/js/jquery.tablesorter.min.js"></script>
 <script
 	type="text/javascript"
-	src="<?php echo base_url(); ?>assets/js/jquery.metadata.js"></script>
+	src="<?php echo base_url(); ?>assets/example1/js/jquery.metadata.js"></script>
 <script
 	type="text/javascript"
-	src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.pager.js"></script>
+	src="<?php echo base_url(); ?>assets/example1/js/jquery.tablesorter.pager.js"></script>
 <link rel="stylesheet"
-	href="<?php echo base_url(); ?>assets/css/home.css" type="text/css" />
+	href="<?php echo base_url(); ?>assets/example1/css/home.css" type="text/css" />
 <link rel="stylesheet"
-	href="<?php echo base_url(); ?>assets/css/oborci/crud.css" type="text/css" />
+	href="<?php echo base_url(); ?>assets/example1/css/oborci/crud.css" type="text/css" />
 <link rel="stylesheet"
-	href="<?php echo base_url(); ?>assets/css/oborci/form.css" type="text/css" />
+	href="<?php echo base_url(); ?>assets/example1/css/oborci/form.css" type="text/css" />
 </head>
 <body>
 
-<h1><?php echo t('Administration Panel'); ?></h1>
+<h1><?php echo t('Example1 Panel'); ?></h1>
 
 <p>
 <?php if ($this->oci_auth->get_access()) : ?>
