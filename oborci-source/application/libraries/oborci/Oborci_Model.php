@@ -77,6 +77,26 @@ class Oborci_Model {
         }
         
         /**
+         * Get from relation table with belongs_to relation (we owned by one of the other table)
+         * @param string $model Foreign model name
+         * @param array $field_value Search criteria
+         * @return object CI active record query containing data items  
+         */
+        private function _get_belongs_to($model, $field_value) {
+                $rules = $this->db_relations[$model];
+                $query = $this->get_by($field_value);
+                $row = $query->row_array();
+                $query = NULL;
+                $primary_key = $this->db_fields[$this->db_primary_key];
+                $id = $row[$primary_key];
+                if (! empty($id)) {
+                        $their_key = $this->CI->$model->db_fields[$rules['key']];
+                        $query = $this->CI->$model->get_by(array($their_key => $primary_key));
+                }
+                return $query;
+        }
+        
+        /**
          * Get from relation table with has_many relation (other table have many of us)
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
@@ -185,6 +205,7 @@ class Oborci_Model {
                         $relation = trim(strtolower($rules['relation']));
                         switch ($relation) {
                                 case 'has_one': $query = $this->_get_has_one($model, $field_value); break;
+                                case 'belongs_to': $query = $this->_get_belongs_to($model, $field_value); break;
                                 case 'has_many': $query = $this->_get_has_many($model, $field_value); break;
                                 case 'has_and_belongs_to': $query = $this->_get_has_and_belongs_to($model, $field_value); break;
                         }
