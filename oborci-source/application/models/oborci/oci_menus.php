@@ -24,6 +24,15 @@ class oci_menus extends Oborci_Model {
         );
 
         protected $db_primary_key = 'id';
+
+        protected $db_relations = array(
+            'oci_roles' => array(
+                'relation' => 'has_and_belongs_to_many',
+                'join_table' => 'oci_roles_screens',
+                'join_key' => 'menu_id',
+                'key' => 'role_id',
+            )
+        );
         
 }
 
