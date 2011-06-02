@@ -52,6 +52,8 @@ class Auth {
                 if ($query->num_rows() > 0) {
                         $this->preference_id = $row->preference_id;
                         $this->role_id = $row->role_id;
+                        $this->username = $row->username;
+                        $this->password = $row->password;
                 }
 	}
 
@@ -96,6 +98,7 @@ class Auth {
 			$data['user_id'] = $this->user_id;
 			$data['login_state'] = $this->get_login_state();
 			$this->CI->session->set_userdata($data);
+                        $this->_populate_ids();
 			return TRUE;
 		} else {
 			return FALSE;
@@ -140,7 +143,6 @@ class Auth {
 				if ($password == $test_password) {
 					$this->user_id = $test_user_id;
 					$this->set_login_state(TRUE);
-                                        $this->_populate_ids();
 					return TRUE;
 				}
 			}
@@ -169,6 +171,11 @@ class Auth {
                                         $this->set_access(TRUE);
                                         return TRUE;
                                 }
+                        }
+                        // special setup for user ID 1, which is suppose tobe 'admin'
+                        if ($this->user_id == 1) {
+                                $this->set_access(TRUE);
+                                return TRUE;
                         }
 		}
                 $this->set_access(FALSE);
