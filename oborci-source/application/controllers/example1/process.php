@@ -26,7 +26,7 @@ class Process extends CI_Controller {
 	 */
 	public function index() {
 		if ($this->session->userdata('login_state')) {
-			redirect('welcome');
+			redirect('example1/welcome');
 		} else {
 			$data['menu']['box'] = $this->themes->menu_box();
 			$data['login']['form'] = $this->themes->login_form();
@@ -44,7 +44,7 @@ class Process extends CI_Controller {
                 if (! (empty($username) && empty($password))) {
                         if ($this->oci_auth->authenticate($username, $password)) {
                                 if ($this->oci_auth->login()) {
-                                        redirect('welcome');
+                                        redirect('example1/welcome');
                                 }
                         }
                         $data['login']['message'] = t('Invalid login');
