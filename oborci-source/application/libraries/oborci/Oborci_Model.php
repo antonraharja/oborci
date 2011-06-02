@@ -115,12 +115,12 @@ class Oborci_Model {
         }
         
         /**
-         * Get from relation table with has_and_belongs_to relation
+         * Get from relation table with has_and_belongs_to_many relation
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items
          */
-        private function _get_has_and_belongs_to($model, $field_value) {
+        private function _get_has_and_belongs_to_many($model, $field_value) {
                 $rules = $this->db_relations[$model];
                 $query = $this->get_by($field_value);
                 $row = $query->row_array();
@@ -206,7 +206,7 @@ class Oborci_Model {
                                 case 'has_one': $query = $this->_get_has_one($model, $field_value); break;
                                 case 'belongs_to': $query = $this->_get_belongs_to($model, $field_value); break;
                                 case 'has_many': $query = $this->_get_has_many($model, $field_value); break;
-                                case 'has_and_belongs_to': $query = $this->_get_has_and_belongs_to($model, $field_value); break;
+                                case 'has_and_belongs_to_many': $query = $this->_get_has_and_belongs_to_many($model, $field_value); break;
                         }
                 }
                 return $query;
