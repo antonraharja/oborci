@@ -28,11 +28,11 @@ class Test_Model extends Oborci_Model {
             // with oci_roles we have has_one relation on foreign key 'role_id'
             // has_one: each of us have one of them
             'oci_roles' => array(
-                'relation' => 'has_one',
+                'relation' => 'belongs_to',
                 'foreign_key' => 'role',
             ),
             'oci_preferences' => array(
-                'relation' => 'has_one',
+                'relation' => 'belongs_to',
                 'foreign_key' => 'preferences'
             ),
         );
