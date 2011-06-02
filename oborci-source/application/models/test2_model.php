@@ -27,18 +27,18 @@ class Test2_Model extends Oborci_Model {
                 'relation' => 'has_many',
                 'key' => 'role',
             ),
-            // with oci_screens we have has_many_through relation on bridge key 'screen_id'
-            // has_many_through: each of us have many of them through a join table
+            // with oci_screens we have has_and_belongs_to relation on bridge key 'screen_id'
+            // has_and_belongs_to: each of us have many of them through a join table
             'oci_screens' => array(
-                'relation' => 'has_many_through',
+                'relation' => 'has_and_belongs_to',
                 'join_table' => 'oci_roles_screens',
                 'join_key' => 'role_id',
                 'key' => 'screen_id',
             ),
-            // with oci_menus we have has_many_through relation on bridge key 'menu_id'
-            // has_many_through: each of us have many of them through a join table
+            // with oci_menus we have has_and_belongs_to relation on bridge key 'menu_id'
+            // has_and_belongs_to: each of us have many of them through a join table
             'oci_menus' => array(
-                'relation' => 'has_many_through',
+                'relation' => 'has_and_belongs_to',
                 'join_table' => 'oci_roles_menus',
                 'join_key' => 'role_id',
                 'key' => 'menu_id',

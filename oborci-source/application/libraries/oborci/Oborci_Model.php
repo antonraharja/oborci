@@ -96,7 +96,7 @@ class Oborci_Model {
         }
         
         /**
-         * Get from relation table with has_many_through relation
+         * Get from relation table with has_and_belongs_to relation
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items
