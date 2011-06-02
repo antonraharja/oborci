@@ -6,18 +6,29 @@ Ext.onReady(function(){
                 closable: false,
                 draggable: false,
                 resizable: false,
-                layout: 'fit',
+                layout: 'border',
                 initComponent: function() {
-                        this.tbar = {
-                                xtype: 'toolbar',
-                                items: [
-                                {
+                        this.items = [{
+                                xtype: 'panel',
+                                title: '',
+                                autoHeight: true,
+                                layout: 'column',
+                                region: 'north',
+                                margins: '5 5 0 5',
+                                tbar: [{
                                         xtype: 'button',
-                                        text: 'Home'
-                                },
-                                {
+                                        text: 'Help',
+                                        handler: onMenuClick
+                                                        
+                                },{
+                                        xtype: 'tbfill' // or '->'
+                                },{
                                         xtype: 'button',
-                                        text: 'Master',
+                                        text: 'Home',
+                                        handler: onMenuClick
+                                },{
+                                        xtype: 'button',
+                                        text: 'Main',
                                         menu: {
                                                 xtype: 'menu',
                                                 items: [
@@ -48,23 +59,43 @@ Ext.onReady(function(){
                                         xtype: 'button',
                                         text: 'Logout',
                                         handler: onLogoutClick
-                                }
-                                ]
-                        };
-                        this.items = [
-                        {
-                                xtype: 'treepanel',
-                                title: 'My Tree',
-                                width: 260,
-                                height: 511,
-                                root: {
-                                        text: 'Tree Node'
-                                },
-                                loader: {
-
-                        }
-                        }
-                        ];
+                                }]
+                        },{
+                                xtype: 'panel',
+                                title: 'Options',
+                                width: 200,
+                                height: '100%',
+                                layout: 'accordion',
+                                collapsible: true,
+                                region: 'west',
+                                margins: '5 0 5 5',
+                                split: true,
+                                items: [{
+                                        title: 'Panel 1',
+                                        html: 'Content of Panel 1'
+                                },{
+                                        title: 'Panel 2',
+                                        html: 'Content of Panel 2'
+                                },{
+                                        title: 'Panel 3',
+                                        html: 'Content of Panel 3'
+                                },{
+                                        title: 'Panel 4',
+                                        html: 'Content of Panel 4'
+                                },{
+                                        title: 'Panel 5',
+                                        html: 'Content of Panel 5'
+                                }]
+                        },{
+                                xtype: 'panel',
+                                title: 'Dashboard',
+                                width: '100%',
+                                height: '100%',
+                                layout: 'fit',
+                                region: 'center',
+                                margins: '5 5 5 0',
+                                split: true
+                        }];
                         MyWindowUi.superclass.initComponent.call(this);
                 }
         });        
