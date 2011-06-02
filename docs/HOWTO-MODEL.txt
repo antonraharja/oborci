@@ -11,6 +11,16 @@ FILES
 - application/helpers/translate_helper.php
 
 
+RELATIONS
+---------
+- has_one
+- belongs_to
+- has_many
+- has_and_belongs_to_many
+
+Please read: http://guides.rubyonrails.org/association_basics.html
+
+
 METHODS
 -------
 
