@@ -1,7 +1,7 @@
 Ext.onReady(function(){
         var login = new Ext.FormPanel({ 
                 labelWidth:80,
-                url:'process/login', 
+                url:'process/login/ajax', 
                 frame:true, 
                 title:'Please Login', 
                 defaultType:'textfield',

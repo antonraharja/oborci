@@ -21,16 +21,18 @@ class Process extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
+         * @param string $param Is 'ajax' or NULL
 	 *
 	 */
-	public function index() {
+	public function index($param=NULL) {
 		redirect('example2/welcome');
 	}
 
 	/**
 	 * Process login
+         * @param string $param Is 'ajax' or NULL
 	 */
-	public function login() {
+	public function login($param=NULL) {
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
                 if (! (empty($username) && empty($password))) {
@@ -56,16 +58,18 @@ class Process extends CI_Controller {
 
 	/**
 	 * Process logout
+         * @param string $param Is 'ajax' or NULL
 	 */
-	public function logout() {
+	public function logout($param=NULL) {
 		$this->auth->logout();
                 redirect('example2/welcome');
 	}
 
 	/**
 	 * Process unauthorized
+         * @param string $param Is 'ajax' or NULL
 	 */
-	public function unauthorized() {
+	public function unauthorized($param=NULL) {
                 $this->auth->logout();
                 redirect('example2/welcome');
 	}
