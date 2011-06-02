@@ -13,24 +13,28 @@ FILES
 
 RELATIONS
 ---------
-- has_one
 - belongs_to
+- has_one
 - has_many
 - has_and_belongs_to_many
 
 Please read: http://guides.rubyonrails.org/association_basics.html
 
 Example:
-1. A blog application:
+1. Blog relation:
         - tbl_users --> tbl_posts --> tbl_comments
                 - a user has many posts
                 - a post has many comments
                 - a comment belongs to a post
                 - a post belongs to a user
-2. A contact application:
+2. Contact relation:
         - tbl_users <--> tbl_users_contacts <--> tbl_contacts
                 - a user has and belongs to many contacts
                 - a contact has and belongs to many user
+3. User and preferences:
+        - tbl_users --> tbl_preferences
+                - a user belongs_to a preferences
+                - a preferences has_one user
 
 
 METHODS
@@ -62,6 +66,13 @@ public function get_all()
  * @return object CI active record query containing data items
  */
 public function get_by($field_value)
+
+/**
+ * Get one data by partial fields and its value
+ * @param array $field_value Array of fields and its value
+ * @return object CI active record query containing data item
+ */
+public function get_one($field_value)
 
 /**
  * Get from relation table with various relation type
@@ -138,14 +149,16 @@ class oci_users extends Oborci_Model {
         protected $db_primary_key = 'id';
         
         protected $db_relations = array(
-            // with oci_roles we have has_one relation on (our) foreign key 'role'
-            // has_one: each of us have one of them
+            // with oci_roles we have belongs_to relation on (mapped) key 'role'
+            // belongs_to: each of us have one of them
             'oci_roles' => array(
-                'relation' => 'has_one',
+                'relation' => 'belongs_to',
                 'foreign_key' => 'role',
             ),
+            // with oci_preferences we have belongs_to relation on (mapped) key 'preferences'
+            // belongs_to: each of us have one of them
             'oci_preferences' => array(
-                'relation' => 'has_one',
+                'relation' => 'belongs_to',
                 'foreign_key' => 'preferences'
             ),
         );
