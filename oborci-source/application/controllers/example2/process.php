@@ -6,7 +6,7 @@ exit('No direct script access allowed');
 /**
  * Process controller
  *
- * @property oci_auth $oci_auth
+ * @property auth $auth
  * @property themes $themes
  *
  * @author Anton Raharja
@@ -16,8 +16,7 @@ class Process extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_auth'));
-                $this->load->library(array('uri'));
+                $this->load->library(array('oborci/Auth', 'uri'));
 	}
 
 	/**
@@ -35,8 +34,8 @@ class Process extends CI_Controller {
 		$username = $this->input->post('username');
 		$password = $this->input->post('password');
                 if (! (empty($username) && empty($password))) {
-                        if ($this->oci_auth->authenticate($username, $password)) {
-                                if ($this->oci_auth->login()) {
+                        if ($this->auth->authenticate($username, $password)) {
+                                if ($this->auth->login()) {
                                         $data['output']['success'] = TRUE;
                                         $data['output']['message'] = t('Login successful');
                                 } else {
@@ -59,7 +58,7 @@ class Process extends CI_Controller {
 	 * Process logout
 	 */
 	public function logout() {
-		$this->oci_auth->logout();
+		$this->auth->logout();
                 redirect('example2/welcome');
 	}
 
@@ -67,7 +66,7 @@ class Process extends CI_Controller {
 	 * Process unauthorized
 	 */
 	public function unauthorized() {
-                $this->oci_auth->logout();
+                $this->auth->logout();
                 redirect('example2/welcome');
 	}
 

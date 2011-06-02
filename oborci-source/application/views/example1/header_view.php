@@ -26,7 +26,7 @@
 <h1><?php echo t('Example1 Panel'); ?></h1>
 
 <p>
-<?php if ($this->oci_auth->get_access()) : ?>
+<?php if ($this->auth->get_access()) : ?>
 <?php echo t('Welcome'); ?> <?= $login['first_name'] ?> <?= $login['last_name'] ?><br />
 <?php echo t('Your role'); ?>: <?= $login['role'] ?>
 <?php endif; ?>
@@ -34,7 +34,7 @@
 
 <div id='menu_box'>
         <?= $menu['box'] ?>
-<?php if ($this->oci_auth->get_access()) : ?>
+<?php if ($this->auth->get_access()) : ?>
         <?php echo anchor('example1/process/logout', t('Logout'), 'title=' . t('Logout')); ?>
 <?php endif; ?>
 </div>

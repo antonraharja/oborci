@@ -4,14 +4,16 @@ if (!defined('BASEPATH'))
 exit('No direct script access allowed');
 
 /**
- * Authentication model
+ * Authentication library
  *
  * @property oci_roles $oci_roles
  * @property oci_users $oci_users
- *  *
+ * 
  * @author Anton Raharja
+ * @version 0.9
+ * @see http://github.com/antonraharja/oborci
  */
-class oci_auth extends CI_Model {
+class Auth {
 
 	public $username = NULL;
 	public $password = NULL;
@@ -22,16 +24,19 @@ class oci_auth extends CI_Model {
 	private $login_state = FALSE;
 	private $access = FALSE;
         
+        private $CI = NULL;
+        
 	function __construct() {
-		$this->load->model(
+                $this->CI =& get_instance();
+		$this->CI->load->model(
 			array(
 				'oborci/oci_roles', 
 				'oborci/oci_users',
                                 'oborci/oci_screens',
 			)
 		);
-		if ($this->session->userdata('login_state')) {
-			$this->user_id = $this->session->userdata('user_id');
+		if ($this->CI->session->userdata('login_state')) {
+			$this->user_id = $this->CI->session->userdata('user_id');
 			$this->set_login_state(TRUE);
                         $this->_populate_ids();
 		}
@@ -42,7 +47,7 @@ class oci_auth extends CI_Model {
 	 */
 	private function _populate_ids() {
 		$user_id = $this->user_id;
-                $query = $this->oci_users->get($user_id);
+                $query = $this->CI->oci_users->get($user_id);
                 $row = $query->row();
                 if ($query->num_rows() > 0) {
                         $this->preference_id = $row->preference_id;
@@ -90,7 +95,7 @@ class oci_auth extends CI_Model {
 		if ($this->get_login_state()) {
 			$data['user_id'] = $this->user_id;
 			$data['login_state'] = $this->get_login_state();
-			$this->session->set_userdata($data);
+			$this->CI->session->set_userdata($data);
 			return TRUE;
 		} else {
 			return FALSE;
@@ -102,12 +107,12 @@ class oci_auth extends CI_Model {
 	 * @return NULL
 	 */
 	public function logout() {
-		$this->session->sess_destroy();
+		$this->CI->session->sess_destroy();
 		$this->user_id = NULL;
 		$this->set_login_state(FALSE);
 		$data['user_id'] = $this->user_id;
 		$data['login_state'] = $this->get_login_state();
-		$this->session->unset_userdata($data);
+		$this->CI->session->unset_userdata($data);
 	}
 
 	/**
@@ -125,7 +130,7 @@ class oci_auth extends CI_Model {
                 $this->username = $username;
                 $this->password = $password;
 		if ($this->username && $this->password) {
-                        $query = $this->oci_users->get_by(array('username' => $this->username));
+                        $query = $this->CI->oci_users->get_by(array('username' => $this->username));
                         $row = $query->row();
 			if (isset($row->id)) {
                                 $test_password = $row->password;
@@ -152,13 +157,13 @@ class oci_auth extends CI_Model {
 	public function validate() {
 		if ($this->get_login_state()) {
 			$uri = NULL;
-			if ($this->uri->rsegment(1)) {
-				$uri = $this->uri->rsegment(1);
+			if ($this->CI->uri->rsegment(1)) {
+				$uri = $this->CI->uri->rsegment(1);
 			}
-			if ($this->uri->rsegment(2) && ($this->uri->rsegment(2) != 'index')) {
-				$uri .= '/' . $this->uri->rsegment(2);
+			if ($this->CI->uri->rsegment(2) && ($this->CI->uri->rsegment(2) != 'index')) {
+				$uri .= '/' . $this->CI->uri->rsegment(2);
 			}
-                        $query = $this->oci_roles->get_from('oci_screens', array('id' => $this->role_id));
+                        $query = $this->CI->oci_roles->get_from('oci_screens', array('id' => $this->role_id));
                         foreach ($query->result() as $row) {
                                 if ($row->uri == $uri) {
                                         $this->set_access(TRUE);

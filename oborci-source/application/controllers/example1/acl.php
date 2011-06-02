@@ -6,7 +6,7 @@ exit('No direct script access allowed');
 /**
  * ACL controller
  *
- * @property oci_auth $oci_auth
+ * @property auth $auth
  * @property crud $crud
  * @property themes $themes
  * @property oci_roles $oci_roles
@@ -18,9 +18,9 @@ class Acl extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_auth', 'example1/themes', 'oborci/oci_screens'));
-                $this->load->library(array('oborci/Crud'));
-		$this->oci_auth->validate();
+                $this->load->model(array('example1/themes', 'oborci/oci_screens'));
+                $this->load->library(array('oborci/Auth', 'oborci/Crud'));
+		$this->auth->validate();
 	}
 
 	/**
@@ -77,7 +77,7 @@ class Acl extends CI_Controller {
 	 * 
 	 */
 	public function screens($param=NULL) {
-		if ($this->oci_auth->get_access()) {
+		if ($this->auth->get_access()) {
 			$data['menu']['box'] = $this->themes->menu_box();
 			$data['login'] = $this->themes->get_login();
 			$data['crud'] = $this->_get_crud_for_screens($param);
@@ -92,7 +92,7 @@ class Acl extends CI_Controller {
 	 * 
 	 */
 	public function menus($param=NULL) {
-		if ($this->oci_auth->get_access()) {
+		if ($this->auth->get_access()) {
 			$data['menu']['box'] = $this->themes->menu_box();
 			$data['login'] = $this->themes->get_login();
 			$data['crud'] = $this->_get_crud_for_menus();

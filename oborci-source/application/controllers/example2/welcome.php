@@ -6,7 +6,7 @@ exit('No direct script access allowed');
 /**
  * Home controller for example2
  *
- * @property oci_auth $oci_auth
+ * @property auth $auth
  * @property themes $themes
  *
  * @author Anton Raharja
@@ -16,8 +16,8 @@ class Welcome extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_auth'));
-		$this->oci_auth->validate();
+                $this->load->library(array('oborci/Auth'));
+		$this->auth->validate();
 	}
 
 	/**
@@ -25,7 +25,7 @@ class Welcome extends CI_Controller {
 	 *
 	 */
 	public function index() {
-                if ($this->oci_auth->get_access()) {
+                if ($this->auth->get_access()) {
                         $this->load->view('example2/app_view');
                 } else {
                         $this->load->view('example2/login_view');

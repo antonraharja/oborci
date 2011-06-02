@@ -7,7 +7,7 @@ Authentication library.
 FILES
 -----
 
-- application/models/oci_auth.php
+- application/libraries/Auth.php
         - This file includes:
                 - application/models/oci_roles.php
                 - application/models/oci_screens.php
@@ -82,9 +82,9 @@ class Users extends CI_Controller {
 	function __construct() {
 		parent::__construct();
                 // load the model
-                $this->load->model(array('oborci/oci_auth'));
+                $this->load->library(array('oborci/Auth'));
                 // do validation
-		$this->oci_auth->validate();
+		$this->auth->validate();
 	}
 
 	/**
@@ -93,10 +93,10 @@ class Users extends CI_Controller {
 	 */
 	public function index() {
                 // access validation result
-		if ($this->oci_auth->get_access()) {
+		if ($this->auth->get_access()) {
                         $data['message'] = t('You have logged in');
                         // access public variable $username from auth object
-                        $data['username'] = $this->oci_auth->username;
+                        $data['username'] = $this->auth->username;
 			$this->load->view('users_view', $data);
 		} else {
                         // get_access() returns FALSE, redirect it

@@ -8,7 +8,7 @@ exit('No direct script access allowed');
  *
  * @property oci_users $oci_users
  * @property oci_preferences $oci_preferences
- * @property oci_auth $oci_auth
+ * @property auth $auth
  * @property form $form
  * @property themes $themes
  *
@@ -19,9 +19,9 @@ class Preference extends CI_Controller {
 
 	function __construct() {
 		parent::__construct();
-                $this->load->model(array('oborci/oci_preferences', 'oborci/oci_users', 'oborci/oci_auth', 'example1/themes'));
-                $this->load->library(array('oborci/Form'));
-                if (! $this->oci_auth->validate()) {
+                $this->load->model(array('oborci/oci_preferences', 'oborci/oci_users', 'example1/themes'));
+                $this->load->library(array('oborci/Auth', 'oborci/Form'));
+                if (! $this->auth->validate()) {
                         redirect('example1/process/unauthorized');
                 }
 	}

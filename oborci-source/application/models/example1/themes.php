@@ -11,7 +11,7 @@ exit('No direct script access allowed');
  * @property oci_roles $oci_roles
  * @property oci_roles_menus $oci_roles_menus
  * @property oci_users $oci_users
- * @property oci_auth $oci_auth
+ * @property auth $auth
  * @property form $form
  *
  * @author Anton Raharja
@@ -21,14 +21,13 @@ class Themes extends CI_Model {
 	function __construct() {
 		$this->load->model(
 			array(
-                                'oborci/oci_auth', 
 				'oborci/oci_roles', 
 				'oborci/oci_users',
                                 'oborci/oci_preferences',
                                 'oborci/oci_menus',
 			)
 		);
-		$this->load->library(array('table', 'oborci/Form'));
+		$this->load->library(array('oborci/Auth', 'oborci/Form', 'table'));
 	}
 
 	/**
@@ -37,12 +36,12 @@ class Themes extends CI_Model {
 	 */
 	public function get_login() {
                 $data = NULL;
-		$query = $this->oci_users->get_from('oci_preferences', array('preferences' => $this->oci_auth->preference_id));
+		$query = $this->oci_users->get_from('oci_preferences', array('preferences' => $this->auth->preference_id));
                 $pref = $query->row_array();
 		if (isset($pref['id'])) {
                         $data = $pref;
 		}
-		$query = $this->oci_roles->get($this->oci_auth->role_id);
+		$query = $this->oci_roles->get($this->auth->role_id);
                 $role = $query->row();
 		if (isset($role->id)) {
 			$data['role'] = $role->name;
@@ -96,8 +95,8 @@ class Themes extends CI_Model {
 	 */
 	public function menu_array() {
 		$data = array();
-		if ($this->oci_auth->get_access()) {
-                        $query = $this->oci_roles->get_from('oci_menus', array('id' => $this->oci_auth->role_id));
+		if ($this->auth->get_access()) {
+                        $query = $this->oci_roles->get_from('oci_menus', array('id' => $this->auth->role_id));
                         foreach ($query->result() as $menu) {
                                 $data[] = array(
                                         'parent' => $menu->parent,
