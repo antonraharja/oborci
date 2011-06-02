@@ -90,8 +90,7 @@ class Oborci_Model {
                 $primary_key = $this->db_fields[$this->db_primary_key];
                 $id = $row[$primary_key];
                 if (! empty($id)) {
-                        $their_key = $this->CI->$model->db_fields[$rules['key']];
-                        $query = $this->CI->$model->get_by(array($their_key => $primary_key));
+                        $query = $this->CI->$model->get_by(array($rules['key'] => $id));
                 }
                 return $query;
         }

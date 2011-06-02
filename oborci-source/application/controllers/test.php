@@ -20,6 +20,7 @@ class Test extends CI_Controller {
                 $this->load->model(array(
                     'test_model', 
                     'test2_model',
+                    'test3_model',
                     'oborci/oci_users',
                     'oborci/oci_roles',
                     'oborci/oci_preferences',
@@ -50,6 +51,9 @@ class Test extends CI_Controller {
                 print_r($query->result_array());
 
                 $query = $this->test2_model->get_from('oci_menus', array('name' => 'Administrators'));
+                print_r($query->result_array());
+
+                $query = $this->test3_model->get_from('oci_users', array('id' => '1'));
                 print_r($query->result_array());
 	}
 	
