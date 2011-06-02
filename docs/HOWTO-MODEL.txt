@@ -20,6 +20,18 @@ RELATIONS
 
 Please read: http://guides.rubyonrails.org/association_basics.html
 
+Example:
+1. A blog application:
+        - tbl_users --> tbl_posts --> tbl_comments
+                - a user has many posts
+                - a post has many comments
+                - a comment belongs to a post
+                - a post belongs to a user
+2. A contact application:
+        - tbl_users <--> tbl_users_contacts <--> tbl_contacts
+                - a user has and belongs to many contacts
+                - a contact has and belongs to many user
+
 
 METHODS
 -------
