@@ -58,12 +58,12 @@ class Oborci_Model {
         }
         
         /**
-         * Get from relation table with has_one relation (we have one on other table)
+         * Get from relation table with belongs_to relation (we owned by one of the other table)
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items  
          */
-        private function _get_has_one($model, $field_value) {
+        private function _get_belongs_to($model, $field_value) {
                 $rules = $this->db_relations[$model];
                 $query = $this->get_by($field_value);
                 $row = $query->row_array();
@@ -77,12 +77,12 @@ class Oborci_Model {
         }
         
         /**
-         * Get from relation table with belongs_to relation (we owned by one of the other table)
+         * Get from relation table with has_one relation (other table have one of us)
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items  
          */
-        private function _get_belongs_to($model, $field_value) {
+        private function _get_has_one($model, $field_value) {
                 $rules = $this->db_relations[$model];
                 $query = $this->get_by($field_value);
                 $row = $query->row_array();
@@ -90,7 +90,7 @@ class Oborci_Model {
                 $primary_key = $this->db_fields[$this->db_primary_key];
                 $id = $row[$primary_key];
                 if (! empty($id)) {
-                        $query = $this->CI->$model->get_by(array($rules['key'] => $id));
+                        $query = $this->CI->$model->get_one(array($rules['key'] => $id));
                 }
                 return $query;
         }
@@ -186,6 +186,19 @@ class Oborci_Model {
         public function get_by($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $field_value = $this->_get_map($field_value);
+                $query = $this->db->get_where($this->db_table, $field_value);
+                return $query;
+        }
+
+        /**
+         * Get one data by partial fields and its value
+         * @param array $field_value Array of fields and its value
+         * @return object CI active record query containing data item
+         */
+        public function get_one($field_value) {
+                if (! $this->_oci_model_init()) { return NULL; };
+                $field_value = $this->_get_map($field_value);
+                $this->db->limit(1);
                 $query = $this->db->get_where($this->db_table, $field_value);
                 return $query;
         }
