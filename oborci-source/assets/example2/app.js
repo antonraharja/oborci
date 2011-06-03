@@ -74,7 +74,7 @@ Ext.onReady(function(){
                                         id: 'labelLogin',
                                         xtype: 'label',
                                         text: labelTextLogin,
-                                        padding: '0 0 0 5',
+                                        padding: '0 0 0 5'
                                                         
                                 },{
                                         xtype: 'tbfill' // or '->'
@@ -160,7 +160,7 @@ Ext.onReady(function(){
         
         Ext.define("Welcome", {
                 extend: 'Ext.data.Model',
-                fields: ['windowTitle', 'panelTitleWest', 'panelTitleCenter', 'panelHtmlCenter', 'labelTextLogin', 'buttonTextHome', 'buttonTextMain', 'buttonTextLogout', 'panelItemsOptions', 'menuItemsMain']
+                fields: ['loginState', 'windowTitle', 'panelTitleWest', 'panelTitleCenter', 'panelHtmlCenter', 'labelTextLogin', 'buttonTextHome', 'buttonTextMain', 'buttonTextLogout', 'panelItemsOptions', 'menuItemsMain']
         });
         
         var store = new Ext.data.Store({
@@ -182,36 +182,40 @@ Ext.onReady(function(){
                 var x;
                 var y;
                 
-                y = new MyWindowUi();
-                y.title = w.get('windowTitle');
+                if (w.get('loginState')) {
+                        y = new MyWindowUi();
+                        y.title = w.get('windowTitle');
 
-                x = Ext.getCmp('panelWest');
-                x.title = w.get('panelTitleWest');
-                x.removeAll();
-                x.add(w.get('panelItemsOptions'));
-                
-                x = Ext.getCmp('panelCenter');
-                x.title = w.get('panelTitleCenter');
-                x.html = w.get('panelHtmlCenter');
-                
-                x = Ext.getCmp('labelLogin');
-                x.text = w.get('labelTextLogin');
-                        
-                x = Ext.getCmp('buttonHome');
-                x.text = w.get('buttonTextHome');
-                
-                x = Ext.getCmp('buttonMain');
-                x.text = w.get('buttonTextMain');
-                
-                x = Ext.getCmp('buttonLogout');
-                x.text = w.get('buttonTextLogout');
-                
-                x = Ext.getCmp('menuMain');
-                x.removeAll();
-                x.add(w.get('menuItemsMain'));
-                x.addListener('click', onMenuMainClick);
-                
-                y.show();
+                        x = Ext.getCmp('panelWest');
+                        x.title = w.get('panelTitleWest');
+                        x.removeAll();
+                        x.add(w.get('panelItemsOptions'));
+
+                        x = Ext.getCmp('panelCenter');
+                        x.title = w.get('panelTitleCenter');
+                        x.html = w.get('panelHtmlCenter');
+
+                        x = Ext.getCmp('labelLogin');
+                        x.text = w.get('labelTextLogin');
+
+                        x = Ext.getCmp('buttonHome');
+                        x.text = w.get('buttonTextHome');
+
+                        x = Ext.getCmp('buttonMain');
+                        x.text = w.get('buttonTextMain');
+
+                        x = Ext.getCmp('buttonLogout');
+                        x.text = w.get('buttonTextLogout');
+
+                        x = Ext.getCmp('menuMain');
+                        x.removeAll();
+                        x.add(w.get('menuItemsMain'));
+                        x.addListener('click', onMenuMainClick);
+
+                        y.show();
+                } else {
+                        window.location.href='process/logout/ajax';
+                }
         }
 
 });

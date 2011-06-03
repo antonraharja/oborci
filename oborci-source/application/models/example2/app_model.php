@@ -24,10 +24,11 @@ class App_Model extends CI_Model {
                 $returns = array(
                     'returns' => array(
                         array(
+                            'loginState' => $this->auth->get_login_state(),
                             'windowTitle' => '<div style="font-size : 2em; height: 40px; padding-top: 10px;">OborCI Example2</div><div style="padding-bottom: 10px;"><a href="http://github.com/antonraharja/oborci">Get source code</a></div>',
                             'panelTitleWest' => 'Navigations',
                             'panelTitleCenter' => 'Dashboard',
-                            'panelHtmlCenter' => 'Welcome to OborCI project Example2',
+                            'panelHtmlCenter' => '<div style="font-size : 2em; height: 40px; padding: 5px 5px 5px 5px;">Welcome to OborCI Example2</div>',
                             'labelTextLogin' => 'Welcome: '.$this->auth->username,
                             'buttonTextHome' => 'Home',
                             'buttonTextMain' => 'Main',
@@ -47,7 +48,7 @@ class App_Model extends CI_Model {
                     ));
                 return $returns;
         }
-
+        
 }
 
 /* End of file app_model.php */
