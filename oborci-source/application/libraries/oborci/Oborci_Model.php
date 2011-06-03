@@ -12,6 +12,30 @@ exit('No direct script access allowed');
  */
 class Oborci_Model {
 
+        /**
+         * Database table name
+         * @var string
+         */
+        protected $db_table = NULL;
+        
+        /**
+         * Map of field's name
+         * @var array
+         */
+        protected $db_fields = NULL;
+        
+        /**
+         * Table's mapped primary key
+         * @var string
+         */
+        protected $db_primary_key = NULL;
+        
+        /**
+         * Table relation configuration
+         * @var array
+         */
+        protected $db_relations = NULL;
+        
         private $CI = NULL;
         private $db = NULL;
         
