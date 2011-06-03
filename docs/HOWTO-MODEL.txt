@@ -103,7 +103,7 @@ public function update_all($data)
  * @param array $data Array of data to be updated
  * @return boolean TRUE if update success
  */
-public function update_by($field_value, $data)
+public function update_where($field_value, $data)
 
 /**
  * Delete data

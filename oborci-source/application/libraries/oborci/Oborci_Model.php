@@ -267,7 +267,7 @@ class Oborci_Model {
 	 * @param array $data Array of data to be updated
 	 * @return boolean TRUE if update success
 	 */
-	public function update_by($field_value, $data) {
+	public function update_where($field_value, $data) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $field_value = $this->_get_map($field_value);
                 $data = $this->_get_map($data);
