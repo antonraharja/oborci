@@ -12,6 +12,10 @@ exit('No direct script access allowed');
  */
 class Oborci_Model {
 
+        // VARIABLES
+        // ---------------------------------------------------------------- //
+        
+        
         /**
          * Database table name
          * @var string
@@ -36,6 +40,11 @@ class Oborci_Model {
          */
         protected $db_relations = NULL;
         
+        
+        // CONSTRUCTS
+        // ---------------------------------------------------------------- //
+        
+        
         private $CI = NULL;
         private $db = NULL;
         
@@ -43,6 +52,11 @@ class Oborci_Model {
 		$this->CI =& get_instance();
                 $this->db = $this->CI->db;
 	}
+        
+        
+        // PRIVATES
+        // ---------------------------------------------------------------- //
+        
 
         /**
          * Helper to get field names and set primary_key
@@ -163,6 +177,11 @@ class Oborci_Model {
                 return $query;
         }
         
+        
+        // INSERT
+        // ---------------------------------------------------------------- //
+        
+        
         /**
 	 * Insert a new data to database
 	 * @param array $data Array of data to be inserted to database
@@ -180,6 +199,11 @@ class Oborci_Model {
 		}
                 return $returns;
 	}
+        
+        
+        // GET
+        // ---------------------------------------------------------------- //
+        
 
 	/**
 	 * Get specific data when ID is given
@@ -249,6 +273,11 @@ class Oborci_Model {
                 return $query;
         }
         
+        
+        // UPDATE
+        // ---------------------------------------------------------------- //
+        
+        
         /**
 	 * Update data
 	 * @param integer $id ID
@@ -304,7 +333,12 @@ class Oborci_Model {
 		}
                 return $returns;
 	}
+        
+        
+        // DELETE
+        // ---------------------------------------------------------------- //
 
+        
 	/**
 	 * Delete data
 	 * @param integer $id ID
