@@ -383,6 +383,43 @@ class Oborci_Model {
 		}
                 return $returns;
 	}
+        
+        
+        // CALLBACKS
+        // ---------------------------------------------------------------- //
+
+        
+        public function before_insert($param1=NULL, $param2=NULL) {
+                
+        }
+        
+        public function after_insert($param1=NULL, $param2=NULL) {
+                
+        }
+
+        public function before_get($param1=NULL, $param2=NULL) {
+                
+        }
+        
+        public function after_get($param1=NULL, $param2=NULL) {
+                
+        }
+
+        public function before_update($param1=NULL, $param2=NULL) {
+                
+        }
+        
+        public function after_update($param1=NULL, $param2=NULL) {
+                
+        }
+
+        public function before_delete($param1=NULL, $param2=NULL) {
+                
+        }
+        
+        public function after_delete($param1=NULL, $param2=NULL) {
+                
+        }
 
 }
 
