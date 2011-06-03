@@ -41,8 +41,10 @@ class Welcome extends CI_Controller {
         public function app($param=NULL) {
                 if ($this->auth->get_access()) {
                         $data['output'] = $this->app_model->get_vars();
-                        $this->load->view('example2/json_view', $data);
+                } else {
+                        $data['output'] = $this->app_model->get_unauthorized();
                 }
+                $this->load->view('example2/json_view', $data);
         }
         
 }

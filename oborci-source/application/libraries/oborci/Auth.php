@@ -173,10 +173,11 @@ class Auth {
                                 }
                         }
                         // special setup for user ID 1, which is suppose tobe 'admin'
+                        /*
                         if ($this->user_id == 1) {
                                 $this->set_access(TRUE);
                                 return TRUE;
-                        }
+                        }*/
 		}
                 $this->set_access(FALSE);
                 return FALSE;

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 30, 2011 at 10:31 AM
+-- Generation Time: Jun 03, 2011 at 06:09 PM
 -- Server version: 5.5.8
 -- PHP Version: 5.3.5
 
@@ -105,12 +105,14 @@ CREATE TABLE IF NOT EXISTS `oci_preferences` (
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `oci_preferences`
 --
 
+INSERT INTO `oci_preferences` (`id`, `email`, `first_name`, `last_name`) VALUES
+(1, 'antonrd@gmail.com', 'Anton', 'Raharja');
 
 -- --------------------------------------------------------
 
@@ -177,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `oci_roles_screens` (
   `role_id` int(11) NOT NULL,
   `screen_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --
 -- Dumping data for table `oci_roles_screens`
@@ -195,7 +197,9 @@ INSERT INTO `oci_roles_screens` (`id`, `role_id`, `screen_id`) VALUES
 (9, 1, 7),
 (10, 1, 8),
 (11, 1, 9),
-(12, 1, 10);
+(12, 1, 10),
+(13, 1, 11),
+(14, 2, 11);
 
 -- --------------------------------------------------------
 
@@ -210,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `oci_screens` (
   `name` varchar(100) NOT NULL,
   `uri` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `oci_screens`
@@ -226,7 +230,8 @@ INSERT INTO `oci_screens` (`id`, `module_id`, `name`, `uri`) VALUES
 (7, 1, 'Screen Management', 'screens'),
 (8, 1, 'Module Management', 'modules'),
 (9, 1, 'ACL screens management', 'acl/screens'),
-(10, 1, 'ACL menus management', 'acl/menus');
+(10, 1, 'ACL menus management', 'acl/menus'),
+(11, 1, 'Welcome App', 'welcome/app');
 
 -- --------------------------------------------------------
 
@@ -264,4 +269,4 @@ INSERT INTO `oci_users` (`id`, `role_id`, `preference_id`, `username`, `password
 (24, 9, 0, 'hoho', 'asd', ''),
 (25, 10, 28, 'tester1', 'test', ''),
 (26, 2, 29, 'Momotaro', 'ooo', ''),
-(27, 1, 0, 'rumbada', 'asdf1234', '');
+(27, 1, 1, 'rumbada', 'asdf1234', '');

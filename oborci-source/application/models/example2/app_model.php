@@ -17,6 +17,10 @@ class App_Model extends CI_Model {
                 $this->load->library('oborci/Auth');
 	}
         
+        /**
+         * Get variables for dashboard
+         * @return array Dahsboard variables
+         */
         public function get_vars() {
                 // ['windowTitle', 'panelTitleWest', 'panelTitleCenter', 
                 // 'panelHtmlCenter', 'labelTextLogin', 'buttonTextHome', 
@@ -46,6 +50,21 @@ class App_Model extends CI_Model {
                             ),
                         )
                     ));
+                return $returns;
+        }
+        
+        /**
+         * Get unauthorized response
+         * @return array Unauthorized response
+         */
+        public function get_unauthorized() {
+                $returns = array(
+                    'returns' => array(
+                        array(
+                            'loginState' => FALSE,
+                        )
+                     )
+                 );
                 return $returns;
         }
         
