@@ -123,7 +123,7 @@ public function delete_all()
  * @param integer $field_value Array of fields and its value
  * @return boolean TRUE if deletion success
  */
-public function delete_by($field_value)
+public function delete_where($field_value)
 
 
 USAGE EXAMPLES

@@ -315,7 +315,7 @@ class Oborci_Model {
 	 * @param integer $field_value Array of fields and its value
 	 * @return boolean TRUE if deletion success
 	 */
-	public function delete_by($field_value) {
+	public function delete_where($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $returns = FALSE;
                 $field_value = $this->_get_map($field_value);
