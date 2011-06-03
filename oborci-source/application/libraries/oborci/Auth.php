@@ -36,16 +36,28 @@ class Auth {
 			)
 		);
 		if ($this->CI->session->userdata('login_state')) {
+                        $this->_id_empty();
 			$this->user_id = $this->CI->session->userdata('user_id');
 			$this->set_login_state(TRUE);
-                        $this->_populate_ids();
+                        $this->_id_refill();
 		}
 	}
 
 	/**
-	 * Helper function to get user ID, preference ID and role ID information
+	 * Helper function to empty variables in the object
 	 */
-	private function _populate_ids() {
+	private function _id_empty() {
+                $this->username = NULL;
+                $this->password = NULL;
+                $this->user_id = NULL;
+                $this->role_id = NULL;
+                $this->preference_id = NULL;
+	}
+
+	/**
+	 * Helper function to re-fill object with informations related to logged in user
+	 */
+	private function _id_refill() {
 		$user_id = $this->user_id;
                 $query = $this->CI->oci_users->get($user_id);
                 $row = $query->row();
@@ -98,9 +110,10 @@ class Auth {
 			$data['user_id'] = $this->user_id;
 			$data['login_state'] = $this->get_login_state();
 			$this->CI->session->set_userdata($data);
-                        $this->_populate_ids();
+                        $this->_id_refill();
 			return TRUE;
 		} else {
+                        $this->_id_empty();
 			return FALSE;
 		}
 	}
@@ -116,6 +129,7 @@ class Auth {
 		$data['user_id'] = $this->user_id;
 		$data['login_state'] = $this->get_login_state();
 		$this->CI->session->unset_userdata($data);
+                $this->_id_empty();
 	}
 
 	/**
