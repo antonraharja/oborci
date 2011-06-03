@@ -65,7 +65,7 @@ class Oborci_Model {
          */
         private function _get_belongs_to($model, $field_value) {
                 $rules = $this->db_relations[$model];
-                $query = $this->get_by($field_value);
+                $query = $this->get_where($field_value);
                 $row = $query->row_array();
                 $query = NULL;
                 $foreign_key = $this->db_fields[$rules['foreign_key']];
@@ -84,7 +84,7 @@ class Oborci_Model {
          */
         private function _get_has_one($model, $field_value) {
                 $rules = $this->db_relations[$model];
-                $query = $this->get_by($field_value);
+                $query = $this->get_where($field_value);
                 $row = $query->row_array();
                 $query = NULL;
                 $primary_key = $this->db_fields[$this->db_primary_key];
@@ -103,13 +103,13 @@ class Oborci_Model {
          */
         private function _get_has_many($model, $field_value) {
                 $rules = $this->db_relations[$model];
-                $query = $this->get_by($field_value);
+                $query = $this->get_where($field_value);
                 $row = $query->row_array();
                 $query = NULL;
                 $primary_key = $this->db_fields[$this->db_primary_key];
                 $id = $row[$primary_key];
                 if (! empty($id)) {
-                        $query = $this->CI->$model->get_by(array($rules['key'] => $id));
+                        $query = $this->CI->$model->get_where(array($rules['key'] => $id));
                 }
                 return $query;
         }
@@ -122,7 +122,7 @@ class Oborci_Model {
          */
         private function _get_has_and_belongs_to_many($model, $field_value) {
                 $rules = $this->db_relations[$model];
-                $query = $this->get_by($field_value);
+                $query = $this->get_where($field_value);
                 $row = $query->row_array();
                 $query = NULL;
                 $primary_key = $this->db_fields[$this->db_primary_key];
@@ -183,7 +183,7 @@ class Oborci_Model {
          * @param array $field_value Array of fields and its value
          * @return object CI active record query containing data items
          */
-        public function get_by($field_value) {
+        public function get_where($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $field_value = $this->_get_map($field_value);
                 $query = $this->db->get_where($this->db_table, $field_value);

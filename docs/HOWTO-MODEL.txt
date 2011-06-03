@@ -65,7 +65,7 @@ public function get_all()
  * @param array $field_value Array of fields and its value
  * @return object CI active record query containing data items
  */
-public function get_by($field_value)
+public function get_where($field_value)
 
 /**
  * Get one data by partial fields and its value

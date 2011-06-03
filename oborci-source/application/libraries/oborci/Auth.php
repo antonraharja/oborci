@@ -133,7 +133,7 @@ class Auth {
                 $this->username = $username;
                 $this->password = $password;
 		if ($this->username && $this->password) {
-                        $query = $this->CI->oci_users->get_by(array('username' => $this->username));
+                        $query = $this->CI->oci_users->get_where(array('username' => $this->username));
                         $row = $query->row();
 			if (isset($row->id)) {
                                 $test_password = $row->password;
