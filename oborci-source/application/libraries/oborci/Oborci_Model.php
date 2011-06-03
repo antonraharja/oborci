@@ -19,13 +19,13 @@ class Oborci_Model {
         protected $db_table = NULL;
         
         /**
-         * Map of field's name
+         * Map of field's name. If NULL the model will auto-fill this.
          * @var array
          */
         protected $db_fields = NULL;
         
         /**
-         * Table's mapped primary key
+         * Table's mapped primary key. If NULL the model will auto-set it.
          * @var string
          */
         protected $db_primary_key = NULL;
