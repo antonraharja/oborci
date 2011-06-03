@@ -1,8 +1,8 @@
 README
 ------
 
-OborCI, Obor CI, CI Torch Project. Speed up coding, especially starting up, by 
-using libraries included in this package.
+OborCI, speedup coding with CodeIgniter PHP framework, especially starting up,
+by using libraries included in this package.
 
 Author  : Anton Raharja
 Contact : antonrd@gmail.com
