@@ -4,16 +4,16 @@
 <title>Oborci Example1</title>
 <script
 	type="text/javascript"
-	src="<?php echo base_url(); ?>assets/example1/js/jquery-1.6.min.js"></script>
+	src="<?php echo base_url(); ?>assets/oborci/js/jquery-1.6.min.js"></script>
 <script
 	type="text/javascript"
-	src="<?php echo base_url(); ?>assets/example1/js/jquery.tablesorter.min.js"></script>
+	src="<?php echo base_url(); ?>assets/oborci/js/jquery.tablesorter.min.js"></script>
 <script
 	type="text/javascript"
-	src="<?php echo base_url(); ?>assets/example1/js/jquery.metadata.js"></script>
+	src="<?php echo base_url(); ?>assets/oborci/js/jquery.metadata.js"></script>
 <script
 	type="text/javascript"
-	src="<?php echo base_url(); ?>assets/example1/js/jquery.tablesorter.pager.js"></script>
+	src="<?php echo base_url(); ?>assets/oborci/js/jquery.tablesorter.pager.js"></script>
 <link rel="stylesheet"
 	href="<?php echo base_url(); ?>assets/example1/css/home.css" type="text/css" />
 <link rel="stylesheet"
