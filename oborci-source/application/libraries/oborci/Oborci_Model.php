@@ -63,7 +63,7 @@ class Oborci_Model {
          * @return boolean TRUE if model init succeeded
          */
         private function _oci_model_init() {
-                if (isset($this->db_table)) {
+                if (isset($this->db_table) && $this->db->table_exists($this->db_table)) {
                         if (! is_array($this->db_fields)) {
                                 $fields = $this->db->field_data($this->db_table);
                                 foreach ($fields as $field)
