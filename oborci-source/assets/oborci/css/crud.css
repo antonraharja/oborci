@@ -139,7 +139,7 @@ tr.alt:hover {
 }
 
 table.crud_table thead tr .header {
-	background-image: url(../images/oborci/bg.gif);
+	background-image: url(../../../assets/oborci/images/bg.gif);
 	background-repeat: no-repeat;
 	background-position: center right;
 	cursor: pointer;
@@ -153,11 +153,11 @@ table.crud_table tbody tr.odd td {
 }
 
 table.crud_table thead tr .headerSortUp {
-	background-image: url(../images/oborci/asc.gif);
+	background-image: url(../../../assets/oborci/images/asc.gif);
 }
 
 table.crud_table thead tr .headerSortDown {
-	background-image: url(../images/oborci/desc.gif);
+	background-image: url(../../../assets/oborci/images/desc.gif);
 }
 
 table.crud_table thead tr .headerSortDown, table.crud_table thead tr .headerSortUp {

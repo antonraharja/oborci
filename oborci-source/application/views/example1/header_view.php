@@ -17,9 +17,9 @@
 <link rel="stylesheet"
 	href="<?php echo base_url(); ?>assets/example1/css/home.css" type="text/css" />
 <link rel="stylesheet"
-	href="<?php echo base_url(); ?>assets/example1/css/oborci/crud.css" type="text/css" />
+	href="<?php echo base_url(); ?>assets/oborci/css/crud.css" type="text/css" />
 <link rel="stylesheet"
-	href="<?php echo base_url(); ?>assets/example1/css/oborci/form.css" type="text/css" />
+	href="<?php echo base_url(); ?>assets/oborci/css/form.css" type="text/css" />
 </head>
 <body>
 

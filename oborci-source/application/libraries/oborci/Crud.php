@@ -756,11 +756,11 @@ class Crud {
                                 $returns .= '
                                         <div id="pagination" class="crud_pagination">
                                                 <form>
-                                                        <img src="'.base_url().'assets/images/oborci/first.png" class="first"/>
-                                                        <img src="'.base_url().'assets/images/oborci/prev.png" class="prev"/>
+                                                        <img src="'.base_url().'assets/oborci/images/first.png" class="first"/>
+                                                        <img src="'.base_url().'assets/oborci/images/prev.png" class="prev"/>
                                                         <input type="text" class="pagedisplay" readonly />
-                                                        <img src="'.base_url().'assets/images/oborci/next.png" class="next"/>
-                                                        <img src="'.base_url().'assets/images/oborci/last.png" class="last"/>
+                                                        <img src="'.base_url().'assets/oborci/images/next.png" class="next"/>
+                                                        <img src="'.base_url().'assets/oborci/images/last.png" class="last"/>
                                                         <select class="pagesize">
                                                                 <option selected="selected" value="10">10</option>
                                                                 <option value="20">20</option>
