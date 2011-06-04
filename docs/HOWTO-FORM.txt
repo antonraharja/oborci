@@ -8,7 +8,7 @@ FILES
 -----
 
 - application/libraries/oborci/Form.php
-- assets/css/oborci/form.css
+- assets/oborci/css/form.css
 - application/helpers/oborci/translate_helper.php
 
 

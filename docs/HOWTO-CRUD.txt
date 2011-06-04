@@ -10,8 +10,9 @@ FILES
 - application/config/oborci_crud.php
 - application/libraries/oborci/Crud.php
 - application/libraries/oborci/Form.php
-- assets/css/oborci/crud.css
-- assets/css/oborci/form.css
+- assets/oborci/css/crud.css
+- assets/oborci/css/form.css
+- assets/oborci/js/jquery*
 - application/helpers/oborci/translate_helper.php
 
 
