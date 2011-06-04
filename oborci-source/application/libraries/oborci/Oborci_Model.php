@@ -190,6 +190,7 @@ class Oborci_Model {
 	public function insert($data) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $data = $this->_get_map($data);
+                $data = $this->before_insert($data);
                 $returns = FALSE;
 		if ($this->db->insert($this->db_table, $data)) {
 			$insert_id = $this->db->insert_id();
@@ -197,6 +198,7 @@ class Oborci_Model {
 				$returns = $insert_id;
 			}
 		}
+                $returns = $this->after_insert($data, $returns);
                 return $returns;
 	}
         
@@ -389,36 +391,23 @@ class Oborci_Model {
         // ---------------------------------------------------------------- //
 
         
-        public function before_insert($param1=NULL, $param2=NULL) {
-                
+        /**
+         * Callback before insert
+         * @param array $data Insert data array
+         * @return array Tampered insert data array
+         */
+        public function before_insert($data) {
+                return $data;
         }
         
-        public function after_insert($param1=NULL, $param2=NULL) {
-                
-        }
-
-        public function before_get($param1=NULL, $param2=NULL) {
-                
-        }
-        
-        public function after_get($param1=NULL, $param2=NULL) {
-                
-        }
-
-        public function before_update($param1=NULL, $param2=NULL) {
-                
-        }
-        
-        public function after_update($param1=NULL, $param2=NULL) {
-                
-        }
-
-        public function before_delete($param1=NULL, $param2=NULL) {
-                
-        }
-        
-        public function after_delete($param1=NULL, $param2=NULL) {
-                
+        /**
+         * Callback after insert
+         * @param array $data Insert data array
+         * @param boolean $returns Insert state result
+         * @return boolean Tampered insert state result
+         */
+        public function after_insert($data, $returns) {
+                return $returns;
         }
 
 }
