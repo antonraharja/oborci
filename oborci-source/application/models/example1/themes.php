@@ -36,13 +36,13 @@ class Themes extends CI_Model {
 	 */
 	public function get_login() {
                 $data = NULL;
-		$query = $this->oci_users->get_from('oci_preferences', array('preferences' => $this->auth->preference_id));
-                $pref = $query->row_array();
+		$results = $this->oci_users->find_from('oci_preferences', array('preferences' => $this->auth->preference_id));
+                $pref = $results[0];
 		if (isset($pref['id'])) {
                         $data = $pref;
 		}
-		$query = $this->oci_roles->get($this->auth->role_id);
-                $role = $query->row();
+		$results = $this->oci_roles->find($this->auth->role_id);
+                $role = (object)$results[0];
 		if (isset($role->id)) {
 			$data['role'] = $role->name;
 		}
@@ -96,8 +96,9 @@ class Themes extends CI_Model {
 	public function menu_array() {
 		$data = array();
 		if ($this->auth->get_access()) {
-                        $query = $this->oci_roles->get_from('oci_menus', array('id' => $this->auth->role_id));
-                        foreach ($query->result() as $menu) {
+                        $results = $this->oci_roles->find_from('oci_menus', array('id' => $this->auth->role_id));
+                        foreach ($results as $menu) {
+                                $menu = (object)$menu;
                                 $data[] = array(
                                         'parent' => $menu->parent,
                                         'index' => $menu->index,
