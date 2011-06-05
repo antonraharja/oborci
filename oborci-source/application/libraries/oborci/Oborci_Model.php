@@ -254,9 +254,11 @@ class Oborci_Model {
 	 */
 	public function find($id) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $id = $this->before_find($id);
 		$query = $this->db->get_where($this->db_table, array($this->db_fields[$this->db_primary_key] => $id));
                 $this->_format_find_returns($query);
                 $returns = $this->get_returns();
+                $returns = $this->after_find($id, $returns);
 		return $returns;
 	}
 
@@ -266,9 +268,11 @@ class Oborci_Model {
 	 */
 	public function find_all() {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $this->before_find_all();
         	$query = $this->db->get($this->db_table);
                 $this->_format_find_returns($query);
                 $returns = $this->get_returns();
+                $returns = $this->after_find_all($returns);
 		return $returns;
 	}
 
@@ -280,9 +284,11 @@ class Oborci_Model {
         public function find_where($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $field_value = $this->_get_map($field_value);
+                $field_value = $this->before_find_where($field_value);
                 $query = $this->db->get_where($this->db_table, $field_value);
                 $this->_format_find_returns($query);
                 $returns = $this->get_returns();
+                $returns = $this->after_find_where($field_value, $returns);
                 return $returns;
         }
 
@@ -294,10 +300,12 @@ class Oborci_Model {
         public function find_one($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $field_value = $this->_get_map($field_value);
+                $field_value = $this->before_find_one($field_value);
                 $this->db->limit(1);
                 $query = $this->db->get_where($this->db_table, $field_value);
                 $this->_format_find_returns($query);
                 $returns = $this->get_returns();
+                $returns = $this->after_find_one($field_value, $returns);
                 return $returns;
         }
 
@@ -309,6 +317,7 @@ class Oborci_Model {
          */
         public function find_from($model, $field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                list($model, $field_value) = $this->before_find_from($model, $field_value);
                 $returns = NULL;
                 $rules = $this->db_relations[$model];
                 if (is_array($rules)) {
@@ -320,6 +329,7 @@ class Oborci_Model {
                                 case 'has_and_belongs_to_many': $returns = $this->_find_has_and_belongs_to_many($model, $field_value); break;
                         }
                 }
+                $returns = $this->after_find_from($model, $field_value, $returns);
                 return $returns;
         }
         
@@ -458,6 +468,45 @@ class Oborci_Model {
                 return $returns;
         }
         
+        public function before_find($id) {
+                return $id;
+        }
+        
+        public function after_find($id, $returns) {
+                return $returns;
+        }
+
+        public function before_find_all() {
+        }
+        
+        public function after_find_all($returns) {
+                return $returns;
+        }
+
+        public function before_find_where($field_value) {
+                return $field_value;
+        }
+        
+        public function after_find_where($field_value, $returns) {
+                return $returns;
+        }
+
+        public function before_find_one($field_value) {
+                return $field_value;
+        }
+        
+        public function after_find_one($field_value, $returns) {
+                return $returns;
+        }
+
+        public function before_find_from($model, $field_value) {
+                return array($model, $field_value);
+        }
+        
+        public function after_find_from($model, $field_value, $returns) {
+                return $returns;
+        }
+
         
         // MAGIC
         // ---------------------------------------------------------------- //
