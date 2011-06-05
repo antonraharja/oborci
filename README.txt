@@ -19,26 +19,7 @@ described in file docs/LICENSE.txt. Included samples source codes are subject
 to its own licenses, such as ExtJS, JQuery and CodeIgniter related source codes
 
 
-DIRECTORY STRUCTURE
--------------------
-
-- REAME.txt file contains most general information to start with
-- Directory docs contains detail information, very technical
-- Directory oborci-source contains the OborCI source codes and samples
-
-
-CURRENT FEATURES
-----------------
-
-- Form generation library
-- CRUD and table grid generation library, with JQuery tablesorter
-- Role Based Authentication and Control
-- Enriched CI_Model with CRUD methods and (very young) ORM
-        - Relations: belongs_to, has_one, has_many, has_and_belongs_to_many
-- Samples of using OborCI with ExtJS
-
-
 HOWTO
 -----
 
-Please read howto files and step by step installation in docs/
+Please read OborCI wiki at https://github.com/antonraharja/oborci/wiki
