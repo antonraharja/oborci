@@ -101,15 +101,15 @@ class Oborci_Model {
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items  
          */
-        private function _get_belongs_to($model, $field_value) {
+        private function _find_belongs_to($model, $field_value) {
                 $rules = $this->db_relations[$model];
-                $query = $this->get_where($field_value);
+                $query = $this->find_where($field_value);
                 $row = $query->row_array();
                 $query = NULL;
                 $foreign_key = $this->db_fields[$rules['foreign_key']];
                 $id = $row[$foreign_key];
                 if (! empty($id)) {
-                        $query = $this->CI->$model->get($id);
+                        $query = $this->CI->$model->find($id);
                 }
                 return $query;
         }
@@ -120,15 +120,15 @@ class Oborci_Model {
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items  
          */
-        private function _get_has_one($model, $field_value) {
+        private function _find_has_one($model, $field_value) {
                 $rules = $this->db_relations[$model];
-                $query = $this->get_where($field_value);
+                $query = $this->find_where($field_value);
                 $row = $query->row_array();
                 $query = NULL;
                 $primary_key = $this->db_fields[$this->db_primary_key];
                 $id = $row[$primary_key];
                 if (! empty($id)) {
-                        $query = $this->CI->$model->get_one(array($rules['key'] => $id));
+                        $query = $this->CI->$model->find_one(array($rules['key'] => $id));
                 }
                 return $query;
         }
@@ -139,15 +139,15 @@ class Oborci_Model {
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items
          */
-        private function _get_has_many($model, $field_value) {
+        private function _find_has_many($model, $field_value) {
                 $rules = $this->db_relations[$model];
-                $query = $this->get_where($field_value);
+                $query = $this->find_where($field_value);
                 $row = $query->row_array();
                 $query = NULL;
                 $primary_key = $this->db_fields[$this->db_primary_key];
                 $id = $row[$primary_key];
                 if (! empty($id)) {
-                        $query = $this->CI->$model->get_where(array($rules['key'] => $id));
+                        $query = $this->CI->$model->find_where(array($rules['key'] => $id));
                 }
                 return $query;
         }
@@ -158,9 +158,9 @@ class Oborci_Model {
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items
          */
-        private function _get_has_and_belongs_to_many($model, $field_value) {
+        private function _find_has_and_belongs_to_many($model, $field_value) {
                 $rules = $this->db_relations[$model];
-                $query = $this->get_where($field_value);
+                $query = $this->find_where($field_value);
                 $row = $query->row_array();
                 $query = NULL;
                 $primary_key = $this->db_fields[$this->db_primary_key];
@@ -212,7 +212,7 @@ class Oborci_Model {
 	 * @param integer $id ID
 	 * @return object CI active record query containing data items
 	 */
-	public function get($id) {
+	public function find($id) {
                 if (! $this->_oci_model_init()) { return NULL; };
 		$query = $this->db->get_where($this->db_table, array($this->db_fields[$this->db_primary_key] => $id));
 		return $query;
@@ -222,7 +222,7 @@ class Oborci_Model {
 	 * Get all data
 	 * @return object CI active record query containing data items
 	 */
-	public function get_all() {
+	public function find_all() {
                 if (! $this->_oci_model_init()) { return NULL; };
         	$query = $this->db->get($this->db_table);
 		return $query;
@@ -233,7 +233,7 @@ class Oborci_Model {
          * @param array $field_value Array of fields and its value
          * @return object CI active record query containing data items
          */
-        public function get_where($field_value) {
+        public function find_where($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $field_value = $this->_get_map($field_value);
                 $query = $this->db->get_where($this->db_table, $field_value);
@@ -245,7 +245,7 @@ class Oborci_Model {
          * @param array $field_value Array of fields and its value
          * @return object CI active record query containing data item
          */
-        public function get_one($field_value) {
+        public function find_one($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $field_value = $this->_get_map($field_value);
                 $this->db->limit(1);
@@ -259,17 +259,17 @@ class Oborci_Model {
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items
          */
-        public function get_from($model, $field_value) {
+        public function find_from($model, $field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $query = NULL;
                 $rules = $this->db_relations[$model];
                 if (is_array($rules)) {
                         $relation = trim(strtolower($rules['relation']));
                         switch ($relation) {
-                                case 'has_one': $query = $this->_get_has_one($model, $field_value); break;
-                                case 'belongs_to': $query = $this->_get_belongs_to($model, $field_value); break;
-                                case 'has_many': $query = $this->_get_has_many($model, $field_value); break;
-                                case 'has_and_belongs_to_many': $query = $this->_get_has_and_belongs_to_many($model, $field_value); break;
+                                case 'has_one': $query = $this->_find_has_one($model, $field_value); break;
+                                case 'belongs_to': $query = $this->_find_belongs_to($model, $field_value); break;
+                                case 'has_many': $query = $this->_find_has_many($model, $field_value); break;
+                                case 'has_and_belongs_to_many': $query = $this->_find_has_and_belongs_to_many($model, $field_value); break;
                         }
                 }
                 return $query;
@@ -409,7 +409,30 @@ class Oborci_Model {
         public function after_insert($data, $returns) {
                 return $returns;
         }
-
+        
+        
+        // MAGIC
+        // ---------------------------------------------------------------- //
+        
+        
+        /**
+         * Magic method to get wildcard method's results
+         * @param string $name Method's name
+         * @param mixed $arguments Method's arguments
+         * @return mixed
+         */
+        public function __call($name, $arguments) {
+                
+                // find_by_fields($arguments)
+                foreach ($this->db_fields as $key => $val) {
+                        if ($name == 'find_by_'.$key) {
+                                $name_find_by = 'find_by_'.$key;
+                                return $this->find_where(array($key => implode($arguments)));
+                        }
+                }
+                
+        }
+               
 }
 
 /* End of file Oborci_Model.php */
