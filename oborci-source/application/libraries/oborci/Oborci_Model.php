@@ -346,6 +346,7 @@ class Oborci_Model {
 	 */
 	public function update($id, $data) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                list($id, $data) = $this->before_update($id, $data);
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data, array($this->db_fields[$this->db_primary_key] => $id));
@@ -353,6 +354,7 @@ class Oborci_Model {
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
 		}
+                $returns = $this->after_update($id, $data, $returns);
                 return $returns;
 	}
 
@@ -364,6 +366,7 @@ class Oborci_Model {
 	public function update_all($data) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $data = $this->_get_map($data);
+                $data = $this->before_update_all($data);
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data);
@@ -371,6 +374,7 @@ class Oborci_Model {
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
 		}
+                $returns = $this->after_update_all($data, $returns);
                 return $returns;
 	}
 
@@ -383,6 +387,7 @@ class Oborci_Model {
 	public function update_where($field_value, $data) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $field_value = $this->_get_map($field_value);
+                list($field_value, $data) = $this->before_update_where($field_value, $data);
                 $data = $this->_get_map($data);
                 $returns = FALSE;
 		if (count($data) > 0) {
@@ -391,6 +396,7 @@ class Oborci_Model {
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
 		}
+                $returns = $this->after_update_where($field_value, $data, $returns);
                 return $returns;
 	}
         
@@ -406,11 +412,13 @@ class Oborci_Model {
 	 */
 	public function delete($id) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $id = $this->before_delete($id);
                 $returns = FALSE;
 		$this->db->delete($this->db_table, array($this->db_fields[$this->db_primary_key] => $id));
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
 		}
+                $returns = $this->after_delete($id, $returns);
                 return $returns;
 	}
 
@@ -420,11 +428,13 @@ class Oborci_Model {
 	 */
 	public function delete_all() {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $this->before_delete_all();
                 $returns = FALSE;
 		$this->db->delete($this->db_table);
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
 		}
+                $returns = $this->after_delete_all($returns);
                 return $returns;
 	}
 
@@ -435,12 +445,14 @@ class Oborci_Model {
 	 */
 	public function delete_where($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $field_value = $this->before_delete_where($field_value);
                 $returns = FALSE;
                 $field_value = $this->_get_map($field_value);
 		$this->db->delete($this->db_table, $field_value);
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
 		}
+                $returns = $this->after_delete_where($field_value, $returns);
                 return $returns;
 	}
         
@@ -504,6 +516,53 @@ class Oborci_Model {
         }
         
         public function after_find_from($model, $field_value, $returns) {
+                return $returns;
+        }
+        
+        public function before_update($id, $data) {
+                return array($id, $data);
+        }
+        
+        public function after_update($id, $data, $returns) {
+                return $returns;
+        }
+
+        public function before_update_all($data) {
+                return $data;
+        }
+        
+        public function after_update_all($data, $returns) {
+                return $returns;
+        }
+
+        public function before_update_where($field_value, $data) {
+                return array($field_value, $data);
+        }
+        
+        public function after_update_where($field_value, $data, $returns) {
+                return $returns;
+        }
+
+        public function before_delete($id) {
+                return $id;
+        }
+        
+        public function after_delete($id, $returns) {
+                return $returns;
+        }
+
+        public function before_delete_all() {
+        }
+        
+        public function after_delete_all($returns) {
+                return $returns;
+        }
+
+        public function before_delete_where($field_value) {
+                return $field_value;
+        }
+        
+        public function after_delete_where($field_value, $returns) {
                 return $returns;
         }
 
