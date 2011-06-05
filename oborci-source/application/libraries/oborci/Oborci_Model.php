@@ -250,7 +250,7 @@ class Oborci_Model {
 	/**
 	 * Get specific data when ID is given
 	 * @param integer $id ID
-	 * @return array Results
+	 * @return object CI active record query containing data items
 	 */
 	public function find($id) {
                 if (! $this->_oci_model_init()) { return NULL; };
@@ -264,7 +264,7 @@ class Oborci_Model {
 
 	/**
 	 * Get all data
-	 * @return array Results
+	 * @return object CI active record query containing data items
 	 */
 	public function find_all() {
                 if (! $this->_oci_model_init()) { return NULL; };
@@ -279,7 +279,7 @@ class Oborci_Model {
         /**
          * Get data by partial fields and its value
          * @param array $field_value Array of fields and its value
-         * @return array Results
+         * @return object CI active record query containing data items
          */
         public function find_where($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
@@ -295,7 +295,7 @@ class Oborci_Model {
         /**
          * Get one data by partial fields and its value
          * @param array $field_value Array of fields and its value
-         * @return array Results
+         * @return object CI active record query containing data item
          */
         public function find_one($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
@@ -313,7 +313,7 @@ class Oborci_Model {
          * Get from relation table with various relation type
          * @param string $model Foreign model
          * @param array $field_value Search criteria
-         * @return array Results
+         * @return object CI active record query containing data items
          */
         public function find_from($model, $field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
