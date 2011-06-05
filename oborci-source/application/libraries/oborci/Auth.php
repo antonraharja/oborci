@@ -59,13 +59,13 @@ class Auth {
 	 */
 	private function _id_refill() {
 		$user_id = $this->user_id;
-                $query = $this->CI->oci_users->get($user_id);
-                $row = $query->row();
-                if ($query->num_rows() > 0) {
-                        $this->preference_id = $row->preference_id;
-                        $this->role_id = $row->role_id;
-                        $this->username = $row->username;
-                        $this->password = $row->password;
+                $results = $this->CI->oci_users->find($user_id);
+                $row = $results[0];
+                if (count($results) > 0) {
+                        $this->preference_id = $row['preferences'];
+                        $this->role_id = $row['role'];
+                        $this->username = $row['username'];
+                        $this->password = $row['password'];
                 }
 	}
 
@@ -147,11 +147,11 @@ class Auth {
                 $this->username = $username;
                 $this->password = $password;
 		if ($this->username && $this->password) {
-                        $query = $this->CI->oci_users->get_where(array('username' => $this->username));
-                        $row = $query->row();
-			if (isset($row->id)) {
-                                $test_password = $row->password;
-                                $test_user_id = $row->id;
+                        $results = $this->CI->oci_users->find_where(array('username' => $this->username));
+                        $row = $results[0];
+			if (isset($row['id'])) {
+                                $test_password = $row['password'];
+                                $test_user_id = $row['id'];
 			}
 			if (isset($test_password) && isset($test_user_id)) {
 				if ($password == $test_password) {
@@ -179,8 +179,9 @@ class Auth {
 			if ($this->CI->uri->rsegment(2) && ($this->CI->uri->rsegment(2) != 'index')) {
 				$uri .= '/' . $this->CI->uri->rsegment(2);
 			}
-                        $query = $this->CI->oci_roles->get_from('oci_screens', array('id' => $this->role_id));
-                        foreach ($query->result() as $row) {
+                        $results = $this->CI->oci_roles->find_from('oci_screens', array('id' => $this->role_id));
+                        foreach ($results as $row) {
+                                $row = (object) $row;
                                 if ($row->uri == $uri) {
                                         $this->set_access(TRUE);
                                         return TRUE;
