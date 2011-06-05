@@ -346,6 +346,7 @@ class Oborci_Model {
 	 */
 	public function update($id, $data) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $data = $this->_get_map($data);
                 list($id, $data) = $this->before_update($id, $data);
                 $returns = FALSE;
 		if (count($data) > 0) {
@@ -387,6 +388,7 @@ class Oborci_Model {
 	public function update_where($field_value, $data) {
                 if (! $this->_oci_model_init()) { return NULL; };
                 $field_value = $this->_get_map($field_value);
+                $data = $this->_get_map($data);
                 list($field_value, $data) = $this->before_update_where($field_value, $data);
                 $data = $this->_get_map($data);
                 $returns = FALSE;
@@ -445,6 +447,7 @@ class Oborci_Model {
 	 */
 	public function delete_where($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
+                $field_value = $this->_get_map($field_value);
                 $field_value = $this->before_delete_where($field_value);
                 $returns = FALSE;
                 $field_value = $this->_get_map($field_value);
