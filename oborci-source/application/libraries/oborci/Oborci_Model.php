@@ -41,12 +41,6 @@ class Oborci_Model {
         protected $db_relations = NULL;
         
         /**
-         * Array of field value to be passed to methods
-         * @var array
-         */
-        private $db_data = NULL;
-        
-        /**
          * Array of query returns values
          * @var array
          */
