@@ -79,16 +79,16 @@ class Preference extends CI_Controller {
                 $ok = FALSE;
                 $user_id = $param;
                 if (isset($user_id)) {
-                        $query = $this->oci_users->get($user_id);
-                        $data_user = $query->row();
-                        $preference_id = (integer) $data_user->preference_id;
+                        $results = $this->oci_users->find($user_id);
+                        $data_user = (object) $results[0];
+                        $preference_id = (integer) $data_user->preferences;
                         if ($preference_id > 0) {
                                 $ok = TRUE;
                         } else {
                                 $data_pref = array('first_name' => $data_user->username);
                                 $new_preference_id = $this->oci_preferences->insert($data_pref);
                                 if ($new_preference_id > 0) {
-                                        $data_pref = array('preference_id' => $new_preference_id);
+                                        $data_pref = array('preferences' => $new_preference_id);
                                         if ($this->oci_users->update($user_id, $data_pref)) {
                                                 $preference_id = $new_preference_id;
                                                 $ok = TRUE;
@@ -102,8 +102,8 @@ class Preference extends CI_Controller {
                 }
 
                 if ($ok) {
-                        $query = $this->oci_preferences->get($preference_id);
-                        $row = $query->row_array();
+                        $results = $this->oci_preferences->find($preference_id);
+                        $row = $results[0];
                         $data['crud'] = $this->_show_form($row);
                         $data['pref']['username'] = $data_user->username;
                 } else {
