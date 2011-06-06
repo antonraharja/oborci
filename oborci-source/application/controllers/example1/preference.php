@@ -54,6 +54,7 @@ class Preference extends CI_Controller {
                 $id = $inputs['key_id'];
                 unset($inputs['key_id']);
                 $CI =& get_instance();
+                //print_r($inputs); echo $id; die();
                 $CI->oci_preferences->update($id, $inputs);
                 // redirect(current_url());
                 $returns = '<p>'.t('Preferences has been successfully updated').'</p>';
@@ -81,7 +82,7 @@ class Preference extends CI_Controller {
                 if (isset($user_id)) {
                         $results = $this->oci_users->find($user_id);
                         $data_user = (object) $results[0];
-                        $preference_id = (integer) $data_user->preference_id;
+                        $preference_id = (integer) $data_user->preferences;
                         if ($preference_id > 0) {
                                 $ok = TRUE;
                         } else {
