@@ -469,8 +469,50 @@ class Oborci_Model {
          * @param array $data Insert data array
          * @return array Tampered insert data array
          */
-        public function before_insert($data) {
+        private function _before_insert($data) {
                 return $data;
+        }
+        
+        private function _before_find($id) {
+                return $id;
+        }
+        
+        private function _before_find_all() {
+        }
+        
+        private function _before_find_where($field_value) {
+                return $field_value;
+        }
+        
+        private function _before_find_one($field_value) {
+                return $field_value;
+        }
+        
+        private function _before_find_from($model, $field_value) {
+                return array($model, $field_value);
+        }
+        
+        private function _before_update($id, $data) {
+                return array($id, $data);
+        }
+        
+        private function _before_update_all($data) {
+                return $data;
+        }
+        
+        private function _before_update_where($field_value, $data) {
+                return array($field_value, $data);
+        }
+        
+        private function _before_delete($id) {
+                return $id;
+        }
+        
+        private function _before_delete_all() {
+        }
+        
+        private function _before_delete_where($field_value) {
+                return $field_value;
         }
         
         /**
@@ -479,93 +521,51 @@ class Oborci_Model {
          * @param boolean $returns Insert state result
          * @return boolean Tampered insert state result
          */
-        public function after_insert($data, $returns) {
+        private function _after_insert($data, $returns) {
                 return $returns;
         }
         
-        public function before_find($id) {
-                return $id;
-        }
-        
-        public function after_find($id, $returns) {
+        private function _after_find($id, $returns) {
                 return $returns;
         }
 
-        public function before_find_all() {
-        }
-        
-        public function after_find_all($returns) {
+        private function _after_find_all($returns) {
                 return $returns;
         }
 
-        public function before_find_where($field_value) {
-                return $field_value;
-        }
-        
-        public function after_find_where($field_value, $returns) {
+        private function _after_find_where($field_value, $returns) {
                 return $returns;
         }
 
-        public function before_find_one($field_value) {
-                return $field_value;
-        }
-        
-        public function after_find_one($field_value, $returns) {
+        private function _after_find_one($field_value, $returns) {
                 return $returns;
         }
 
-        public function before_find_from($model, $field_value) {
-                return array($model, $field_value);
-        }
-        
-        public function after_find_from($model, $field_value, $returns) {
+        private function _after_find_from($model, $field_value, $returns) {
                 return $returns;
         }
         
-        public function before_update($id, $data) {
-                return array($id, $data);
-        }
-        
-        public function after_update($id, $data, $returns) {
+        private function _after_update($id, $data, $returns) {
                 return $returns;
         }
 
-        public function before_update_all($data) {
-                return $data;
-        }
-        
-        public function after_update_all($data, $returns) {
+        private function _after_update_all($data, $returns) {
                 return $returns;
         }
 
-        public function before_update_where($field_value, $data) {
-                return array($field_value, $data);
-        }
-        
-        public function after_update_where($field_value, $data, $returns) {
+        private function _after_update_where($field_value, $data, $returns) {
                 return $returns;
         }
 
-        public function before_delete($id) {
-                return $id;
-        }
-        
-        public function after_delete($id, $returns) {
+        private function _after_delete($id, $returns) {
                 return $returns;
         }
 
-        public function before_delete_all() {
-        }
-        
-        public function after_delete_all($returns) {
+        private function _after_delete_all($returns) {
                 return $returns;
         }
 
-        public function before_delete_where($field_value) {
-                return $field_value;
-        }
-        
-        public function after_delete_where($field_value, $returns) {
+        private function _after_delete_where($field_value, $returns) {
                 return $returns;
         }
 
@@ -588,6 +588,37 @@ class Oborci_Model {
                                 $name_find_by = 'find_by_'.$key;
                                 return $this->find_where(array($key => implode($arguments)));
                         }
+                }
+                
+                // callbacks
+                $callback_method = '_'.$name;
+                switch($name) {
+                        // before methods
+                        case 'before_insert': return $this->$callback_method($arguments[0]); break;
+                        case 'before_find': return $this->$callback_method($arguments[0]); break;
+                        case 'before_find_all': return $this->$callback_method(); break;
+                        case 'before_find_where': return $this->$callback_method($arguments[0]); break;
+                        case 'before_find_one': return $this->$callback_method($arguments[0]); break;
+                        case 'before_find_from': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'before_update': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'before_update_all': return $this->$callback_method($arguments[0]); break;
+                        case 'before_update_where': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'before_delete': return $this->$callback_method($arguments[0]); break;
+                        case 'before_delete_all': return $this->$callback_method(); break;
+                        case 'before_delete_where': return $this->$callback_method($arguments[0]); break;
+                        // after methods
+                        case 'after_insert': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'after_find': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'after_find_all': return $this->$callback_method($arguments[0]); break;
+                        case 'after_find_where': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'after_find_one': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'after_find_from': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2]); break;
+                        case 'after_update': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'after_update_all': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'after_update_where': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2]); break;
+                        case 'after_delete': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'after_delete_all': return $this->$callback_method($arguments[0]); break;
+                        case 'after_delete_where': return $this->$callback_method($arguments[0], $arguments[1]); break;
                 }
                 
         }
