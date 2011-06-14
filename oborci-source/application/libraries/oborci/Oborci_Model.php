@@ -125,6 +125,97 @@ class Oborci_Model {
         }
         
         /**
+         * Helper for insert_with() with belongs_to relation
+         * @param string $model_name Related model
+         * @param array $model_data Array of related model data
+         * @param array $data Array of data to be inserted to database
+         * @return integer|boolean Last inserted ID or FALSE when failed
+         */
+        private function _insert_with_belongs_to($model_name, $model_data, $data) {
+                $returns = FALSE;
+                // insert to model
+                $model_id = $this->$model_name->insert($model_data);
+                if ($model_id) {
+                        // get foreign_key
+                        $fk = $this->db_relations[$model_name]['foreign_key'];
+                        $data[$fk] = $model_id;
+                        // insert to ours
+                        $id = $this->insert($data);
+                        if ($id) {
+                                // alright, good, returns it
+                                $returns = $id;
+                        } else {
+                                // not OK, revert
+                                $this->$model_name->delete($model_id);
+                        }
+                }
+                return $returns;
+        }
+
+        /**
+         * Helper for insert_with() with has_one relation
+         * @param string $model_name Related model
+         * @param array $model_data Array of related model data
+         * @param array $data Array of data to be inserted to database
+         * @return integer|boolean Last inserted ID or FALSE when failed
+         */
+        private function _insert_with_has_one($model_name, $model_data, $data) {
+                $returns = FALSE;
+                // insert to ours
+                $id = $this->insert($data);
+                if ($id) {
+                        // get key
+                        $key = $this->db_relations[$model_name]['key'];
+                        $mode_data[$key] = $id;
+                        // insert to model
+                        $model_id = $this->$model_name->insert($model_data);
+                        if ($model_id) {
+                                // alright, good, returns it
+                                $returns = $id;
+                        } else {
+                                // not OK, revert
+                                $this->delete($id);
+                        }
+                }
+                return $returns;
+        }
+
+        /**
+         * Helper for insert_with() with has_and_belongs_to_many relation
+         * @param string $model_name Related model
+         * @param array $model_data Array of related model data
+         * @param array $data Array of data to be inserted to database
+         * @return integer|boolean Last inserted ID or FALSE when failed
+         */
+        private function _insert_with_has_and_belongs_to_many($model_name, $model_data, $data) {
+                $returns = FALSE;
+                // insert to ours
+                $id = $this->insert($data);
+                if ($id) {
+                        // insert into model
+                        $model_id = $this->$model_name->insert($model_data);
+                        if ($model_id) {
+                                $join_table = $this->db_relations[$model_name]['join_table'];
+                                $join_key = $this->db_relations[$model_name]['join_key'];
+                                $key = $this->db_relations[$model_name]['key'];
+                                $join_data = array($join_key => $id, $key => $model_id);
+                                // insert into join table
+                                if ($this->db->insert($join_table, $join_data)) {
+                                        // all good, returns it
+                                        $returns = $id;
+                                } else {
+                                        // not good, delete on model
+                                        $this->$model_name->delete($model_id);
+                                }
+                        } else {
+                                // not good, delete on ours
+                                $this->delete($id);
+                        }
+                }
+                return $returns;
+        }
+
+        /**
          * Get from relation table with belongs_to relation (we owned by one of the other table)
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
@@ -241,6 +332,29 @@ class Oborci_Model {
                 $returns = $this->after_insert($data, $returns);
                 return $returns;
 	}
+        
+        /**
+         * Insert a new data and its related model data to database
+         * @param string $model_name Related model
+         * @param array $model_data Array of related model data
+         * @param array $data Array of data to be inserted to database
+         * @return integer|boolean Last inserted ID or FALSE when failed
+         */
+        public function insert_with($model_name, $model_data, $data) {
+                if (! $this->_oci_model_init()) { return NULL; };
+                $data = $this->_get_map($data);
+                $data = $this->before_insert($data);
+                $returns = FALSE;
+                $relation = $this->db_relations[$model_name]['relation'];
+                switch ($relation) {
+                        case 'belongs_to': $returns = $this->_insert_with_belongs_to($model_name, $model_data, $data); break;
+                        case 'has_one': 
+                        case 'has_many': $returns = $this->_insert_with_has_one($model_name, $model_data, $data); break;
+                        case 'has_and_belongs_to_many': $returns = $this->_insert_with_has_and_belongs_to_many($model_name, $model_data, $data); break;
+                }
+		$returns = $this->after_insert($data, $returns);
+                return $returns;
+        }
         
         
         // GET
