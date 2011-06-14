@@ -63,36 +63,48 @@ class Test extends CI_Controller {
                 print_r($query);
                 
                 echo '<p>Test 7</p>';
+                // prepare testing data
                 $unique = mktime();
                 $username = 'test7'.$unique;
                 $password = '123456';
                 $email = $username.'@somdomain.dom';
                 $first_name = 'User '.$unique;
                 $last_name = 'Test7 Only';
+                // get role
                 $query = $this->test2_model->find_one(array('name' => 'Administrators'));
                 print_r($query);
+                // prepare data array
                 $data = array('username' => $username, 'password' => $password, 'role' => $query[0]['id']);
                 $model_data = array('email' => $email, 'first_name' => $first_name, 'last_name' => $last_name);
+                // insert with relation (belongs_to)
                 $this->test_model->insert_with('oci_preferences', $model_data, $data);
+                // find inserted data
                 $query = $this->test_model->find_where(array('username' => $username));
                 print_r($query);
+                // find inserted data on related model
                 $query = $this->test_model->find_from('oci_preferences', array('username' => $username));
                 print_r($query);
                 
                 echo '<p>Test 8</p>';
+                // prepare testing data
                 $unique = mktime();
                 $username = 'test8'.$unique;
                 $password = '123456';
                 $email = $username.'@somdomain.dom';
                 $first_name = 'User '.$unique;
                 $last_name = 'Test8 Only';
-                $data = array('email' => $email, 'first_name' => $first_name, 'last_name' => $last_name);
+                // get role
                 $query = $this->test2_model->find_one(array('name' => 'Administrators'));
                 print_r($query);
+                // prepare data array
                 $model_data = array('username' => $username, 'password' => $password, 'role' => $query[0]['id']);
+                $data = array('email' => $email, 'first_name' => $first_name, 'last_name' => $last_name);
+                // insert with relation (has_one)
                 $this->test3_model->insert_with('oci_users', $model_data, $data);
+                // find inserted data
                 $query = $this->test3_model->find_where(array('email' => $email));
                 print_r($query);
+                // find inserted data on related model
                 $query = $this->test3_model->find_from('oci_users', array('email' => $email));
                 print_r($query);
 	}
