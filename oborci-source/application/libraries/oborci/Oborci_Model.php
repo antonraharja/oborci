@@ -134,7 +134,7 @@ class Oborci_Model {
         private function _insert_with_belongs_to($model_name, $model_data, $data) {
                 $returns = FALSE;
                 // insert to model
-                $model_id = $this->$model_name->insert($model_data);
+                $model_id = $this->CI->$model_name->insert($model_data);
                 if ($model_id) {
                         // get foreign_key
                         $fk = $this->db_relations[$model_name]['foreign_key'];
@@ -146,7 +146,7 @@ class Oborci_Model {
                                 $returns = $id;
                         } else {
                                 // not OK, revert
-                                $this->$model_name->delete($model_id);
+                                $this->CI->$model_name->delete($model_id);
                         }
                 }
                 return $returns;
@@ -168,7 +168,7 @@ class Oborci_Model {
                         $key = $this->db_relations[$model_name]['key'];
                         $mode_data[$key] = $id;
                         // insert to model
-                        $model_id = $this->$model_name->insert($model_data);
+                        $model_id = $this->CI->$model_name->insert($model_data);
                         if ($model_id) {
                                 // alright, good, returns it
                                 $returns = $id;
@@ -193,7 +193,7 @@ class Oborci_Model {
                 $id = $this->insert($data);
                 if ($id) {
                         // insert into model
-                        $model_id = $this->$model_name->insert($model_data);
+                        $model_id = $this->CI->$model_name->insert($model_data);
                         if ($model_id) {
                                 $join_table = $this->db_relations[$model_name]['join_table'];
                                 $join_key = $this->db_relations[$model_name]['join_key'];
@@ -205,7 +205,7 @@ class Oborci_Model {
                                         $returns = $id;
                                 } else {
                                         // not good, delete on model
-                                        $this->$model_name->delete($model_id);
+                                        $this->CI->$model_name->delete($model_id);
                                 }
                         } else {
                                 // not good, delete on ours
@@ -342,8 +342,7 @@ class Oborci_Model {
          */
         public function insert_with($model_name, $model_data, $data) {
                 if (! $this->_oci_model_init()) { return NULL; };
-                $data = $this->_get_map($data);
-                $data = $this->before_insert($data);
+                list($model_name, $model_data, $data) = $this->before_insert_with($model_name, $model_data, $data);
                 $returns = FALSE;
                 $relation = $this->db_relations[$model_name]['relation'];
                 switch ($relation) {
@@ -352,7 +351,7 @@ class Oborci_Model {
                         case 'has_many': $returns = $this->_insert_with_has_one($model_name, $model_data, $data); break;
                         case 'has_and_belongs_to_many': $returns = $this->_insert_with_has_and_belongs_to_many($model_name, $model_data, $data); break;
                 }
-		$returns = $this->after_insert($data, $returns);
+		$returns = $this->after_insert_with($model_name, $model_data, $data, $returns);
                 return $returns;
         }
         
@@ -587,6 +586,10 @@ class Oborci_Model {
                 return $data;
         }
         
+        private function _before_insert_with($model_name, $model_data, $data) {
+                return array($model_name, $model_data, $data);
+        }
+        
         private function _before_find($id) {
                 return $id;
         }
@@ -636,6 +639,10 @@ class Oborci_Model {
          * @return boolean Tampered insert state result
          */
         private function _after_insert($data, $returns) {
+                return $returns;
+        }
+        
+        private function _after_insert_with($model_name, $model_data, $data, $returns) {
                 return $returns;
         }
         
@@ -709,6 +716,7 @@ class Oborci_Model {
                 switch($name) {
                         // before methods
                         case 'before_insert': return $this->$callback_method($arguments[0]); break;
+                        case 'before_insert_with': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2]); break;
                         case 'before_find': return $this->$callback_method($arguments[0]); break;
                         case 'before_find_all': return $this->$callback_method(); break;
                         case 'before_find_where': return $this->$callback_method($arguments[0]); break;
@@ -722,6 +730,7 @@ class Oborci_Model {
                         case 'before_delete_where': return $this->$callback_method($arguments[0]); break;
                         // after methods
                         case 'after_insert': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'after_insert_with': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2], $arguments[3]); break;
                         case 'after_find': return $this->$callback_method($arguments[0], $arguments[1]); break;
                         case 'after_find_all': return $this->$callback_method($arguments[0]); break;
                         case 'after_find_where': return $this->$callback_method($arguments[0], $arguments[1]); break;

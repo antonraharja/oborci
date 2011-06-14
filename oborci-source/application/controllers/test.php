@@ -61,6 +61,23 @@ class Test extends CI_Controller {
                 echo '<p>Test 6</p>';
                 $query = $this->test3_model->find_from('oci_users', array('id' => '1'));
                 print_r($query);
+                
+                echo '<p>Test 7</p>';
+                $unique = mktime();
+                $username = 'test'.$unique;
+                $password = '123456';
+                $email = $username.'@somdomain.dom';
+                $first_name = 'User '.$unique;
+                $last_name = 'Test Only';
+                $query = $this->test2_model->find_one(array('name' => 'Administrators'));
+                print_r($query);
+                $data = array('username' => $username, 'password' => $password, 'role' => $query[0]['id']);
+                $model_data = array('email' => $email, 'first_name' => $first_name, 'last_name' => $last_name);
+                $this->test_model->insert_with('oci_preferences', $model_data, $data);
+                $query = $this->test_model->find_where(array('username' => $username));
+                print_r($query);
+                $query = $this->test_model->find_from('oci_preferences', array('username' => $username));
+                print_r($query);
 	}
 	
 }
