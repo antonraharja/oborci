@@ -166,7 +166,7 @@ class Oborci_Model {
                 if ($id) {
                         // get key
                         $key = $this->db_relations[$model_name]['key'];
-                        $mode_data[$key] = $id;
+                        $model_data[$key] = $id;
                         // insert to model
                         $model_id = $this->CI->$model_name->insert($model_data);
                         if ($model_id) {

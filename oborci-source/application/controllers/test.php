@@ -64,11 +64,11 @@ class Test extends CI_Controller {
                 
                 echo '<p>Test 7</p>';
                 $unique = mktime();
-                $username = 'test'.$unique;
+                $username = 'test7'.$unique;
                 $password = '123456';
                 $email = $username.'@somdomain.dom';
                 $first_name = 'User '.$unique;
-                $last_name = 'Test Only';
+                $last_name = 'Test7 Only';
                 $query = $this->test2_model->find_one(array('name' => 'Administrators'));
                 print_r($query);
                 $data = array('username' => $username, 'password' => $password, 'role' => $query[0]['id']);
@@ -77,6 +77,23 @@ class Test extends CI_Controller {
                 $query = $this->test_model->find_where(array('username' => $username));
                 print_r($query);
                 $query = $this->test_model->find_from('oci_preferences', array('username' => $username));
+                print_r($query);
+                
+                echo '<p>Test 8</p>';
+                $unique = mktime();
+                $username = 'test8'.$unique;
+                $password = '123456';
+                $email = $username.'@somdomain.dom';
+                $first_name = 'User '.$unique;
+                $last_name = 'Test8 Only';
+                $data = array('email' => $email, 'first_name' => $first_name, 'last_name' => $last_name);
+                $query = $this->test2_model->find_one(array('name' => 'Administrators'));
+                print_r($query);
+                $model_data = array('username' => $username, 'password' => $password, 'role' => $query[0]['id']);
+                $this->test3_model->insert_with('oci_users', $model_data, $data);
+                $query = $this->test3_model->find_where(array('email' => $email));
+                print_r($query);
+                $query = $this->test3_model->find_from('oci_users', array('email' => $email));
                 print_r($query);
 	}
 	
