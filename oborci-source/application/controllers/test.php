@@ -107,6 +107,29 @@ class Test extends CI_Controller {
                 // find inserted data on related model
                 $query = $this->test3_model->find_from('oci_users', array('email' => $email));
                 print_r($query);
+
+                echo '<p>Test 9</p>';
+                // prepare testing data
+                $unique = mktime();
+                $name = 'Role'.$unique;
+                $module = '1';
+                $parent = '0';
+                $index = '0';
+                $uri = 'test/only/'.$unique;
+                $text = 'Menu'.$unique;
+                $title = 'Menu '.$unique;
+                $id_css = 'menu_'.$unique;
+                // prepare data array
+                $data = array('name' => $name);
+                $model_data = array('module' => $module, 'parent' => $parent, 'index' => $index, 'uri' => $uri, 'text' => $text, 'title' => $title, 'id_css' => $id_css);
+                // insert with relation (has_and_belongs_to_many)
+                $this->test2_model->insert_with('oci_menus', $model_data, $data);
+                // find inserted data
+                $query = $this->test2_model->find_where(array('name' => $name));
+                print_r($query);
+                // find inserted data on related model
+                $query = $this->test2_model->find_from('oci_menus', array('name' => $name));
+                print_r($query);
 	}
 	
 }
