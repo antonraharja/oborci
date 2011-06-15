@@ -84,6 +84,8 @@ class Test extends CI_Controller {
                 // find inserted data on related model
                 $query = $this->test_model->find_from('oci_preferences', array('username' => $username));
                 print_r($query);
+                // clean test, delete them
+                $this->test_model->delete_with(array('username' => $username), 'oci_preferences');
                 
                 echo '<p>Test 8</p>';
                 // prepare testing data
@@ -107,6 +109,8 @@ class Test extends CI_Controller {
                 // find inserted data on related model
                 $query = $this->test3_model->find_from('oci_users', array('email' => $email));
                 print_r($query);
+                // clean test, delete them
+                $this->test3_model->delete_with(array('email' => $email), 'oci_users');
 
                 echo '<p>Test 9</p>';
                 // prepare testing data
@@ -130,6 +134,8 @@ class Test extends CI_Controller {
                 // find inserted data on related model
                 $query = $this->test2_model->find_from('oci_menus', array('name' => $name));
                 print_r($query);
+                // clean test, delete them
+                $this->test2_model->delete_with(array('name' => $name), 'oci_menus');
 	}
 	
 }
