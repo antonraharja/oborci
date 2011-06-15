@@ -295,6 +295,106 @@ class Oborci_Model {
                 return $returns;
         }
         
+        /**
+         * Helper for update_with() with belongs_to relation
+         * @param array $field_value Array of fields and its value
+         * @param string $model_name Related model
+         * @param array $model_data Array of related model data
+         * @param array $data Array of data to be inserted to database
+         * @return boolean TRUE if update success
+         */
+        private function _update_with_belongs_to($field_value, $model_name, $model_data, $data) {
+                $their_pk = $this->CI->$model_name->db_fields[$this->CI->$model_name->db_primary_key];
+                $fk = $this->db_relations[$model_name]['foreign_key'];
+                $returns = $this->update_where($field_value, $data);
+                if ($returns) {
+                        $results = $this->find_where($field_value);
+                        foreach ($results as $row) {
+                                $where = array($$their_pk => $row[$fk]);
+                                $this->CI->$model_name->update_where($where, $model_data);
+                        }
+                }
+                return $returns;
+        }
+
+        /**
+         * Helper for update_with() with belongs_to relation
+         * @param array $field_value Array of fields and its value
+         * @param string $model_name Related model
+         * @param array $model_data Array of related model data
+         * @param array $data Array of data to be inserted to database
+         * @return boolean TRUE if update success
+         */
+        private function _update_with_has_one($field_value, $model_name, $model_data, $data) {
+                $key = $this->db_relations[$model_name]['key'];
+                $returns = $this->update_where($field_value, $data);
+                if ($returns) {
+                        $results = $this->find_where($field_value);
+                        foreach ($results as $row) {
+                                $where = array($key => $row[$this->db_primary_key]);
+                                $this->CI->$model_name->update_where($where, $model_data);
+                        }
+                }
+                return $returns;
+        }
+
+        /**
+         * Helper for delete_with() with belongs_to relation
+         * @param array $field_value Array of fields and its value
+         * @param string $model_name Related model
+         * @return boolean TRUE if delete success
+         */
+        private function _delete_with_belongs_to($field_value, $model_name) {
+                $their_pk = $this->CI->$model_name->db_fields[$this->CI->$model_name->db_primary_key];
+                $fk = $this->db_relations[$model_name]['foreign_key'];
+                $results = $this->find_where($field_value);
+                foreach ($results as $row) {
+                        $this->CI->$model_name->delete_where(array($their_pk => $row[$fk]));
+                }
+                $returns = $this->delete_where($field_value);
+                return $returns;
+        }
+
+        /**
+         * Helper for delete_with() with has_one relation
+         * @param array $field_value Array of fields and its value
+         * @param string $model_name Related model
+         * @return boolean TRUE if delete success
+         */
+        private function _delete_with_has_one($field_value, $model_name) {
+                $key = $this->db_relations[$model_name]['key'];
+                $results = $this->find_where($field_value);
+                foreach ($results as $row) {
+                        $this->CI->$model_name->delete_where(array($key => $row[$this->db_primary_key]));
+                }
+                $returns = $this->delete_where($field_value);
+                return $returns;
+        }
+
+        /**
+         * Helper for delete_with() with has_and_belongs_to_many relation
+         * @param array $field_value Array of fields and its value
+         * @param string $model_name Related model
+         * @return boolean TRUE if delete success
+         */
+        private function _delete_with_has_and_belongs_to_many($field_value, $model_name) {
+                $results = $this->find_where($field_value);
+                foreach ($results as $row) {
+                        $join_table_name = $this->db_relations[$model_name]['join_table'];
+                        $join_key = $this->db_relations[$model_name]['join_key'];
+                        $key = $this->db_relations[$model_name]['key'];
+                        $query = $this->db->get_where($join_table_name, array($join_key => $row[$this->db_primary_key]));
+                        foreach ($query->result_array() as $row) {
+                                $their_table_name = $this->CI->$model_name->db_table;
+                                $their_pk = $this->CI->$model_name->db_fields[$this->CI->$model_name->db_primary_key];
+                                $this->db->delete($their_table_name, array($their_pk => $row[$key]));
+                        }
+                        $this->db->delete($join_table_name, array($join_key => $row[$this->db_primary_key]));
+                }
+                $returns = $this->delete_where($field_value);
+                return $returns;
+        }
+
         
         // HELPERS
         // ---------------------------------------------------------------- //
@@ -529,9 +629,7 @@ class Oborci_Model {
                 $relation = $this->db_relations[$model_name]['relation'];
                 switch ($relation) {
                         case 'belongs_to': $returns = $this->_update_with_belongs_to($field_value, $model_name, $model_data, $data); break;
-                        case 'has_one': 
-                        case 'has_many': $returns = $this->_update_with_has_one($field_value, $model_name, $model_data, $data); break;
-                        case 'has_and_belongs_to_many': $returns = $this->_update_with_has_and_belongs_to_many($field_value, $model_name, $model_data, $data); break;
+                        case 'has_one': $returns = $this->_update_with_has_one($field_value, $model_name, $model_data, $data); break;
                 }
 		$returns = $this->after_update_with($field_value, $model_name, $model_data, $data, $returns);
                 return $returns;
@@ -597,7 +695,7 @@ class Oborci_Model {
          * Delete data and its related model data
          * @param array $field_value Array of fields and its value
          * @param string $model_name Related model
-         * @return boolean TRUE if update success
+         * @return boolean TRUE if delete success
          */
         public function delete_with($field_value, $model_name) {
                 if (! $this->_oci_model_init()) { return NULL; };
