@@ -384,10 +384,10 @@ class Oborci_Model {
                         $join_key = $this->db_relations[$model_name]['join_key'];
                         $key = $this->db_relations[$model_name]['key'];
                         $query = $this->db->get_where($join_table_name, array($join_key => $row[$this->db_primary_key]));
-                        foreach ($query->result_array() as $row) {
+                        foreach ($query->result_array() as $row2) {
                                 $their_table_name = $this->CI->$model_name->db_table;
                                 $their_pk = $this->CI->$model_name->db_fields[$this->CI->$model_name->db_primary_key];
-                                $this->db->delete($their_table_name, array($their_pk => $row[$key]));
+                                $this->db->delete($their_table_name, array($their_pk => $row2[$key]));
                         }
                         $this->db->delete($join_table_name, array($join_key => $row[$this->db_primary_key]));
                 }
