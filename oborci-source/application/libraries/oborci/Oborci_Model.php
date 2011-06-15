@@ -514,6 +514,29 @@ class Oborci_Model {
                 return $returns;
 	}
         
+        /**
+         * Update data and its related model data
+         * @param array $field_value Array of fields and its value
+         * @param string $model_name Related model
+         * @param array $model_data Array of related model data
+         * @param array $data Array of data to be updated
+         * @return boolean TRUE if update success
+         */
+        public function update_with($field_value, $model_name, $model_data, $data) {
+                if (! $this->_oci_model_init()) { return NULL; };
+                list($field_value, $model_name, $model_data, $data) = $this->before_update_with($field_value, $model_name, $model_data, $data);
+                $returns = FALSE;
+                $relation = $this->db_relations[$model_name]['relation'];
+                switch ($relation) {
+                        case 'belongs_to': $returns = $this->_update_with_belongs_to($field_value, $model_name, $model_data, $data); break;
+                        case 'has_one': 
+                        case 'has_many': $returns = $this->_update_with_has_one($field_value, $model_name, $model_data, $data); break;
+                        case 'has_and_belongs_to_many': $returns = $this->_update_with_has_and_belongs_to_many($field_value, $model_name, $model_data, $data); break;
+                }
+		$returns = $this->after_update_with($field_value, $model_name, $model_data, $data, $returns);
+                return $returns;
+        }
+
         
         // DELETE
         // ---------------------------------------------------------------- //
@@ -569,6 +592,27 @@ class Oborci_Model {
                 $returns = $this->after_delete_where($field_value, $returns);
                 return $returns;
 	}
+
+        /**
+         * Delete data and its related model data
+         * @param array $field_value Array of fields and its value
+         * @param string $model_name Related model
+         * @return boolean TRUE if update success
+         */
+        public function delete_with($field_value, $model_name) {
+                if (! $this->_oci_model_init()) { return NULL; };
+                list($field_value, $model_name) = $this->before_delete_with($field_value, $model_name);
+                $returns = FALSE;
+                $relation = $this->db_relations[$model_name]['relation'];
+                switch ($relation) {
+                        case 'belongs_to': $returns = $this->_delete_with_belongs_to($field_value, $model_name); break;
+                        case 'has_one': 
+                        case 'has_many': $returns = $this->_delete_with_has_one($field_value, $model_name); break;
+                        case 'has_and_belongs_to_many': $returns = $this->_delete_with_has_and_belongs_to_many($field_value, $model_name); break;
+                }
+		$returns = $this->after_delete_with($field_value, $model_name, $returns);
+                return $returns;
+        }
         
         
         // CALLBACKS
@@ -619,6 +663,10 @@ class Oborci_Model {
                 return array($field_value, $data);
         }
         
+        private function _before_update_with($field_value, $model_name, $model_data, $data) {
+                return array($field_value, $model_name, $model_data, $data);
+        }
+        
         private function _before_delete($id) {
                 return $id;
         }
@@ -628,6 +676,10 @@ class Oborci_Model {
         
         private function _before_delete_where($field_value) {
                 return $field_value;
+        }
+        
+        private function _before_delete_with($field_value, $model_name) {
+                return array($field_value, $model_name);
         }
         
         /**
@@ -676,6 +728,10 @@ class Oborci_Model {
                 return $returns;
         }
 
+        private function _after_update_with($field_value, $model_name, $model_data, $data, $returns) {
+                return $returns;
+        }
+
         private function _after_delete($id, $returns) {
                 return $returns;
         }
@@ -685,6 +741,10 @@ class Oborci_Model {
         }
 
         private function _after_delete_where($field_value, $returns) {
+                return $returns;
+        }
+
+        private function _after_delete_with($field_value, $model_name, $returns) {
                 return $returns;
         }
 
@@ -723,9 +783,11 @@ class Oborci_Model {
                         case 'before_update': return $this->$callback_method($arguments[0], $arguments[1]); break;
                         case 'before_update_all': return $this->$callback_method($arguments[0]); break;
                         case 'before_update_where': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'before_update_with': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2], $arguments[3]); break;
                         case 'before_delete': return $this->$callback_method($arguments[0]); break;
                         case 'before_delete_all': return $this->$callback_method(); break;
                         case 'before_delete_where': return $this->$callback_method($arguments[0]); break;
+                        case 'before_delete_with': return $this->$callback_method($arguments[0], $arguments[1]); break;
                         // after methods
                         case 'after_insert': return $this->$callback_method($arguments[0], $arguments[1]); break;
                         case 'after_insert_with': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2], $arguments[3]); break;
@@ -737,9 +799,11 @@ class Oborci_Model {
                         case 'after_update': return $this->$callback_method($arguments[0], $arguments[1]); break;
                         case 'after_update_all': return $this->$callback_method($arguments[0], $arguments[1]); break;
                         case 'after_update_where': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2]); break;
+                        case 'after_update_with': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4]); break;
                         case 'after_delete': return $this->$callback_method($arguments[0], $arguments[1]); break;
                         case 'after_delete_all': return $this->$callback_method($arguments[0]); break;
                         case 'after_delete_where': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'after_delete_with': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2]); break;
                 }
                 
         }
