@@ -320,8 +320,8 @@ class Oborci_Model {
 	 */
 	public function insert($data) {
                 if (! $this->_oci_model_init()) { return NULL; };
-                $data = $this->_get_map($data);
                 $data = $this->before_insert($data);
+                $data = $this->_get_map($data);
                 $returns = FALSE;
 		if ($this->db->insert($this->db_table, $data)) {
 			$insert_id = $this->db->insert_id();
@@ -396,8 +396,8 @@ class Oborci_Model {
          */
         public function find_where($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
-                $field_value = $this->_get_map($field_value);
                 $field_value = $this->before_find_where($field_value);
+                $field_value = $this->_get_map($field_value);
                 $query = $this->db->get_where($this->db_table, $field_value);
                 $this->_format_find_returns($query);
                 $returns = $this->get_returns();
@@ -412,8 +412,8 @@ class Oborci_Model {
          */
         public function find_one($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
-                $field_value = $this->_get_map($field_value);
                 $field_value = $this->before_find_one($field_value);
+                $field_value = $this->_get_map($field_value);
                 $this->db->limit(1);
                 $query = $this->db->get_where($this->db_table, $field_value);
                 $this->_format_find_returns($query);
@@ -459,8 +459,8 @@ class Oborci_Model {
 	 */
 	public function update($id, $data) {
                 if (! $this->_oci_model_init()) { return NULL; };
-                $data = $this->_get_map($data);
                 list($id, $data) = $this->before_update($id, $data);
+                $data = $this->_get_map($data);
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data, array($this->db_fields[$this->db_primary_key] => $id));
@@ -479,8 +479,8 @@ class Oborci_Model {
 	 */
 	public function update_all($data) {
                 if (! $this->_oci_model_init()) { return NULL; };
-                $data = $this->_get_map($data);
                 $data = $this->before_update_all($data);
+                $data = $this->_get_map($data);
                 $returns = FALSE;
 		if (count($data) > 0) {
 			$this->db->update($this->db_table, $data);
@@ -500,9 +500,8 @@ class Oborci_Model {
 	 */
 	public function update_where($field_value, $data) {
                 if (! $this->_oci_model_init()) { return NULL; };
-                $field_value = $this->_get_map($field_value);
-                $data = $this->_get_map($data);
                 list($field_value, $data) = $this->before_update_where($field_value, $data);
+                $field_value = $this->_get_map($field_value);
                 $data = $this->_get_map($data);
                 $returns = FALSE;
 		if (count($data) > 0) {
@@ -560,10 +559,9 @@ class Oborci_Model {
 	 */
 	public function delete_where($field_value) {
                 if (! $this->_oci_model_init()) { return NULL; };
-                $field_value = $this->_get_map($field_value);
                 $field_value = $this->before_delete_where($field_value);
-                $returns = FALSE;
                 $field_value = $this->_get_map($field_value);
+                $returns = FALSE;
 		$this->db->delete($this->db_table, $field_value);
 		if ($this->db->affected_rows()) {
 			$returns = TRUE;
