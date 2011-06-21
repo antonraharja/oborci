@@ -894,7 +894,7 @@ class Oborci_Model {
                         case 'after_find_where': return $this->$callback_method($arguments[0], $arguments[1]); break;
                         case 'after_find_one': return $this->$callback_method($arguments[0], $arguments[1]); break;
                         case 'after_find_from': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2]); break;
-                        case 'after_update': return $this->$callback_method($arguments[0], $arguments[1]); break;
+                        case 'after_update': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2]); break;
                         case 'after_update_all': return $this->$callback_method($arguments[0], $arguments[1]); break;
                         case 'after_update_where': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2]); break;
                         case 'after_update_with': return $this->$callback_method($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4]); break;
