@@ -46,6 +46,12 @@ class Oborci_Model {
          */
         private $db_returns = NULL;
         
+        /**
+         * Array of inputs
+         * @var array
+         */
+        private $db_data = NULL;
+        
         
         // CONSTRUCTS
         // ---------------------------------------------------------------- //
@@ -408,6 +414,29 @@ class Oborci_Model {
                 return $this->db_returns;
         }
         
+        /**
+         * Set data inputs
+         * @param array $data 
+         */
+        public function set_data($data) {
+                $this->db_data = $data;
+        }
+        
+        /**
+         * Get data inputs
+         * @return array
+         */
+        public function get_data() {
+                return $this->db_data;
+        }
+        
+        /**
+         * Clear data inputs
+         */
+        public function clear_data() {
+                $this->db_data = NULL;
+        }
+
         
         // INSERT
         // ---------------------------------------------------------------- //
