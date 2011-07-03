@@ -447,8 +447,9 @@ class Oborci_Model {
 	 * @param array $data Array of data to be inserted to database
 	 * @return integer|boolean Last inserted ID or FALSE when failed
 	 */
-	public function insert($data) {
-                if (! $this->_oci_model_init()) { return NULL; };
+	public function insert($data=NULL) {
+                if (! isset($data)) { $data = $this->get_data(); }
+                if (! $this->_oci_model_init()) { return NULL; }
                 $data = $this->before_insert($data);
                 $data = $this->_get_map($data);
                 $returns = FALSE;
@@ -469,8 +470,9 @@ class Oborci_Model {
          * @param array $data Array of data to be inserted to database
          * @return integer|boolean Last inserted ID or FALSE when failed
          */
-        public function insert_with($model_name, $model_data, $data) {
-                if (! $this->_oci_model_init()) { return NULL; };
+        public function insert_with($model_name, $model_data, $data=NULL) {
+                if (! isset($data)) { $data = $this->get_data(); }
+                if (! $this->_oci_model_init()) { return NULL; }
                 list($model_name, $model_data, $data) = $this->before_insert_with($model_name, $model_data, $data);
                 $returns = FALSE;
                 $relation = $this->db_relations[$model_name]['relation'];
@@ -586,8 +588,9 @@ class Oborci_Model {
 	 * @param array $data Array of data to be updated
 	 * @return boolean TRUE if update success
 	 */
-	public function update($id, $data) {
-                if (! $this->_oci_model_init()) { return NULL; };
+	public function update($id, $data=NULL) {
+                if (! isset($data)) { $data = $this->get_data(); }
+                if (! $this->_oci_model_init()) { return NULL; }
                 list($id, $data) = $this->before_update($id, $data);
                 $data = $this->_get_map($data);
                 $returns = FALSE;
@@ -606,8 +609,9 @@ class Oborci_Model {
 	 * @param array $data Array of data to be updated
 	 * @return boolean TRUE if update success
 	 */
-	public function update_all($data) {
-                if (! $this->_oci_model_init()) { return NULL; };
+	public function update_all($data=NULL) {
+                if (! isset($data)) { $data = $this->get_data(); }
+                if (! $this->_oci_model_init()) { return NULL; }
                 $data = $this->before_update_all($data);
                 $data = $this->_get_map($data);
                 $returns = FALSE;
@@ -627,8 +631,9 @@ class Oborci_Model {
 	 * @param array $data Array of data to be updated
 	 * @return boolean TRUE if update success
 	 */
-	public function update_where($field_value, $data) {
-                if (! $this->_oci_model_init()) { return NULL; };
+	public function update_where($field_value, $data=NULL) {
+                if (! isset($data)) { $data = $this->get_data(); }
+                if (! $this->_oci_model_init()) { return NULL; }
                 list($field_value, $data) = $this->before_update_where($field_value, $data);
                 $field_value = $this->_get_map($field_value);
                 $data = $this->_get_map($data);
@@ -651,8 +656,9 @@ class Oborci_Model {
          * @param array $data Array of data to be updated
          * @return boolean TRUE if update success
          */
-        public function update_with($field_value, $model_name, $model_data, $data) {
-                if (! $this->_oci_model_init()) { return NULL; };
+        public function update_with($field_value, $model_name, $model_data, $data=NULL) {
+                if (! isset($data)) { $data = $this->get_data(); }
+                if (! $this->_oci_model_init()) { return NULL; }
                 list($field_value, $model_name, $model_data, $data) = $this->before_update_with($field_value, $model_name, $model_data, $data);
                 $returns = FALSE;
                 $relation = $this->db_relations[$model_name]['relation'];
