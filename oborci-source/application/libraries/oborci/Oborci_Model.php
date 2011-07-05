@@ -113,13 +113,15 @@ class Oborci_Model {
         /**
          * Helper to get fields map
          * @param array $field_value Unmapped fields
-         * @return array Mapped fields
+         * @return array Mapped fields only
          */
         private function _get_map($field_value) {
                 $returns = NULL;
                 foreach ($field_value as $field => $value) {
                         $real_field = $this->db_fields[$field];
-                        $returns[$real_field] = $value;
+                        if (isset($real_field)) {
+                                $returns[$real_field] = $value;
+                        }
                 }
                 return $returns;
         }
