@@ -419,7 +419,7 @@ class Oborci_Model {
          * @param array $data 
          */
         public function set_data($data) {
-                empty($this->db_data);
+                $this->clear_data();
                 $this->db_data = $data;
         }
         
