@@ -41,6 +41,23 @@ class Oborci_Model {
         protected $db_relations = NULL;
         
         /**
+         * Validation rules
+         * @var array
+         */
+        protected $db_validation = NULL;
+        
+        
+        // PRIVATE VARIABLES
+        // ---------------------------------------------------------------- //
+
+        
+        /**
+         * Validation errors
+         * @var array
+         */
+        private $db_validation_errors = NULL;
+        
+        /**
          * Array of query returns values
          * @var array
          */
@@ -449,6 +466,14 @@ class Oborci_Model {
                         }
                 }
                 $this->set_data($data);
+        }
+        
+        /**
+         * Validate inputs
+         * @return boolean TRUE if validation successful
+         */
+        public function validate() {
+                return TRUE;
         }
 
         
