@@ -419,6 +419,7 @@ class Oborci_Model {
          * @param array $data 
          */
         public function set_data($data) {
+                empty($this->db_data);
                 $this->db_data = $data;
         }
         
@@ -434,7 +435,20 @@ class Oborci_Model {
          * Clear data inputs
          */
         public function clear_data() {
+                empty($this->db_data);
                 $this->db_data = NULL;
+        }
+        
+        /**
+         * Populate $db_data with $_POST
+         */
+        public function populate() {
+                foreach ($this->db_fields as $key => $field) {
+                        if (isset($_POST[$field])) {
+                                $data[$field] = $this->input->post($field);
+                        }
+                }
+                $this->set_data($data);
         }
 
         
