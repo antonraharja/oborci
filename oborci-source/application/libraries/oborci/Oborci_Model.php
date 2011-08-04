@@ -433,6 +433,19 @@ class Oborci_Model {
                 return $this->db_data;
         }
         
+        /**
+         * Populate $db_data with $_POST
+         */
+        public function populate() {
+                foreach ($_POST as $key => $val) {
+                        $data = NULL;
+                        if (isset($db_fields[$key])) {
+                                $data[$key] = $this->input->post($key);
+                        }
+                        $this->set_data($data);
+                }
+        }
+        
 
         // INSERT
         // ---------------------------------------------------------------- //
