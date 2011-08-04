@@ -29,6 +29,11 @@ class Oborci_Model {
         protected $db_fields = NULL;
         
         /**
+         * Defines field's rules
+         */
+        protected $db_rules = NULL;
+        
+        /**
          * Table's mapped primary key. If NULL the model will auto-set it.
          * @var string
          */
@@ -444,6 +449,16 @@ class Oborci_Model {
                         }
                         $this->set_data($data);
                 }
+        }
+        
+        /**
+         * Validate field's rules
+         * @return type boolean TRUE if fields rules are valid
+         */
+        public function valid() {
+                $data = $this->get_data();
+                // fixme anton - to be finished asap
+                return TRUE;
         }
         
 
