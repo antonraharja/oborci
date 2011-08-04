@@ -418,7 +418,7 @@ class Oborci_Model {
          * Set data inputs
          * @param array $data 
          */
-        public function set_data($data) {
+        public function set_data($data=NULL) {
                 $this->db_data = $data;
         }
         
@@ -430,14 +430,7 @@ class Oborci_Model {
                 return $this->db_data;
         }
         
-        /**
-         * Clear data inputs
-         */
-        public function clear_data() {
-                $this->db_data = NULL;
-        }
 
-        
         // INSERT
         // ---------------------------------------------------------------- //
         
