@@ -222,7 +222,7 @@ class Oborci_Model {
         }
 
         /**
-         * Get from relation table with belongs_to relation (we owned by one of the other table)
+         * Get from relation table/model with belongs_to relation (we owned by one of the other table/model)
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items  
@@ -240,7 +240,7 @@ class Oborci_Model {
         }
         
         /**
-         * Get from relation table with has_one relation (other table have one of us)
+         * Get from relation table/model with has_one relation (other table/model have one of us)
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items  
@@ -258,7 +258,7 @@ class Oborci_Model {
         }
         
         /**
-         * Get from relation table with has_many relation (other table have many of us)
+         * Get from relation table/model with has_many relation (other table/model have many of us)
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items
@@ -276,7 +276,7 @@ class Oborci_Model {
         }
         
         /**
-         * Get from relation table with has_and_belongs_to_many relation
+         * Get from relation table/model with has_and_belongs_to_many relation
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items
@@ -554,7 +554,7 @@ class Oborci_Model {
         }
 
         /**
-         * Get from relation table with various relation type
+         * Get from relation table/model with various relation type
          * @param string $model Foreign model
          * @param array $field_value Search criteria
          * @return array Results
