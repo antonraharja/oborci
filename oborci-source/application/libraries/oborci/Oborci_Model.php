@@ -29,6 +29,11 @@ class Oborci_Model {
         protected $db_fields = NULL;
         
         /**
+         * Defines field's rules
+         */
+        protected $db_rules = NULL;
+        
+        /**
          * Table's mapped primary key. If NULL the model will auto-set it.
          * @var string
          */
@@ -241,7 +246,7 @@ class Oborci_Model {
         }
 
         /**
-         * Get from relation table with belongs_to relation (we owned by one of the other table)
+         * Get from relation table/model with belongs_to relation (we owned by one of the other table/model)
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items  
@@ -259,7 +264,7 @@ class Oborci_Model {
         }
         
         /**
-         * Get from relation table with has_one relation (other table have one of us)
+         * Get from relation table/model with has_one relation (other table/model have one of us)
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items  
@@ -277,7 +282,7 @@ class Oborci_Model {
         }
         
         /**
-         * Get from relation table with has_many relation (other table have many of us)
+         * Get from relation table/model with has_many relation (other table/model have many of us)
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items
@@ -295,7 +300,7 @@ class Oborci_Model {
         }
         
         /**
-         * Get from relation table with has_and_belongs_to_many relation
+         * Get from relation table/model with has_and_belongs_to_many relation
          * @param string $model Foreign model name
          * @param array $field_value Search criteria
          * @return object CI active record query containing data items
@@ -437,9 +442,11 @@ class Oborci_Model {
          * Set data inputs
          * @param array $data 
          */
-        public function set_data($data) {
-                $this->clear_data();
-                $this->db_data = $data;
+        public function set_data($data=NULL) {
+                $this->db_data = NULL;
+                if (is_array($data)) {
+                        $this->db_data = $data;
+                }
         }
         
         /**
@@ -451,34 +458,29 @@ class Oborci_Model {
         }
         
         /**
-         * Clear data inputs
-         */
-        public function clear_data() {
-                empty($this->db_data);
-                $this->db_data = NULL;
-        }
-        
-        /**
          * Populate $db_data with $_POST
          */
         public function populate() {
-                foreach ($this->db_fields as $key => $field) {
-                        if (isset($_POST[$field])) {
-                                $data[$field] = $this->input->post($field);
+                foreach ($_POST as $key => $val) {
+                        $data = NULL;
+                        if (isset($db_fields[$key])) {
+                                $data[$key] = $this->input->post($key);
                         }
+                        $this->set_data($data);
                 }
-                $this->set_data($data);
         }
         
         /**
-         * Validate inputs
-         * @return boolean TRUE if validation successful
+         * Validate field's rules
+         * @return type boolean TRUE if fields rules are valid
          */
-        public function validate() {
+        public function valid() {
+                $data = $this->get_data();
+                // fixme anton - to be finished asap
                 return TRUE;
         }
-
         
+
         // INSERT
         // ---------------------------------------------------------------- //
         
@@ -595,7 +597,7 @@ class Oborci_Model {
         }
 
         /**
-         * Get from relation table with various relation type
+         * Get from relation table/model with various relation type
          * @param string $model Foreign model
          * @param array $field_value Search criteria
          * @return array Results
